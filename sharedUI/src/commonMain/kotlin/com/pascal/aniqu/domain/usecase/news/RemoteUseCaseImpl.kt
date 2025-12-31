@@ -1,10 +1,15 @@
 package com.pascal.aniqu.domain.usecase.news
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.pascal.aniqu.data.repository.NewsRepository
 import com.pascal.aniqu.domain.mapper.toDomain
+import com.pascal.aniqu.domain.model.Anime
 import com.pascal.aniqu.domain.model.Dashboard
 import com.pascal.aniqu.domain.model.MarketHighlight
 import com.pascal.aniqu.domain.model.StockRecommendation
+import com.pascal.aniqu.domain.usecase.pagination.AnimePagingSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.koin.core.annotation.Single
@@ -16,6 +21,15 @@ class RemoteUseCaseImpl(
 
     override suspend fun dashboard(): Flow<Dashboard> = flow {
         emit(repository.dashboard().toDomain())
+    }
+
+    override suspend fun getAnimeList(): Flow<PagingData<Anime>> {
+        return Pager(
+            config = PagingConfig(pageSize = 1),
+            pagingSourceFactory = {
+                AnimePagingSource()
+            }
+        ).flow
     }
 
     override suspend fun getMarketHighlight(): Flow<MarketHighlight> = flow {

@@ -7,7 +7,9 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import com.pascal.aniqu.domain.mapper.getFavoriteTitlesFlow
+import com.pascal.aniqu.domain.model.Anime
 import com.pascal.aniqu.domain.usecase.local.LocalUseCase
 import com.pascal.aniqu.domain.usecase.news.RemoteUseCase
 import com.pascal.aniqu.ui.screen.home.state.HomeUIState
@@ -26,6 +28,9 @@ class HomeViewModel(
 
     private val _uiState = MutableStateFlow(HomeUIState())
     val uiState: StateFlow<HomeUIState> = _uiState.asStateFlow()
+
+    private val _animeResponse = MutableStateFlow(PagingData.empty<Anime>())
+    val animeResponse: StateFlow<PagingData<Anime>> = _animeResponse
 
     fun setTransition(
         sharedTransitionScope: SharedTransitionScope,
@@ -59,6 +64,26 @@ class HomeViewModel(
                     )
                 }
             }.collect { newState -> _uiState.update { newState } }
+        }
+    }
+
+    fun loadAnime() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+
+            remoteUseCase.getAnimeList()
+                .catch { e ->
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            error = true to e.message.toString()
+                        )
+                    }
+                }
+                .collect { result ->
+                    _uiState.update { it.copy(isLoading = false) }
+                    _animeResponse.value = result
+                }
         }
     }
 

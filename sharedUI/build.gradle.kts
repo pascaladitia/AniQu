@@ -120,7 +120,7 @@ dependencies {
 buildkonfig {
     packageName = "com.pascal.aniqu"
     defaultConfigs {
-        buildConfigField(FieldSpec.Type.STRING, "BASE_URL", "https://dummyjson.com")
+        buildConfigField(FieldSpec.Type.STRING, "BASE_URL", "https://kitsu.io/api/edge")
     }
 }
 
