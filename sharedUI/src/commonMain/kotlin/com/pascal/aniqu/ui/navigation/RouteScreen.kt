@@ -24,8 +24,9 @@ import com.pascal.aniqu.ui.screen.bookmark.BookmarkScreen
 import com.pascal.aniqu.ui.screen.detail.DetailScreen
 import com.pascal.aniqu.ui.screen.favorite.FavoriteScreen
 import com.pascal.aniqu.ui.screen.home.HomeScreen
+import com.pascal.aniqu.ui.screen.onboarding.OnboardingRoute
 import com.pascal.aniqu.ui.screen.profile.PortofolioScreen
-import com.pascal.aniqu.ui.screen.splash.SplashScreen
+import com.pascal.aniqu.ui.screen.splash.SplashRoute
 import com.pascal.aniqu.ui.screen.watchlist.WatchListScreen
 import com.pascal.aniqu.utils.base.getFromPreviousBackStack
 import com.pascal.aniqu.utils.base.saveToCurrentBackStack
@@ -60,7 +61,7 @@ fun RouteScreen(
                 startDestination = Screen.SplashScreen.route,
             ) {
                 composable(route = Screen.SplashScreen.route) {
-                    SplashScreen(
+                    SplashRoute(
                         paddingValues = paddingValues
                     ) {
                         navController.navigate(Screen.HomeScreen.route) {
@@ -70,6 +71,13 @@ fun RouteScreen(
                             launchSingleTop = true
                         }
                     }
+                }
+                composable(route = Screen.OnboardingScreen.route) {
+                    OnboardingRoute(
+                        onNext = {
+
+                        }
+                    )
                 }
                 composable(route = Screen.HomeScreen.route) {
                     val animScope: AnimatedVisibilityScope = this
