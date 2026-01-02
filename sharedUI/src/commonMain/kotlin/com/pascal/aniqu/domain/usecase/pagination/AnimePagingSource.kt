@@ -6,7 +6,9 @@ import com.pascal.aniqu.data.remote.api.KtorClientApi
 import com.pascal.aniqu.domain.mapper.toDomain
 import com.pascal.aniqu.domain.model.Anime
 
-class AnimePagingSource() : PagingSource<Int, Anime>() {
+class AnimePagingSource(
+    private val api: KtorClientApi
+) : PagingSource<Int, Anime>() {
 
     override fun getRefreshKey(state: PagingState<Int, Anime>): Int? {
         return state.anchorPosition?.let { anchor ->
@@ -19,7 +21,7 @@ class AnimePagingSource() : PagingSource<Int, Anime>() {
         return try {
             val page = params.key ?: 1
 
-            val animeList: List<Anime> = KtorClientApi.getAnimeList(page)
+            val animeList: List<Anime> = api.getAnimeList(page)
                 .data.map {
                     it.toDomain()
                 }

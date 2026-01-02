@@ -92,6 +92,8 @@ kotlin {
             implementation(libs.androidx.preference.ktx)
             implementation(libs.room.runtime.android)
             implementation(libs.play.services.auth)
+            implementation("androidx.media3:media3-exoplayer:1.9.0")
+            implementation("androidx.media3:media3-ui:1.9.0")
         }
 
         iosMain.dependencies {

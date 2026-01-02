@@ -12,7 +12,7 @@ import io.ktor.client.request.parameter
 import org.koin.core.annotation.Single
 
 @Single
-object KtorClientApi {
+class KtorClientApi {
 
     suspend fun dashboard(): DashboardResponse =
         client.get("http:///dashboard").body()

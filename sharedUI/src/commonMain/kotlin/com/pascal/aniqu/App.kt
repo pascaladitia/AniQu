@@ -14,6 +14,7 @@ import com.russhwolf.settings.Settings
 fun App(
     onThemeChanged: @Composable (isDark: Boolean) -> Unit = {}
 ) = AppTheme(onThemeChanged) {
+    onThemeChanged(true)
     RouteScreen()
 }
 

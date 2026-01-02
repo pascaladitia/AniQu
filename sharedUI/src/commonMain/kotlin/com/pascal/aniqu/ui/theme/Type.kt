@@ -8,21 +8,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import aniqu.sharedui.generated.resources.Res
 import aniqu.sharedui.generated.resources.roboto
+import aniqu.sharedui.generated.resources.roboto_bold
 import org.jetbrains.compose.resources.Font
 
 @Composable
 fun getTypography(): Typography {
     return Typography(
         headlineLarge = TextStyle(
-            fontFamily = FontFamily(Font(Res.font.roboto)),
-            fontWeight = FontWeight.ExtraBold,
-            fontSize = 28.sp,
+            fontFamily = FontFamily(Font(Res.font.roboto_bold)),
+            fontSize = 34.sp,
             lineHeight = 36.sp
         ),
         headlineMedium = TextStyle(
-            fontFamily = FontFamily(Font(Res.font.roboto)),
-            fontWeight = FontWeight.ExtraBold,
-            fontSize = 22.sp,
+            fontFamily = FontFamily(Font(Res.font.roboto_bold)),
+            fontSize = 28.sp,
             lineHeight = 32.sp
         ),
         headlineSmall = TextStyle(

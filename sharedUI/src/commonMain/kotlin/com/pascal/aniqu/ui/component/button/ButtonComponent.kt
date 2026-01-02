@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.pascal.aniqu.ui.theme.AppTheme
 import compose.icons.FeatherIcons
@@ -34,6 +35,7 @@ fun ButtonComponent(
     modifier: Modifier = Modifier,
     text: String,
     isIcon: Int = 0,
+    height: Dp = 48.dp,
     icon: ImageVector = FeatherIcons.Home,
     color: Color = MaterialTheme.colorScheme.primary,
     onClick: () -> Unit
@@ -41,8 +43,8 @@ fun ButtonComponent(
     ElevatedButton(
         modifier = modifier
             .fillMaxWidth()
-            .height(48.dp),
-        shape = RoundedCornerShape(8.dp),
+            .height(height),
+        shape = RoundedCornerShape(16.dp),
         elevation = ButtonDefaults.elevatedButtonElevation(
             defaultElevation = 0.dp
         ),
@@ -63,7 +65,7 @@ fun ButtonComponent(
             }
             Text(
                 text = text,
-                style = MaterialTheme.typography.titleSmall.copy(
+                style = MaterialTheme.typography.titleMedium.copy(
                     color = Color.White,
                     fontWeight = FontWeight.ExtraBold
                 )
@@ -86,13 +88,14 @@ fun ButtonOutlineComponent(
     modifier: Modifier = Modifier,
     text: String,
     isIcon: Int = 0,
+    height: Dp = 48.dp,
     color: Color = MaterialTheme.colorScheme.primary,
     onClick: () -> Unit
 ) {
     OutlinedIconButton(
         modifier = modifier
             .fillMaxWidth()
-            .height(48.dp),
+            .height(height),
         border = BorderStroke(1.dp, color),
         shape = RoundedCornerShape(16.dp),
         onClick = { onClick() },
@@ -109,7 +112,7 @@ fun ButtonOutlineComponent(
             }
             Text(
                 text = text,
-                style = MaterialTheme.typography.titleSmall.copy(
+                style = MaterialTheme.typography.titleMedium.copy(
                     color = color,
                     fontWeight = FontWeight.ExtraBold
                 )

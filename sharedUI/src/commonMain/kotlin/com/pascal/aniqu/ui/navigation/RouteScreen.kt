@@ -64,7 +64,7 @@ fun RouteScreen(
                     SplashRoute(
                         paddingValues = paddingValues
                     ) {
-                        navController.navigate(Screen.HomeScreen.route) {
+                        navController.navigate(Screen.OnboardingScreen.route) {
                             popUpTo(Screen.SplashScreen.route) {
                                 inclusive = true
                             }

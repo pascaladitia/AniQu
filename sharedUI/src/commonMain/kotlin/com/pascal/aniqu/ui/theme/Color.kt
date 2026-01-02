@@ -3,7 +3,7 @@ package com.pascal.aniqu.ui.theme
 import androidx.compose.ui.graphics.Color
 
 // ==================== Light Colors ====================
-internal val PrimaryLight = Color(0xFFF5891D)
+internal val PrimaryLight = Color(0xFFE50913)
 internal val OnPrimaryLight = Color(0xFFFFFFFF)
 internal val PrimaryContainerLight = Color(0xFFFFE0B2)
 internal val OnPrimaryContainerLight = Color(0xFF4E342E)
@@ -49,7 +49,7 @@ internal val SurfaceContainerHighestLight = Color(0xFFE9E9E9)
 
 
 // ==================== Dark Colors ====================
-internal val PrimaryDark = Color(0xFFF5891D)
+internal val PrimaryDark = Color(0xFFE50913)
 internal val OnPrimaryDark = Color(0xFFFFFFFF)
 internal val PrimaryContainerDark = Color(0xFF004080)
 internal val OnPrimaryContainerDark = Color(0xFFFFFFFF)
