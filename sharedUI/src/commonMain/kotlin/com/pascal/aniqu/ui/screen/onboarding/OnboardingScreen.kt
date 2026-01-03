@@ -1,25 +1,18 @@
 package com.pascal.aniqu.ui.screen.onboarding
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,13 +21,15 @@ import aniqu.sharedui.generated.resources.Res
 import aniqu.sharedui.generated.resources.label_description_onboarding
 import aniqu.sharedui.generated.resources.label_get_started
 import aniqu.sharedui.generated.resources.label_title_onboarding
-import aniqu.sharedui.generated.resources.no_thumbnail
 import com.pascal.aniqu.ui.component.button.ButtonComponent
 import com.pascal.aniqu.ui.screen.onboarding.component.PagerIndicator
 import com.pascal.aniqu.ui.screen.onboarding.state.LocalOnboardingEvent
 import com.pascal.aniqu.ui.theme.AppTheme
+import com.pascal.aniqu.utils.VideoUtils
+import io.github.kdroidfilter.composemediaplayer.InitialPlayerState
+import io.github.kdroidfilter.composemediaplayer.VideoPlayerSurface
+import io.github.kdroidfilter.composemediaplayer.rememberVideoPlayerState
 import kotlinx.coroutines.delay
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -43,34 +38,44 @@ fun OnboardingScreen(
     modifier: Modifier = Modifier
 ) {
     val event = LocalOnboardingEvent.current
+    val videoList = VideoUtils.getOnboardingVideo()
+    val pagerState = rememberPagerState(pageCount = { videoList.size })
+    val playerStates = videoList.map { rememberVideoPlayerState() }
 
-    val imageList = listOf(
-        Res.drawable.no_thumbnail,
-        Res.drawable.no_thumbnail,
-        Res.drawable.no_thumbnail
-    )
+    LaunchedEffect(Unit) {
+        playerStates.forEachIndexed { index, state ->
+            state.openUri(videoList[index], initializeplayerState = InitialPlayerState.PAUSE)
+            state.loop = true
 
-    val pagerState = rememberPagerState(
-        initialPage = 0,
-        pageCount = { imageList.size }
-    )
+            state.play()
+            delay(50)
+            state.pause()
+        }
+
+        if (playerStates.isNotEmpty()) {
+            playerStates[0].play()
+        }
+    }
+
+    LaunchedEffect(pagerState.currentPage) {
+        val current = pagerState.currentPage
+        playerStates.forEachIndexed { index, state ->
+            if (index == current) {
+                state.play()
+            } else {
+                state.pause()
+            }
+        }
+    }
 
     LaunchedEffect(Unit) {
         while (true) {
             delay(10000)
-
             if (!pagerState.isScrollInProgress) {
                 val nextPage =
-                    if (pagerState.currentPage == pagerState.pageCount - 1) {
-                        0
-                    } else {
-                        pagerState.currentPage + 1
-                    }
-
-                pagerState.animateScrollToPage(
-                    page = nextPage,
-                    pageOffsetFraction = 0f
-                )
+                    if (pagerState.currentPage == pagerState.pageCount - 1) 0
+                    else pagerState.currentPage + 1
+                pagerState.animateScrollToPage(nextPage)
             }
         }
     }
@@ -84,9 +89,10 @@ fun OnboardingScreen(
             state = pagerState,
             modifier = Modifier.fillMaxSize()
         ) { page ->
-            Image(
-                painter = painterResource(imageList[page]),
-                contentDescription = null
+            VideoPlayerSurface(
+                modifier = Modifier.fillMaxSize(),
+                playerState = playerStates[page],
+                contentScale = ContentScale.Crop
             )
         }
 
@@ -129,7 +135,7 @@ fun OnboardingScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             PagerIndicator(
-                pageCount = imageList.size,
+                pageCount = videoList.size,
                 currentPage = pagerState.currentPage
             )
 

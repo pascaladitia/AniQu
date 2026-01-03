@@ -76,6 +76,7 @@ kotlin {
             implementation(libs.androidx.customview.poolingcontainer)
             implementation(libs.emoji2)
             implementation(libs.emoji2.view.helper)
+            implementation(libs.composemediaplayer)
         }
 
         commonTest.dependencies {
@@ -92,8 +93,6 @@ kotlin {
             implementation(libs.androidx.preference.ktx)
             implementation(libs.room.runtime.android)
             implementation(libs.play.services.auth)
-            implementation("androidx.media3:media3-exoplayer:1.9.0")
-            implementation("androidx.media3:media3-ui:1.9.0")
         }
 
         iosMain.dependencies {
