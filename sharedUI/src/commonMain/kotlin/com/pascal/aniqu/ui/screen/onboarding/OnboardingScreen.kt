@@ -1,18 +1,28 @@
 package com.pascal.aniqu.ui.screen.onboarding
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,15 +31,18 @@ import aniqu.sharedui.generated.resources.Res
 import aniqu.sharedui.generated.resources.label_description_onboarding
 import aniqu.sharedui.generated.resources.label_get_started
 import aniqu.sharedui.generated.resources.label_title_onboarding
+import aniqu.sharedui.generated.resources.logo
+import chaintech.videoplayer.host.MediaPlayerHost
+import chaintech.videoplayer.model.ScreenResize
+import chaintech.videoplayer.model.VideoPlayerConfig
+import chaintech.videoplayer.ui.youtube.YouTubePlayerComposable
 import com.pascal.aniqu.ui.component.button.ButtonComponent
 import com.pascal.aniqu.ui.screen.onboarding.component.PagerIndicator
 import com.pascal.aniqu.ui.screen.onboarding.state.LocalOnboardingEvent
 import com.pascal.aniqu.ui.theme.AppTheme
 import com.pascal.aniqu.utils.VideoUtils
-import io.github.kdroidfilter.composemediaplayer.InitialPlayerState
-import io.github.kdroidfilter.composemediaplayer.VideoPlayerSurface
-import io.github.kdroidfilter.composemediaplayer.rememberVideoPlayerState
 import kotlinx.coroutines.delay
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -40,37 +53,33 @@ fun OnboardingScreen(
     val event = LocalOnboardingEvent.current
     val videoList = VideoUtils.getOnboardingVideo()
     val pagerState = rememberPagerState(pageCount = { videoList.size })
-    val playerStates = videoList.map { rememberVideoPlayerState() }
 
-    LaunchedEffect(Unit) {
-        playerStates.forEachIndexed { index, state ->
-            state.openUri(videoList[index], initializeplayerState = InitialPlayerState.PAUSE)
-            state.loop = true
-
-            state.play()
-            delay(50)
-            state.pause()
-        }
-
-        if (playerStates.isNotEmpty()) {
-            playerStates[0].play()
+    val playerHosts = remember {
+        videoList.map { url ->
+            MediaPlayerHost(
+                mediaUrl = url,
+                autoPlay = true,
+                isMuted = true,
+                isLooping = true,
+                headers = null,
+                initialVideoFitMode = ScreenResize.FIT
+            )
         }
     }
 
     LaunchedEffect(pagerState.currentPage) {
-        val current = pagerState.currentPage
-        playerStates.forEachIndexed { index, state ->
-            if (index == current) {
-                state.play()
+        playerHosts.forEachIndexed { index, host ->
+            if (index == pagerState.currentPage) {
+                host.play()
             } else {
-                state.pause()
+                host.pause()
             }
         }
     }
 
     LaunchedEffect(Unit) {
         while (true) {
-            delay(10000)
+            delay(15000)
             if (!pagerState.isScrollInProgress) {
                 val nextPage =
                     if (pagerState.currentPage == pagerState.pageCount - 1) 0
@@ -89,10 +98,50 @@ fun OnboardingScreen(
             state = pagerState,
             modifier = Modifier.fillMaxSize()
         ) { page ->
-            VideoPlayerSurface(
+            YouTubePlayerComposable(
                 modifier = Modifier.fillMaxSize(),
-                playerState = playerStates[page],
-                contentScale = ContentScale.Crop
+                playerHost = playerHosts[page],
+                playerConfig = VideoPlayerConfig(
+                    showControls = false,
+                    isPauseResumeEnabled = false,
+                    isSeekBarVisible = false,
+                    isDurationVisible = false,
+                    isMuteControlEnabled = false,
+                    isSpeedControlEnabled = false,
+                    isFullScreenEnabled = true,
+                    showSubTitlesOptions = false,
+                    reelVerticalScrolling = true,
+                    enableFullEdgeToEdge = true,
+                    enableResumePlayback = true
+                )
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.TopCenter)
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            Color.Black,
+                            Color.Black.copy(alpha = 0.8f),
+                            Color.Black.copy(alpha = 0.9f),
+                            Color.Transparent
+                        ),
+                        startY = 0f,
+                        endY = Float.POSITIVE_INFINITY
+                    )
+                )
+                .statusBarsPadding(),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                modifier = Modifier
+                    .padding(top = 48.dp, bottom = 16.dp)
+                    .width(100.dp),
+                painter = painterResource(Res.drawable.logo),
+                contentDescription = null
             )
         }
 
@@ -104,6 +153,7 @@ fun OnboardingScreen(
                     brush = Brush.verticalGradient(
                         colors = listOf(
                             Color.Black,
+                            Color.Black.copy(alpha = 0.9f),
                             Color.Black.copy(alpha = 0.8f),
                             Color.Transparent
                         ),

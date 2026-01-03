@@ -76,7 +76,7 @@ kotlin {
             implementation(libs.androidx.customview.poolingcontainer)
             implementation(libs.emoji2)
             implementation(libs.emoji2.view.helper)
-            implementation(libs.composemediaplayer)
+            implementation(libs.compose.multiplatform.media.player)
         }
 
         commonTest.dependencies {

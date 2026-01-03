@@ -39,7 +39,7 @@ itext7Core = "9.4.0"
 composeIcons = "1.1.1"
 androidx-customview-poolingcontainer = "1.1.0"
 emoji2 = "1.6.0"
-composemediaplayer = "0.8.6"
+composeMultiplatformMediaPlayer = "1.0.51"
 
 [libraries]
 
@@ -106,7 +106,7 @@ composeIcons-featherIcons = { module = "br.com.devsrsouza.compose.icons:feather"
 androidx-customview-poolingcontainer = { module = "androidx.customview:customview-poolingcontainer", version.ref = "androidx-customview-poolingcontainer" }
 emoji2 = { module = "androidx.emoji2:emoji2", version.ref = "emoji2" }
 emoji2-view-helper = { module = "androidx.emoji2:emoji2-views-helper", version.ref = "emoji2" }
-composemediaplayer = { module = "io.github.kdroidfilter:composemediaplayer", version.ref = "composemediaplayer" }
+compose-multiplatform-media-player = { module = "network.chaintech:compose-multiplatform-media-player", version.ref = "composeMultiplatformMediaPlayer" }
 
 [plugins]
 
