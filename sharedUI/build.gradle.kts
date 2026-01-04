@@ -28,6 +28,10 @@ kotlin {
     iosSimulatorArm64()
 
     sourceSets {
+        val commonMain by getting {
+            resources.srcDir("src/commonMain/composeResources")
+        }
+
         commonMain.dependencies {
             api(libs.compose.runtime)
             api(libs.compose.ui)
