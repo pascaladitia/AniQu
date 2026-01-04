@@ -37,7 +37,7 @@ import chaintech.videoplayer.model.ScreenResize
 import chaintech.videoplayer.model.VideoPlayerConfig
 import chaintech.videoplayer.ui.youtube.YouTubePlayerComposable
 import com.pascal.aniqu.ui.component.button.ButtonComponent
-import com.pascal.aniqu.ui.screen.onboarding.component.PagerIndicator
+import com.pascal.aniqu.ui.component.screenUtils.PagerIndicator
 import com.pascal.aniqu.ui.screen.onboarding.state.LocalOnboardingEvent
 import com.pascal.aniqu.ui.theme.AppTheme
 import com.pascal.aniqu.utils.VideoUtils
@@ -185,6 +185,7 @@ fun OnboardingScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             PagerIndicator(
+                modifier = Modifier.fillMaxWidth(),
                 pageCount = videoList.size,
                 currentPage = pagerState.currentPage
             )

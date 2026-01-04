@@ -3,27 +3,34 @@
 package com.pascal.aniqu.ui.screen.home
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import aniqu.sharedui.generated.resources.Res
-import aniqu.sharedui.generated.resources.logo
+import com.pascal.aniqu.ui.component.screenUtils.DynamicAsyncImage
+import com.pascal.aniqu.ui.component.screenUtils.PagerIndicator
 import com.pascal.aniqu.ui.screen.home.state.HomeUIState
 import com.pascal.aniqu.ui.screen.onboarding.state.LocalOnboardingEvent
 import com.pascal.aniqu.ui.theme.AppTheme
 import com.pascal.aniqu.utils.VideoUtils
 import kotlinx.coroutines.delay
-import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun HomeScreen(
@@ -57,13 +64,45 @@ fun HomeScreen(
                     state = pagerState,
                     modifier = Modifier.fillMaxSize()
                 ) { page ->
-                    Image(
+                    DynamicAsyncImage(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .width(200.dp),
-                        painter = painterResource(Res.drawable.logo),
-                        contentDescription = null
+                            .height(240.dp),
+                        imageUrl = videoList[page],
+                        contentScale = ContentScale.Crop
                     )
+                }
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .align(Alignment.BottomCenter)
+                ) {
+                    Text(
+                        text = "New episode",
+                        style = MaterialTheme.typography.headlineMedium
+                    )
+
+                    Spacer(Modifier.height(4.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "New episode",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        )
+
+                        PagerIndicator(
+                            pageCount = videoList.size,
+                            currentPage = pagerState.currentPage
+                        )
+                    }
                 }
             }
         }
