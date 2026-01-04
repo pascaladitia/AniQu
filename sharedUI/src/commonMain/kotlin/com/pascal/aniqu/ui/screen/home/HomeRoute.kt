@@ -12,7 +12,10 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import aniqu.sharedui.generated.resources.Res
 import aniqu.sharedui.generated.resources.close
+import app.cash.paging.compose.LazyPagingItems
+import app.cash.paging.compose.collectAsLazyPagingItems
 import com.pascal.aniqu.data.local.entity.FavoritesEntity
+import com.pascal.aniqu.domain.model.Anime
 import com.pascal.aniqu.ui.component.dialog.ShowDialog
 import com.pascal.aniqu.ui.component.screenUtils.LoadingScreen
 import com.pascal.aniqu.ui.component.screenUtils.PullRefreshComponent
@@ -29,10 +32,11 @@ fun HomeRoute(
 ) {
     val event = LocalHomeEvent.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val animeResponse: LazyPagingItems<Anime> = viewModel.animeResponse.collectAsLazyPagingItems()
 
     LaunchedEffect(Unit) {
         viewModel.setTransition(sharedTransitionScope, animatedVisibilityScope)
-        viewModel.loadInit()
+        viewModel.loadAnime()
     }
 
     if (uiState.isLoading) LoadingScreen()
@@ -56,7 +60,10 @@ fun HomeRoute(
                 viewModel.loadInit()
             }
         ) {
-            HomeScreen(uiState = uiState)
+            HomeScreen(
+                uiState = uiState,
+                animeResponse = animeResponse
+            )
         }
     }
 }

@@ -24,8 +24,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import app.cash.paging.compose.LazyPagingItems
+import com.pascal.aniqu.domain.model.Anime
 import com.pascal.aniqu.ui.component.screenUtils.DynamicAsyncImage
 import com.pascal.aniqu.ui.component.screenUtils.PagerIndicator
+import com.pascal.aniqu.ui.screen.home.component.LazyRowCarousel
 import com.pascal.aniqu.ui.screen.home.state.HomeUIState
 import com.pascal.aniqu.ui.screen.onboarding.state.LocalOnboardingEvent
 import com.pascal.aniqu.ui.theme.AppTheme
@@ -35,7 +38,8 @@ import kotlinx.coroutines.delay
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    uiState: HomeUIState = HomeUIState()
+    uiState: HomeUIState = HomeUIState(),
+    animeResponse: LazyPagingItems<Anime>? = null
 ) {
     val event = LocalOnboardingEvent.current
     val videoList = VideoUtils.getOnboardingVideo()
@@ -68,7 +72,7 @@ fun HomeScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(240.dp),
-                        imageUrl = videoList[page],
+                        imageUrl = "",
                         contentScale = ContentScale.Crop
                     )
                 }
@@ -102,6 +106,24 @@ fun HomeScreen(
                             pageCount = videoList.size,
                             currentPage = pagerState.currentPage
                         )
+                    }
+                }
+            }
+        }
+
+        item {
+            uiState.sharedTransitionScope?.let {
+                with(it) {
+                    HorizontalPager(
+                        state = pagerState,
+                        modifier = Modifier.fillMaxWidth()
+                    ) { page ->
+                        LazyRowCarousel(
+                            animeResponse = animeResponse,
+                            animatedVisibilityScope = uiState.animatedVisibilityScope!!
+                        ) {
+                            event.onNext()
+                        }
                     }
                 }
             }

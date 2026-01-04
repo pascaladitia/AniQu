@@ -2,6 +2,7 @@ package com.pascal.aniqu.domain.usecase.pagination
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import co.touchlab.kermit.Logger
 import com.pascal.aniqu.data.remote.api.KtorClientApi
 import com.pascal.aniqu.domain.mapper.toDomain
 import com.pascal.aniqu.domain.model.Anime
@@ -18,6 +19,8 @@ class AnimePagingSource(
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Anime> {
+        Logger.e("tag anime load3")
+
         return try {
             val page = params.key ?: 1
 
