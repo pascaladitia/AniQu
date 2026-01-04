@@ -2,110 +2,71 @@
 
 package com.pascal.aniqu.ui.screen.home
 
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Search
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.pascal.aniqu.data.local.entity.FavoritesEntity
-import com.pascal.aniqu.ui.component.dialog.ShowDialog
-import com.pascal.aniqu.ui.component.screenUtils.LoadingScreen
-import com.pascal.aniqu.ui.component.screenUtils.PullRefreshComponent
-import com.pascal.aniqu.ui.component.screenUtils.TopAppBarComponent
-import com.pascal.aniqu.ui.screen.home.component.HomeAccount
-import com.pascal.aniqu.ui.screen.home.component.HomeCard
-import com.pascal.aniqu.ui.screen.home.component.HomeMenu
-import com.pascal.aniqu.ui.screen.home.component.homeMarket
-import com.pascal.aniqu.ui.screen.home.state.HomeUIState
-import com.pascal.aniqu.ui.screen.home.state.LocalHomeEvent
-import com.pascal.aniqu.ui.theme.AppTheme
-import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
+import androidx.compose.ui.unit.dp
 import aniqu.sharedui.generated.resources.Res
-import aniqu.sharedui.generated.resources.close
+import aniqu.sharedui.generated.resources.logo
+import com.pascal.aniqu.ui.screen.home.state.HomeUIState
+import com.pascal.aniqu.ui.screen.onboarding.state.LocalOnboardingEvent
+import com.pascal.aniqu.ui.theme.AppTheme
+import com.pascal.aniqu.utils.VideoUtils
+import kotlinx.coroutines.delay
+import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun HomeScreen(
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope,
-    viewModel: HomeViewModel = koinInject<HomeViewModel>(),
-    onDetail: (FavoritesEntity?) -> Unit
-) {
-    val event = LocalHomeEvent.current
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(Unit) {
-        viewModel.setTransition(sharedTransitionScope, animatedVisibilityScope)
-        viewModel.loadInit()
-    }
-
-    if (uiState.isLoading) LoadingScreen()
-
-    if (uiState.error.first) {
-        ShowDialog(
-            message = uiState.error.second,
-            textButton = stringResource(Res.string.close)
-        ) {
-            viewModel.resetError()
-        }
-    }
-
-    CompositionLocalProvider(
-        LocalHomeEvent provides event.copy(
-            onDetail = onDetail
-        )
-    ) {
-        PullRefreshComponent(
-            onRefresh = {
-                viewModel.loadInit()
-            }
-        ) {
-            HomeContent(uiState = uiState)
-        }
-    }
-}
-
-@Composable
-fun HomeContent(
     modifier: Modifier = Modifier,
     uiState: HomeUIState = HomeUIState()
 ) {
+    val event = LocalOnboardingEvent.current
+    val videoList = VideoUtils.getOnboardingVideo()
+    val pagerState = rememberPagerState(pageCount = { videoList.size })
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(15000)
+            if (!pagerState.isScrollInProgress) {
+                val nextPage =
+                    if (pagerState.currentPage == pagerState.pageCount - 1) 0
+                    else pagerState.currentPage + 1
+                pagerState.animateScrollToPage(nextPage)
+            }
+        }
+    }
+
     LazyColumn(
         modifier = modifier.fillMaxSize()
     ) {
         item {
-            TopAppBarComponent(
-                title = "Hi, Selamat Datang",
-                rightIcon1 = Icons.Outlined.Search,
-                rightIcon2 = Icons.Filled.Notifications,
-                rightIcon3 = Icons.Filled.Settings
-            )
+            Box(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier.fillMaxSize()
+                ) { page ->
+                    Image(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .width(200.dp),
+                        painter = painterResource(Res.drawable.logo),
+                        contentDescription = null
+                    )
+                }
+            }
         }
-
-        item {
-            HomeAccount()
-        }
-
-        item {
-            HomeMenu()
-        }
-
-        item {
-            HomeCard()
-        }
-
-        homeMarket(uiState = uiState)
     }
 }
 
@@ -113,6 +74,6 @@ fun HomeContent(
 @Composable
 private fun HomePreview() {
     AppTheme {
-        HomeContent()
+        HomeScreen()
     }
 }
