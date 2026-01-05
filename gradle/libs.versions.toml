@@ -21,7 +21,6 @@ kotlinx-datetime = "0.7.1"
 room = "2.8.4"
 ksp = "2.3.4"
 buildKonfig = "0.17.1"
-materialKolor = "4.0.5"
 
 pagingCommon = "3.3.0-alpha02-0.5.1"
 pagingComposeCommon = "3.3.0-alpha02-0.5.1"
@@ -85,7 +84,6 @@ multiplatformSettings = { module = "com.russhwolf:multiplatform-settings-no-arg"
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-runtime-android = { group = "androidx.room", name = "room-runtime-android", version.ref = "room" }
-materialKolor = { module = "com.materialkolor:material-kolor", version.ref = "materialKolor" }
 
 paging-common = { module = "app.cash.paging:paging-common", version.ref = "pagingCommon" }
 paging-compose-common = { module = "app.cash.paging:paging-compose-common", version.ref = "pagingComposeCommon" }

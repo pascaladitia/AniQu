@@ -163,7 +163,7 @@ fun SharedTransitionScope.LazyRowCarousel(
             Text(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 text = currentAnime?.title?.english.orEmpty(),
-                style = MaterialTheme.typography.headlineMedium,
+                style = MaterialTheme.typography.headlineSmall,
                 textAlign = TextAlign.Center,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis

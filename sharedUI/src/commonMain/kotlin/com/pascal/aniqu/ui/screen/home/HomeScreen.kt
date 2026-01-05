@@ -15,6 +15,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
@@ -36,6 +40,7 @@ import com.pascal.aniqu.domain.model.Anime
 import com.pascal.aniqu.ui.component.screenUtils.DynamicAsyncImage
 import com.pascal.aniqu.ui.component.screenUtils.PagerIndicator
 import com.pascal.aniqu.ui.component.screenUtils.verticalFadeBackground
+import com.pascal.aniqu.ui.screen.home.component.HomeOngoingItem
 import com.pascal.aniqu.ui.screen.home.component.LazyRowCarousel
 import com.pascal.aniqu.ui.screen.home.state.HomeUIState
 import com.pascal.aniqu.ui.screen.onboarding.state.LocalOnboardingEvent
@@ -162,6 +167,32 @@ fun HomeScreen(
                     }
                 }
             }
+        }
+
+        item {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "On Going",
+                    style = MaterialTheme.typography.titleLarge
+                )
+
+                Icon(
+                    modifier = Modifier.size(24.dp),
+                    imageVector = Icons.Default.ChevronRight,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+            }
+        }
+
+        items(videoList) {
+            HomeOngoingItem()
         }
     }
 }

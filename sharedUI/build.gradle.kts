@@ -61,7 +61,6 @@ kotlin {
             implementation(libs.coil.network.ktor)
             implementation(libs.multiplatformSettings)
             implementation(libs.room.runtime)
-            implementation(libs.materialKolor)
 
             implementation(libs.moko.permission)
             implementation(libs.moko.permission.camera)
