@@ -146,7 +146,7 @@ fun SharedTransitionScope.LazyRowCarousel(
                             .clickable { result?.let { onDetail(it) } }
                     ) {
                         DynamicAsyncImage(
-                            imageUrl = result?.images?.cover.orEmpty(),
+                            imageUrl = result?.images?.poster.orEmpty(),
                             contentDescription = result?.title?.english.orEmpty(),
                             contentScale = ContentScale.Crop,
                             modifier = modifier

@@ -114,16 +114,11 @@ fun HomeScreen(
         item {
             uiState.sharedTransitionScope?.let {
                 with(it) {
-                    HorizontalPager(
-                        state = pagerState,
-                        modifier = Modifier.fillMaxWidth()
-                    ) { page ->
-                        LazyRowCarousel(
-                            animeResponse = animeResponse,
-                            animatedVisibilityScope = uiState.animatedVisibilityScope!!
-                        ) {
-                            event.onNext()
-                        }
+                    LazyRowCarousel(
+                        animeResponse = animeResponse,
+                        animatedVisibilityScope = uiState.animatedVisibilityScope!!
+                    ) {
+                        event.onNext()
                     }
                 }
             }

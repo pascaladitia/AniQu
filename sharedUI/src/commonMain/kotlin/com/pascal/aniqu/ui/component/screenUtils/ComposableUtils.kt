@@ -9,7 +9,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -31,7 +30,7 @@ fun Modifier.shimmer(): Modifier {
 
     val shimmerColors = listOf(
         Color.LightGray,
-        MaterialTheme.colorScheme.primary,
+        Color.Gray,
         Color.LightGray,
     )
 

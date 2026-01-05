@@ -19,22 +19,18 @@ class AnimePagingSource(
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Anime> {
-        Logger.e("tag anime load3")
-
         return try {
             val page = params.key ?: 1
+            val limit = 5
+            val offset = (page - 1) * limit
 
-            val animeList: List<Anime> = api.getAnimeList(page)
-                .data.map {
-                    it.toDomain()
-                }
+            val animeList = api.getAnimeList(offset).data.map { it.toDomain() }
 
             LoadResult.Page(
                 data = animeList,
                 prevKey = if (page == 1) null else page - 1,
-                nextKey = if (animeList.isEmpty()) null else page + 1
+                nextKey = if (animeList.size < limit) null else page + 1
             )
-
         } catch (e: Exception) {
             LoadResult.Error(e)
         }

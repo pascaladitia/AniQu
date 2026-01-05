@@ -19,7 +19,7 @@ class KtorClientApi {
 
     suspend fun getAnimeList(page: Int): AnimeResponse {
         return client.get("${BuildKonfig.BASE_URL}/anime"){
-            parameter("page[limit]", "10")
+            parameter("page[limit]", "5")
             parameter("page[offset]", "$page")
         }.body()
     }

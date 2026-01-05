@@ -3,15 +3,14 @@ package com.pascal.aniqu.ui.component.screenUtils
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
@@ -33,19 +32,29 @@ fun DynamicAsyncImage(
     placeholder: Painter? = null,
     contentScale: ContentScale = ContentScale.Fit
 ) {
-    var isLoading by remember { mutableStateOf(true) }
+    val context = LocalPlatformContext.current
+    val imageLoader = remember(context) { getAsyncImageLoader(context) }
+
+    var isLoading by remember(imageUrl) { mutableStateOf(true) }
 
     Box(modifier = modifier) {
         AsyncImage(
+            modifier = Modifier.fillMaxSize(),
             model = imageUrl,
-            placeholder = placeholder,
             contentDescription = contentDescription,
-            modifier = Modifier.matchParentSize(),
+            imageLoader = imageLoader,
+            placeholder = placeholder,
             error = placeholder,
             contentScale = contentScale,
-            onSuccess = { isLoading = false },
-            onError = { isLoading = false },
-            imageLoader = getAsyncImageLoader(LocalPlatformContext.current)
+            onLoading = {
+                isLoading = true
+            },
+            onSuccess = {
+                isLoading = false
+            },
+            onError = {
+                isLoading = false
+            }
         )
 
         if (isLoading) {
@@ -66,40 +75,46 @@ fun DynamicZoomableAsyncImage(
     placeholder: Painter? = null,
     contentScale: ContentScale = ContentScale.Fit
 ) {
-    var isLoading by remember { mutableStateOf(true) }
+    val context = LocalPlatformContext.current
+    val imageLoader = remember(context) { getAsyncImageLoader(context) }
+
+    var isLoading by remember(imageUrl) { mutableStateOf(true) }
 
     var scale by remember { mutableFloatStateOf(1f) }
-    var offsetX by remember { mutableFloatStateOf(0f) }
-    var offsetY by remember { mutableFloatStateOf(0f) }
+    var offset by remember { mutableStateOf(Offset.Zero) }
 
     Box(
-        modifier = modifier
-            .pointerInput(Unit) {
-                detectTransformGestures { _, pan, zoom, _ ->
-                    scale = (scale * zoom).coerceIn(1f, 5f)
-                    offsetX += pan.x * scale
-                    offsetY += pan.y * scale
-                }
+        modifier = modifier.pointerInput(Unit) {
+            detectTransformGestures { _, pan, zoom, _ ->
+                scale = (scale * zoom).coerceIn(1f, 4f)
+                offset += pan * scale
             }
+        }
     ) {
-
         AsyncImage(
             model = imageUrl,
-            placeholder = placeholder,
             contentDescription = contentDescription,
+            imageLoader = imageLoader,
             modifier = Modifier
                 .fillMaxSize()
-                .graphicsLayer(
-                    scaleX = scale,
-                    scaleY = scale,
-                    translationX = offsetX,
-                    translationY = offsetY
-                ),
+                .graphicsLayer {
+                    scaleX = scale
+                    scaleY = scale
+                    translationX = offset.x
+                    translationY = offset.y
+                },
+            placeholder = placeholder,
             error = placeholder,
             contentScale = contentScale,
-            onSuccess = { isLoading = false },
-            onError = { isLoading = false },
-            imageLoader = getAsyncImageLoader(LocalPlatformContext.current)
+            onLoading = {
+                isLoading = true
+            },
+            onSuccess = {
+                isLoading = false
+            },
+            onError = {
+                isLoading = false
+            }
         )
 
         if (isLoading) {
@@ -116,8 +131,8 @@ fun getAsyncImageLoader(context: PlatformContext): ImageLoader {
     return ImageLoader.Builder(context)
         .memoryCache {
             MemoryCache.Builder()
-                .maxSizePercent(context, 0.25)
-                .strongReferencesEnabled(true)
+                .maxSizePercent(context, 0.20)
+                .strongReferencesEnabled(false)
                 .build()
         }
         .diskCachePolicy(CachePolicy.ENABLED)
