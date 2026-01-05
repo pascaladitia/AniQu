@@ -63,6 +63,7 @@ import androidx.compose.ui.zIndex
 import app.cash.paging.compose.LazyPagingItems
 import com.pascal.aniqu.domain.model.Anime
 import com.pascal.aniqu.ui.component.screenUtils.DynamicAsyncImage
+import com.pascal.aniqu.utils.toEnglishDate
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
@@ -185,7 +186,7 @@ fun SharedTransitionScope.LazyRowCarousel(
             }
         }
 
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(8.dp))
 
         AnimatedVisibility(
             visible = isContentVisible,
@@ -198,7 +199,7 @@ fun SharedTransitionScope.LazyRowCarousel(
                 exit = fadeOut(tween(durationMillis = 300)) + slideOutVertically()
             ) {
                 Text(
-                    text = anime?.dates?.startDate ?: "Empty Date",
+                    text = anime?.dates?.startDate?.toEnglishDate() ?: "Empty Date",
                     style = MaterialTheme.typography.bodySmall
                 )
             }
