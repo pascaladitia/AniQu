@@ -21,7 +21,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -38,6 +37,7 @@ import chaintech.videoplayer.model.VideoPlayerConfig
 import chaintech.videoplayer.ui.youtube.YouTubePlayerComposable
 import com.pascal.aniqu.ui.component.button.ButtonComponent
 import com.pascal.aniqu.ui.component.screenUtils.PagerIndicator
+import com.pascal.aniqu.ui.component.screenUtils.verticalFadeBackground
 import com.pascal.aniqu.ui.screen.onboarding.state.LocalOnboardingEvent
 import com.pascal.aniqu.ui.theme.AppTheme
 import com.pascal.aniqu.utils.VideoUtils
@@ -121,18 +121,7 @@ fun OnboardingScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.TopCenter)
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            Color.Black,
-                            Color.Black.copy(alpha = 0.8f),
-                            Color.Black.copy(alpha = 0.9f),
-                            Color.Transparent
-                        ),
-                        startY = 0f,
-                        endY = Float.POSITIVE_INFINITY
-                    )
-                )
+                .verticalFadeBackground(isTop = true)
                 .statusBarsPadding(),
             contentAlignment = Alignment.Center
         ) {
@@ -149,18 +138,7 @@ fun OnboardingScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            Color.Black,
-                            Color.Black.copy(alpha = 0.9f),
-                            Color.Black.copy(alpha = 0.8f),
-                            Color.Transparent
-                        ),
-                        startY = Float.POSITIVE_INFINITY,
-                        endY = 0f
-                    )
-                )
+                .verticalFadeBackground(isTop = false)
                 .padding(24.dp)
         ) {
             Text(

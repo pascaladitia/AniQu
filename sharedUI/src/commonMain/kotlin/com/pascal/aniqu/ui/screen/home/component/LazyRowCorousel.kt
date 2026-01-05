@@ -31,6 +31,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -73,291 +74,236 @@ import kotlin.math.absoluteValue
 fun SharedTransitionScope.LazyRowCarousel(
     modifier: Modifier = Modifier,
     animatedVisibilityScope: AnimatedVisibilityScope,
-    isContentVisible: Boolean = true,
     animeResponse: LazyPagingItems<Anime>?,
+    imageWidth: Dp = 200.dp,
+    imageHeight: Dp = 300.dp,
+    imageCornerRadius: Dp = 16.dp,
     dotsActiveColor: Color = MaterialTheme.colorScheme.primary,
     dotsInActiveColor: Color = Color.LightGray,
     dotsSize: Dp = 6.dp,
-    pagerPaddingValues: PaddingValues = PaddingValues(horizontal = 65.dp),
-    imageCornerRadius: Dp = 16.dp,
-    imageHeight: Dp = 350.dp,
     onDetail: (Anime) -> Unit
 ) {
     if (animeResponse == null || animeResponse.itemCount == 0) {
-        LazyRowShimmer()
+        LazyRowShimmer(
+            imageWidth = imageWidth,
+            imageHeight = imageHeight
+        )
         return
     }
 
-    var anime by remember { mutableStateOf<Anime?>(null) }
-    var baseAnime by remember { mutableStateOf<Anime?>(null) }
+    var currentAnime by remember { mutableStateOf<Anime?>(null) }
     var isSlide by remember { mutableStateOf(true) }
 
     val pagerState = rememberPagerState(
         initialPage = 1,
         pageCount = { animeResponse.itemCount }
     )
-    val scope = rememberCoroutineScope()
-    val density = LocalDensity.current
 
-    LaunchedEffect(baseAnime) {
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(pagerState.currentPage) {
         isSlide = false
-        delay(300)
-        anime = baseAnime
+        delay(250)
+        currentAnime = animeResponse[pagerState.currentPage]
         isSlide = true
     }
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        AnimatedVisibility(
-            visible = isContentVisible,
-            enter = fadeIn(tween(durationMillis = 500)),
-            exit = fadeOut(tween(durationMillis = 500)) + slideOutHorizontally(tween(1000))
-        ) {
-            Box(
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
+        Box(Modifier.fillMaxWidth()) {
+            HorizontalPager(
+                state = pagerState,
+                pageSize = PageSize.Fixed(imageWidth),
+                contentPadding = PaddingValues(horizontal = imageWidth / 2),
                 modifier = Modifier.fillMaxWidth()
-            ) {
-                HorizontalPager(
-                    state = pagerState,
-                    contentPadding = pagerPaddingValues,
+            ) { page ->
+
+                val anime = animeResponse[page]
+
+                val pageOffset = (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
+                val scale = 0.85f + (1f - 0.85f) * (1f - pageOffset.absoluteValue)
+                val zIndex = 1f - pageOffset.absoluteValue
+
+                Box(
                     modifier = Modifier
-                ) { page ->
-                    baseAnime = animeResponse[pagerState.currentPage]
-                    val result = animeResponse[page]
-
-                    val pageOffset =
-                        (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
-                    val scaleFactor = 0.75f + (1f - 0.75f) * (1f - pageOffset.absoluteValue)
-                    val transX = with(density) { (pageOffset * 100.dp).toPx() }
-                    val zIndex = 1f - pageOffset.absoluteValue
-                    val sharedKey = rememberSharedContentState(key = "poster_${result?.id}")
-
-                    Box(
-                        modifier = Modifier
-                            .graphicsLayer {
-                                scaleX = scaleFactor
-                                scaleY = scaleFactor
-                                translationX = transX
-                            }
-                            .zIndex(zIndex)
-                            .padding(10.dp)
-                            .shadow(20.dp, spotColor = LightGray)
-                            .clip(RoundedCornerShape(imageCornerRadius))
-                            .clickable { result?.let { onDetail(it) } }
-                    ) {
-                        DynamicAsyncImage(
-                            imageUrl = result?.images?.poster.orEmpty(),
-                            contentDescription = result?.title?.english.orEmpty(),
-                            contentScale = ContentScale.Crop,
-                            modifier = modifier
-                                .height(imageHeight)
-                                .sharedElement(
-                                    sharedContentState = sharedKey,
-                                    animatedVisibilityScope = animatedVisibilityScope,
-                                    renderInOverlayDuringTransition = true
-                                )
-                        )
-                    }
+                        .graphicsLayer {
+                            scaleX = scale
+                            scaleY = scale
+                        }
+                        .zIndex(zIndex)
+                        .shadow(16.dp, spotColor = LightGray)
+                        .clip(RoundedCornerShape(imageCornerRadius))
+                        .clickable { anime?.let(onDetail) }
+                ) {
+                    DynamicAsyncImage(
+                        imageUrl = anime?.images?.poster.orEmpty(),
+                        contentDescription = anime?.title?.english.orEmpty(),
+                        contentScale = ContentScale.Crop,
+                        modifier = modifier
+                            .width(imageWidth)
+                            .height(imageHeight)
+                            .sharedElement(
+                                sharedContentState =
+                                    rememberSharedContentState("poster_${anime?.id}"),
+                                animatedVisibilityScope = animatedVisibilityScope,
+                                renderInOverlayDuringTransition = true
+                            )
+                    )
                 }
             }
         }
 
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(14.dp))
 
         AnimatedVisibility(
-            visible = isContentVisible,
-            enter = fadeIn(tween(durationMillis = 500)) + slideInVertically(tween(1000)),
-            exit = fadeOut(tween(durationMillis = 500)) + slideOutVertically(tween(1000))
+            visible = isSlide && currentAnime != null,
+            enter = fadeIn(tween(300)) + slideInVertically(),
+            exit = fadeOut(tween(300)) + slideOutVertically()
         ) {
-            AnimatedVisibility(
-                visible = isSlide,
-                enter = fadeIn(tween(durationMillis = 500)) + slideInVertically { fullHeight -> fullHeight },
-                exit = fadeOut(tween(durationMillis = 500)) + slideOutVertically { fullHeight -> fullHeight }
-            ) {
-                Text(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    text = anime?.title?.english ?: "Empty Title",
-                    style = MaterialTheme.typography.headlineMedium,
-                    textAlign = TextAlign.Center,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
+            Text(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                text = currentAnime?.title?.english.orEmpty(),
+                style = MaterialTheme.typography.headlineMedium,
+                textAlign = TextAlign.Center,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
         }
 
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(6.dp))
 
         AnimatedVisibility(
-            visible = isContentVisible,
-            enter = fadeIn(tween(durationMillis = 500)) + slideInVertically(tween(1000)) { it },
-            exit = fadeOut(tween(durationMillis = 500)) + slideOutVertically(tween(1000)) { it }
+            visible = isSlide && currentAnime != null,
+            enter = fadeIn(tween(250)) + slideInVertically(),
+            exit = fadeOut(tween(250)) + slideOutVertically()
         ) {
-            AnimatedVisibility(
-                visible = isSlide,
-                enter = fadeIn(tween(durationMillis = 300)) + slideInVertically(),
-                exit = fadeOut(tween(durationMillis = 300)) + slideOutVertically()
-            ) {
-                Text(
-                    text = anime?.dates?.startDate?.toEnglishDate() ?: "Empty Date",
-                    style = MaterialTheme.typography.bodySmall
-                )
-            }
+            Text(
+                text = currentAnime?.dates?.startDate?.toEnglishDate().orEmpty(),
+                style = MaterialTheme.typography.bodySmall
+            )
         }
 
         Spacer(Modifier.height(16.dp))
 
-        AnimatedVisibility(
-            visible = isContentVisible,
-            enter = fadeIn(tween(durationMillis = 500)) + slideInVertically(tween(1000)) { it },
-            exit = fadeOut(tween(durationMillis = 500)) + slideOutVertically(tween(1000)) { it }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
         ) {
-            Row(
-                modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                val maxDots = 5
-                val startIndex = (pagerState.currentPage / maxDots) * maxDots
+            repeat(animeResponse.itemCount.coerceAtMost(5)) { index ->
+                val size by animateDpAsState(
+                    if (pagerState.currentPage == index)
+                        dotsSize * 1.5f
+                    else dotsSize,
+                    label = ""
+                )
 
-                repeat(maxDots) { index ->
-                    val actualIndex = startIndex + index
+                val color by animateColorAsState(
+                    if (pagerState.currentPage == index)
+                        dotsActiveColor
+                    else dotsInActiveColor,
+                    label = ""
+                )
 
-                    val size by animateDpAsState(
-                        targetValue = if (pagerState.currentPage == actualIndex) dotsSize * 1.5f else dotsSize,
-                        animationSpec = tween(durationMillis = 300), label = ""
-                    )
-
-                    val color by animateColorAsState(
-                        targetValue = if (pagerState.currentPage == actualIndex) dotsActiveColor else dotsInActiveColor,
-                        animationSpec = tween(durationMillis = 300), label = ""
-                    )
-
-                    Box(
-                        modifier = Modifier
-                            .padding(2.dp)
-                            .clip(CircleShape)
-                            .size(size)
-                            .background(color)
-                            .clickable {
-                                if (actualIndex < animeResponse.itemCount) {
-                                    scope.launch {
-                                        pagerState.animateScrollToPage(actualIndex)
-                                    }
-                                }
+                Box(
+                    modifier = Modifier
+                        .padding(3.dp)
+                        .size(size)
+                        .clip(CircleShape)
+                        .background(color)
+                        .clickable {
+                            scope.launch {
+                                pagerState.animateScrollToPage(index)
                             }
-                    )
-                }
+                        }
+                )
             }
         }
     }
 }
 
+
 @Composable
 fun LazyRowShimmer(
     modifier: Modifier = Modifier,
-    pagerPaddingValues: PaddingValues = PaddingValues(horizontal = 65.dp),
+    imageWidth: Dp = 200.dp,
+    imageHeight: Dp = 300.dp,
     imageCornerRadius: Dp = 16.dp,
-    imageHeight: Dp = 350.dp,
 ) {
-    val transition = rememberInfiniteTransition(label = "transition")
-    val translateAnim by transition.animateFloat(
+    val transition = rememberInfiniteTransition(label = "shimmer")
+    val offset by transition.animateFloat(
         initialValue = 0f,
-        targetValue = 1000f,
+        targetValue = 600f,
         animationSpec = infiniteRepeatable(
-            tween(durationMillis = 1200, easing = FastOutSlowInEasing),
-            RepeatMode.Reverse
-        ), label = ""
-    )
-
-    val shimmerColorShades = listOf(
-        Color.LightGray,
-        Color.Gray,
-        Color.LightGray
+            tween(1200, easing = FastOutSlowInEasing),
+            RepeatMode.Restart
+        ),
+        label = ""
     )
 
     val brush = Brush.linearGradient(
-        colors = shimmerColorShades,
-        start = Offset(10f, 10f),
-        end = Offset(translateAnim, translateAnim)
+        listOf(
+            Color.LightGray.copy(alpha = 0.6f),
+            Color.Gray.copy(alpha = 0.3f),
+            Color.LightGray.copy(alpha = 0.6f)
+        ),
+        start = Offset(offset - 200f, 0f),
+        end = Offset(offset, 0f)
     )
 
     val pagerState = rememberPagerState(
         initialPage = 1,
         pageCount = { 3 }
     )
-    val density = LocalDensity.current
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Box(
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
+        HorizontalPager(
+            state = pagerState,
+            pageSize = PageSize.Fixed(imageWidth),
+            contentPadding = PaddingValues(horizontal = imageWidth / 2),
             modifier = modifier.fillMaxWidth()
-        ) {
-            HorizontalPager(
-                state = pagerState,
-                contentPadding = pagerPaddingValues,
-                modifier = modifier
-            ) { page ->
-                val pageOffset = (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
-                val scaleFactor = 0.75f + (1f - 0.75f) * (1f - pageOffset.absoluteValue)
-                val transX = with(density) { (pageOffset * 100.dp).toPx() }
-                val zIndex = 1f - pageOffset.absoluteValue
+        ) { page ->
 
-                Box(
-                    modifier = Modifier
-                        .graphicsLayer {
-                            scaleX = scaleFactor
-                            scaleY = scaleFactor
-                            translationX = transX
-                        }
-                        .zIndex(zIndex)
-                        .padding(10.dp)
-                        .shadow(20.dp)
-                        .clip(RoundedCornerShape(imageCornerRadius))
-                ) {
-                    Spacer(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(imageHeight)
-                            .background(brush = brush)
-                    )
-                }
-            }
+            val pageOffset = (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
+            val scale = 0.85f + (1f - 0.85f) * (1f - pageOffset.absoluteValue)
+
+            Box(
+                modifier = Modifier
+                    .graphicsLayer {
+                        scaleX = scale
+                        scaleY = scale
+                    }
+                    .shadow(16.dp)
+                    .clip(RoundedCornerShape(imageCornerRadius))
+                    .background(brush)
+                    .width(imageWidth)
+                    .height(imageHeight)
+            )
         }
 
-        Spacer(Modifier.height(12.dp))
-
-        Spacer(
-            modifier = Modifier
-                .clip(RoundedCornerShape(16.dp))
-                .width(150.dp)
-                .height(30.dp)
-                .background(brush = brush)
-        )
-
-        Spacer(Modifier.height(12.dp))
-
-        Spacer(
-            modifier = Modifier
-                .clip(RoundedCornerShape(16.dp))
-                .width(80.dp)
-                .height(20.dp)
-                .background(brush = brush)
-        )
-
-        Spacer(Modifier.height(12.dp))
-
-        Spacer(
-            modifier = Modifier
-                .clip(RoundedCornerShape(16.dp))
-                .width(60.dp)
-                .height(20.dp)
-                .background(brush = brush)
-        )
-
         Spacer(Modifier.height(16.dp))
+        ShimmerBar(160.dp, 28.dp, brush)
+        Spacer(Modifier.height(10.dp))
+        ShimmerBar(100.dp, 18.dp, brush)
     }
 }
+
+@Composable
+private fun ShimmerBar(
+    width: Dp,
+    height: Dp,
+    brush: Brush,
+    cornerRadius: Dp = 16.dp
+) {
+    Spacer(
+        modifier = Modifier
+            .clip(RoundedCornerShape(cornerRadius))
+            .width(width)
+            .height(height)
+            .background(brush)
+    )
+}
+
 
 
 
