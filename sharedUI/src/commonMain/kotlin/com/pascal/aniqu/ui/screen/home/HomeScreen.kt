@@ -2,110 +2,198 @@
 
 package com.pascal.aniqu.ui.screen.home
 
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.pascal.aniqu.data.local.entity.FavoritesEntity
-import com.pascal.aniqu.ui.component.dialog.ShowDialog
-import com.pascal.aniqu.ui.component.screenUtils.LoadingScreen
-import com.pascal.aniqu.ui.component.screenUtils.PullRefreshComponent
-import com.pascal.aniqu.ui.component.screenUtils.TopAppBarComponent
-import com.pascal.aniqu.ui.screen.home.component.HomeAccount
-import com.pascal.aniqu.ui.screen.home.component.HomeCard
-import com.pascal.aniqu.ui.screen.home.component.HomeMenu
-import com.pascal.aniqu.ui.screen.home.component.homeMarket
+import androidx.compose.ui.unit.dp
+import app.cash.paging.compose.LazyPagingItems
+import com.pascal.aniqu.domain.model.Anime
+import com.pascal.aniqu.ui.component.screenUtils.DynamicAsyncImage
+import com.pascal.aniqu.ui.component.screenUtils.PagerIndicator
+import com.pascal.aniqu.ui.component.screenUtils.verticalFadeBackground
+import com.pascal.aniqu.ui.screen.home.component.HomeOngoingItem
+import com.pascal.aniqu.ui.screen.home.component.LazyRowCarousel
 import com.pascal.aniqu.ui.screen.home.state.HomeUIState
-import com.pascal.aniqu.ui.screen.home.state.LocalHomeEvent
+import com.pascal.aniqu.ui.screen.onboarding.state.LocalOnboardingEvent
 import com.pascal.aniqu.ui.theme.AppTheme
-import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
-import aniqu.sharedui.generated.resources.Res
-import aniqu.sharedui.generated.resources.close
+import com.pascal.aniqu.utils.VideoUtils
+import kotlinx.coroutines.delay
 
 @Composable
 fun HomeScreen(
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope,
-    viewModel: HomeViewModel = koinInject<HomeViewModel>(),
-    onDetail: (FavoritesEntity?) -> Unit
+    modifier: Modifier = Modifier,
+    uiState: HomeUIState = HomeUIState(),
+    animeResponse: LazyPagingItems<Anime>? = null
 ) {
-    val event = LocalHomeEvent.current
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val event = LocalOnboardingEvent.current
+    val videoList = VideoUtils.getOnboardingVideo()
+    val pagerState = rememberPagerState(pageCount = { videoList.size })
 
     LaunchedEffect(Unit) {
-        viewModel.setTransition(sharedTransitionScope, animatedVisibilityScope)
-        viewModel.loadInit()
-    }
-
-    if (uiState.isLoading) LoadingScreen()
-
-    if (uiState.error.first) {
-        ShowDialog(
-            message = uiState.error.second,
-            textButton = stringResource(Res.string.close)
-        ) {
-            viewModel.resetError()
-        }
-    }
-
-    CompositionLocalProvider(
-        LocalHomeEvent provides event.copy(
-            onDetail = onDetail
-        )
-    ) {
-        PullRefreshComponent(
-            onRefresh = {
-                viewModel.loadInit()
+        while (true) {
+            delay(15000)
+            if (!pagerState.isScrollInProgress) {
+                val nextPage =
+                    if (pagerState.currentPage == pagerState.pageCount - 1) 0
+                    else pagerState.currentPage + 1
+                pagerState.animateScrollToPage(nextPage)
             }
-        ) {
-            HomeContent(uiState = uiState)
         }
     }
-}
 
-@Composable
-fun HomeContent(
-    modifier: Modifier = Modifier,
-    uiState: HomeUIState = HomeUIState()
-) {
     LazyColumn(
         modifier = modifier.fillMaxSize()
     ) {
         item {
-            TopAppBarComponent(
-                title = "Hi, Selamat Datang",
-                rightIcon1 = Icons.Outlined.Search,
-                rightIcon2 = Icons.Filled.Notifications,
-                rightIcon3 = Icons.Filled.Settings
-            )
+            Box(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier.fillMaxSize()
+                ) { page ->
+                    DynamicAsyncImage(
+                        modifier = Modifier
+                            .background(Color.LightGray)
+                            .fillMaxWidth()
+                            .height(240.dp),
+                        imageUrl = "",
+                        contentScale = ContentScale.Crop
+                    )
+                }
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(
+                                    Color.Black.copy(alpha = 0.6f),
+                                    Color.Black.copy(alpha = 0.5f),
+                                    Color.Transparent
+                                ),
+                                startY = Float.POSITIVE_INFINITY,
+                                endY = 0f
+                            )
+                        )
+                        .padding(16.dp)
+                        .align(Alignment.BottomCenter)
+                ) {
+                    Text(
+                        text = "New episode",
+                        style = MaterialTheme.typography.headlineMedium
+                    )
+
+                    Spacer(Modifier.height(4.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "New episode",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        )
+
+                        PagerIndicator(
+                            pageCount = videoList.size,
+                            currentPage = pagerState.currentPage
+                        )
+                    }
+                }
+            }
         }
 
         item {
-            HomeAccount()
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "Trending Now",
+                    style = MaterialTheme.typography.titleLarge
+                )
+
+                Icon(
+                    modifier = Modifier.size(24.dp),
+                    imageVector = Icons.Default.ChevronRight,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+            }
+
+            uiState.sharedTransitionScope?.let {
+                with(it) {
+                    LazyRowCarousel(
+                        animeResponse = animeResponse,
+                        animatedVisibilityScope = uiState.animatedVisibilityScope!!
+                    ) {
+                        event.onNext()
+                    }
+                }
+            }
         }
 
         item {
-            HomeMenu()
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "On Going",
+                    style = MaterialTheme.typography.titleLarge
+                )
+
+                Icon(
+                    modifier = Modifier.size(24.dp),
+                    imageVector = Icons.Default.ChevronRight,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+            }
         }
 
-        item {
-            HomeCard()
+        items(videoList) {
+            HomeOngoingItem()
         }
-
-        homeMarket(uiState = uiState)
     }
 }
 
@@ -113,6 +201,6 @@ fun HomeContent(
 @Composable
 private fun HomePreview() {
     AppTheme {
-        HomeContent()
+        HomeScreen()
     }
 }

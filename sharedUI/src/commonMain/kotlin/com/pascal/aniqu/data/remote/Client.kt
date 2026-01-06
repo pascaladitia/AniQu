@@ -34,7 +34,8 @@ val client = HttpClient {
     }
 
     defaultRequest {
-        header("Content-Type", "application/json")
+        header("Accept", "application/vnd.api+json")
+        header("Content-Type", "application/vnd.api+json")
     }
 
     install(HttpTimeout) {

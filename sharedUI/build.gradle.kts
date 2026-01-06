@@ -61,7 +61,6 @@ kotlin {
             implementation(libs.coil.network.ktor)
             implementation(libs.multiplatformSettings)
             implementation(libs.room.runtime)
-            implementation(libs.materialKolor)
 
             implementation(libs.moko.permission)
             implementation(libs.moko.permission.camera)
@@ -76,6 +75,7 @@ kotlin {
             implementation(libs.androidx.customview.poolingcontainer)
             implementation(libs.emoji2)
             implementation(libs.emoji2.view.helper)
+            implementation(libs.compose.multiplatform.media.player)
         }
 
         commonTest.dependencies {
@@ -92,6 +92,7 @@ kotlin {
             implementation(libs.androidx.preference.ktx)
             implementation(libs.room.runtime.android)
             implementation(libs.play.services.auth)
+            implementation(libs.androidx.ui.tooling)
         }
 
         iosMain.dependencies {

@@ -20,12 +20,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.pascal.aniqu.data.preferences.PrefLogin
 import com.pascal.aniqu.ui.screen.bookmark.BookmarkScreen
 import com.pascal.aniqu.ui.screen.detail.DetailScreen
 import com.pascal.aniqu.ui.screen.favorite.FavoriteScreen
+import com.pascal.aniqu.ui.screen.home.HomeRoute
 import com.pascal.aniqu.ui.screen.home.HomeScreen
+import com.pascal.aniqu.ui.screen.onboarding.OnboardingRoute
 import com.pascal.aniqu.ui.screen.profile.PortofolioScreen
-import com.pascal.aniqu.ui.screen.splash.SplashScreen
+import com.pascal.aniqu.ui.screen.splash.SplashRoute
 import com.pascal.aniqu.ui.screen.watchlist.WatchListScreen
 import com.pascal.aniqu.utils.base.getFromPreviousBackStack
 import com.pascal.aniqu.utils.base.saveToCurrentBackStack
@@ -60,10 +63,16 @@ fun RouteScreen(
                 startDestination = Screen.SplashScreen.route,
             ) {
                 composable(route = Screen.SplashScreen.route) {
-                    SplashScreen(
+                    SplashRoute(
                         paddingValues = paddingValues
                     ) {
-                        navController.navigate(Screen.HomeScreen.route) {
+                        val route = if (PrefLogin.getIsOnboarding()) {
+                            Screen.HomeScreen.route
+                        } else {
+                            Screen.OnboardingScreen.route
+                        }
+
+                        navController.navigate(route) {
                             popUpTo(Screen.SplashScreen.route) {
                                 inclusive = true
                             }
@@ -71,9 +80,21 @@ fun RouteScreen(
                         }
                     }
                 }
+                composable(route = Screen.OnboardingScreen.route) {
+                    OnboardingRoute(
+                        onNext = {
+                            navController.navigate(Screen.HomeScreen.route) {
+                                popUpTo(Screen.OnboardingScreen.route) {
+                                    inclusive = true
+                                }
+                                launchSingleTop = true
+                            }
+                        }
+                    )
+                }
                 composable(route = Screen.HomeScreen.route) {
                     val animScope: AnimatedVisibilityScope = this
-                    HomeScreen(
+                    HomeRoute(
                         sharedTransitionScope = sharedScope,
                         animatedVisibilityScope = animScope,
                         onDetail = {
