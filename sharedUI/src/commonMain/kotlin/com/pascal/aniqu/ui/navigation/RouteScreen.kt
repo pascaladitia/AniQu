@@ -25,7 +25,6 @@ import com.pascal.aniqu.ui.screen.bookmark.BookmarkScreen
 import com.pascal.aniqu.ui.screen.detail.DetailScreen
 import com.pascal.aniqu.ui.screen.favorite.FavoriteScreen
 import com.pascal.aniqu.ui.screen.home.HomeRoute
-import com.pascal.aniqu.ui.screen.home.HomeScreen
 import com.pascal.aniqu.ui.screen.onboarding.OnboardingRoute
 import com.pascal.aniqu.ui.screen.profile.PortofolioScreen
 import com.pascal.aniqu.ui.screen.splash.SplashRoute

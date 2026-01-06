@@ -34,6 +34,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import aniqu.sharedui.generated.resources.Res
+import aniqu.sharedui.generated.resources.label_completed
+import aniqu.sharedui.generated.resources.label_ongoing
 import app.cash.paging.compose.LazyPagingItems
 import com.pascal.aniqu.domain.model.Anime
 import com.pascal.aniqu.ui.component.screenUtils.DynamicAsyncImage
@@ -45,12 +48,12 @@ import com.pascal.aniqu.ui.screen.onboarding.state.LocalOnboardingEvent
 import com.pascal.aniqu.ui.theme.AppTheme
 import com.pascal.aniqu.utils.VideoUtils
 import kotlinx.coroutines.delay
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    uiState: HomeUIState = HomeUIState(),
-    animeResponse: LazyPagingItems<Anime>? = null
+    uiState: HomeUIState = HomeUIState()
 ) {
     val event = LocalOnboardingEvent.current
     val videoList = VideoUtils.getOnboardingVideo()
@@ -146,7 +149,7 @@ fun HomeScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "Trending Now",
+                        text = stringResource(Res.string.label_ongoing),
                         style = MaterialTheme.typography.titleLarge
                     )
 
@@ -161,7 +164,7 @@ fun HomeScreen(
                 uiState.sharedTransitionScope?.let {
                     with(it) {
                         LazyRowCarousel(
-                            items = uiState.animeHome?.completed,
+                            items = uiState.animeHome?.ongoing,
                             animatedVisibilityScope = uiState.animatedVisibilityScope!!
                         ) {
                             event.onNext()
@@ -180,7 +183,7 @@ fun HomeScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "On Going",
+                    text = stringResource(Res.string.label_completed),
                     style = MaterialTheme.typography.titleLarge
                 )
 
@@ -193,7 +196,7 @@ fun HomeScreen(
             }
         }
 
-        itemsIndexed(uiState.animeHome?.ongoing?.animeList.orEmpty()) { index, items ->
+        itemsIndexed(uiState.animeHome?.completed?.animeList.orEmpty()) { index, items ->
             HomeOngoingItem(
                 modifier = Modifier.padding(
                     start = if (index % 2 == 0) 16.dp else 8.dp,

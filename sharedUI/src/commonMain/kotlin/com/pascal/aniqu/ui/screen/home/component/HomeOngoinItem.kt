@@ -20,11 +20,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import aniqu.sharedui.generated.resources.Res
+import aniqu.sharedui.generated.resources.label_episode
+import co.touchlab.kermit.Logger
 import com.pascal.aniqu.domain.model.AnimeItem
 import com.pascal.aniqu.ui.component.screenUtils.DynamicAsyncImage
 import com.pascal.aniqu.ui.theme.AppTheme
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun HomeOngoingItem(
@@ -50,7 +55,9 @@ fun HomeOngoingItem(
 
         Text(
             text = items.title,
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.titleLarge,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis
         )
 
         Spacer(Modifier.height(8.dp))
@@ -58,8 +65,9 @@ fun HomeOngoingItem(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
+            Logger.e("tag episode ${items.episodes}")
             Text(
-                text = items.latestReleaseDate,
+                text = stringResource(Res.string.label_episode, items.episodes),
                 style = MaterialTheme.typography.bodySmall.copy(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -74,7 +82,7 @@ fun HomeOngoingItem(
                 tint = Color.Yellow
             )
 
-            Spacer(Modifier.width(8.dp))
+            Spacer(Modifier.width(4.dp))
 
             Text(
                 text = items.score,

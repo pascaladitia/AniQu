@@ -61,7 +61,6 @@ import androidx.compose.ui.zIndex
 import com.pascal.aniqu.domain.model.AnimeItem
 import com.pascal.aniqu.domain.model.AnimeSection
 import com.pascal.aniqu.ui.component.screenUtils.DynamicAsyncImage
-import com.pascal.aniqu.utils.toEnglishDate
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
@@ -94,7 +93,7 @@ fun SharedTransitionScope.LazyRowCarousel(
     var isSlide by remember { mutableStateOf(true) }
 
     val pagerState = rememberPagerState(
-        initialPage = 0,
+        initialPage = 1,
         pageCount = { animeList.size }
     )
 
@@ -178,7 +177,7 @@ fun SharedTransitionScope.LazyRowCarousel(
             exit = fadeOut(tween(250)) + slideOutVertically()
         ) {
             Text(
-                text = currentAnime?.releaseDay?.toEnglishDate().orEmpty(),
+                text = currentAnime?.latestReleaseDate.orEmpty(),
                 style = MaterialTheme.typography.bodySmall
             )
         }
@@ -189,18 +188,19 @@ fun SharedTransitionScope.LazyRowCarousel(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
-            repeat(animeList.size.coerceAtMost(5)) { index ->
+            val maxDots = 5
+            val activeDotIndex = pagerState.currentPage % maxDots
+
+            repeat(minOf(pagerState.pageCount, maxDots)) { index ->
+                val isActive = index == activeDotIndex
+
                 val size by animateDpAsState(
-                    if (pagerState.currentPage == index)
-                        dotsSize * 1.5f
-                    else dotsSize,
+                    targetValue = if (isActive) dotsSize * 1.5f else dotsSize,
                     label = ""
                 )
 
                 val color by animateColorAsState(
-                    if (pagerState.currentPage == index)
-                        dotsActiveColor
-                    else dotsInActiveColor,
+                    targetValue = if (isActive) dotsActiveColor else dotsInActiveColor,
                     label = ""
                 )
 
@@ -212,12 +212,17 @@ fun SharedTransitionScope.LazyRowCarousel(
                         .background(color)
                         .clickable {
                             scope.launch {
-                                pagerState.animateScrollToPage(index)
+                                val targetPage = (pagerState.currentPage / maxDots) * maxDots + index
+
+                                pagerState.animateScrollToPage(
+                                    targetPage.coerceIn(0, pagerState.pageCount - 1)
+                                )
                             }
                         }
                 )
             }
         }
+
     }
 }
 
