@@ -1,9 +1,9 @@
-package com.pascal.aniqu.data.remote.dtos.home
+package com.pascal.aniqu.data.remote.dtos.anime
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AnimeHomeResponse(
+data class AnimeResponse(
     val ongoing: AnimeSectionResponse? = null,
     val completed: AnimeSectionResponse? = null
 )

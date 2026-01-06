@@ -6,8 +6,8 @@ import com.pascal.aniqu.data.local.database.getRoomDatabase
 import com.pascal.aniqu.data.local.repository.LocalRepository
 import com.pascal.aniqu.data.local.repository.LocalRepositoryImpl
 import com.pascal.aniqu.data.remote.api.KtorClientApi
-import com.pascal.aniqu.data.repository.NewsRepository
-import com.pascal.aniqu.data.repository.NewsRepositoryImpl
+import com.pascal.aniqu.data.repository.RemoteRepository
+import com.pascal.aniqu.data.repository.RemoteRepositoryImpl
 import com.pascal.aniqu.domain.usecase.local.LocalUseCase
 import com.pascal.aniqu.domain.usecase.local.LocalUseCaseImpl
 import com.pascal.aniqu.domain.usecase.remote.RemoteUseCase
@@ -35,7 +35,7 @@ val appModule = module {
     singleOf(::KtorClientApi)
 
     // Repository
-    singleOf(::NewsRepositoryImpl) { bind<NewsRepository>() }
+    singleOf(::RemoteRepositoryImpl) { bind<RemoteRepository>() }
 
     // UseCases
     singleOf(::LocalUseCaseImpl) { bind<LocalUseCase>() }

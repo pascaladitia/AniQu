@@ -4,10 +4,10 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.pascal.aniqu.data.remote.api.KtorClientApi
-import com.pascal.aniqu.data.repository.NewsRepository
+import com.pascal.aniqu.data.repository.RemoteRepository
 import com.pascal.aniqu.domain.mapper.toDomain
 import com.pascal.aniqu.domain.model.Anime
-import com.pascal.aniqu.domain.model.AnimeHome
+import com.pascal.aniqu.domain.model.AnimeItem
 import com.pascal.aniqu.domain.usecase.pagination.AnimePagingSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -15,19 +15,18 @@ import org.koin.core.annotation.Single
 
 @Single
 class RemoteUseCaseImpl(
-    private val api: KtorClientApi,
-    private val repository: NewsRepository
+    private val repository: RemoteRepository
 ) : RemoteUseCase {
 
-    override suspend fun getAnimeHome(): Flow<AnimeHome> = flow {
-        emit(api.getAnimeHome().data.toDomain())
+    override suspend fun getAnimeHome(): Flow<Anime> = flow {
+        emit(repository.getAnimeHome().data.toDomain())
     }
 
-    override suspend fun getAnimeList(): Flow<PagingData<Anime>> {
+    override suspend fun getAnimeLive(): Flow<PagingData<AnimeItem>> {
         return Pager(
             config = PagingConfig(pageSize = 1),
             pagingSourceFactory = {
-                AnimePagingSource(api)
+                AnimePagingSource(repository)
             }
         ).flow
     }
