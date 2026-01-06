@@ -16,8 +16,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -70,10 +72,12 @@ fun HomeScreen(
         }
     }
 
-    LazyColumn(
-        modifier = modifier.fillMaxSize()
+    LazyVerticalGrid(
+        modifier = modifier.fillMaxSize(),
+        columns = GridCells.Fixed(2),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        item {
+        item(span = { GridItemSpan(maxLineSpan) }) {
             Box(
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -136,44 +140,46 @@ fun HomeScreen(
             }
         }
 
-        item {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = "Trending Now",
-                    style = MaterialTheme.typography.titleLarge
-                )
+        item(span = { GridItemSpan(maxLineSpan) }) {
+            Column {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Trending Now",
+                        style = MaterialTheme.typography.titleLarge
+                    )
 
-                Icon(
-                    modifier = Modifier.size(24.dp),
-                    imageVector = Icons.Default.ChevronRight,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
-            }
+                    Icon(
+                        modifier = Modifier.size(24.dp),
+                        imageVector = Icons.Default.ChevronRight,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                }
 
-            uiState.sharedTransitionScope?.let {
-                with(it) {
-                    LazyRowCarousel(
-                        animeResponse = animeResponse,
-                        animatedVisibilityScope = uiState.animatedVisibilityScope!!
-                    ) {
-                        event.onNext()
+                uiState.sharedTransitionScope?.let {
+                    with(it) {
+                        LazyRowCarousel(
+                            animeResponse = animeResponse,
+                            animatedVisibilityScope = uiState.animatedVisibilityScope!!
+                        ) {
+                            event.onNext()
+                        }
                     }
                 }
             }
         }
 
-        item {
+        item(span = { GridItemSpan(maxLineSpan) }) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
+                    .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -191,8 +197,13 @@ fun HomeScreen(
             }
         }
 
-        items(videoList) {
-            HomeOngoingItem()
+        itemsIndexed(videoList) { index, _ ->
+            HomeOngoingItem(
+                modifier = Modifier.padding(
+                    start = if (index % 2 == 0) 16.dp else 8.dp,
+                    end = if (index % 2 == 0) 8.dp else 16.dp
+                )
+            )
         }
     }
 }
