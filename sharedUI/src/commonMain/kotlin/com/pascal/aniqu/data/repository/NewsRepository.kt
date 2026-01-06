@@ -1,13 +1,10 @@
 package com.pascal.aniqu.data.repository
 
-import com.pascal.aniqu.data.remote.dtos.MarketHighlightResponse
-import com.pascal.aniqu.data.remote.dtos.StockRecommendationResponse
+import com.pascal.aniqu.data.remote.dtos.BaseResponse
 import com.pascal.aniqu.data.remote.dtos.dashboard.AnimeResponse
-import com.pascal.aniqu.data.remote.dtos.dashboard.DashboardResponse
+import com.pascal.aniqu.data.remote.dtos.home.AnimeHomeResponse
 
 interface NewsRepository {
-    suspend fun dashboard() : DashboardResponse
+    suspend fun getAnimeHome() : BaseResponse<AnimeHomeResponse>
     suspend fun getAnimeList(page: Int): AnimeResponse
-    suspend fun getMarketHighlight(): MarketHighlightResponse
-    suspend fun getStockRecommendation(): StockRecommendationResponse
 }

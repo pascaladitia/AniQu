@@ -36,7 +36,7 @@ fun HomeRoute(
 
     LaunchedEffect(Unit) {
         viewModel.setTransition(sharedTransitionScope, animatedVisibilityScope)
-        viewModel.loadAnime()
+        viewModel.loadAnimeHome()
     }
 
     if (uiState.isLoading) LoadingScreen()
@@ -57,7 +57,7 @@ fun HomeRoute(
     ) {
         PullRefreshComponent(
             onRefresh = {
-                viewModel.loadInit()
+                viewModel.loadAnimeHome()
             }
         ) {
             HomeScreen(

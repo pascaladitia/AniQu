@@ -15,7 +15,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -54,15 +53,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.times
 import androidx.compose.ui.zIndex
-import app.cash.paging.compose.LazyPagingItems
-import com.pascal.aniqu.domain.model.Anime
+import com.pascal.aniqu.domain.model.AnimeItem
+import com.pascal.aniqu.domain.model.AnimeSection
 import com.pascal.aniqu.ui.component.screenUtils.DynamicAsyncImage
 import com.pascal.aniqu.utils.toEnglishDate
 import kotlinx.coroutines.delay
@@ -74,16 +71,18 @@ import kotlin.math.absoluteValue
 fun SharedTransitionScope.LazyRowCarousel(
     modifier: Modifier = Modifier,
     animatedVisibilityScope: AnimatedVisibilityScope,
-    animeResponse: LazyPagingItems<Anime>?,
+    items: AnimeSection? = null,
     imageWidth: Dp = 200.dp,
     imageHeight: Dp = 300.dp,
     imageCornerRadius: Dp = 16.dp,
     dotsActiveColor: Color = MaterialTheme.colorScheme.primary,
     dotsInActiveColor: Color = Color.LightGray,
     dotsSize: Dp = 6.dp,
-    onDetail: (Anime) -> Unit
+    onDetail: (AnimeItem) -> Unit
 ) {
-    if (animeResponse == null || animeResponse.itemCount == 0) {
+    val animeList = items?.animeList.orEmpty()
+
+    if (animeList.isEmpty()) {
         LazyRowShimmer(
             imageWidth = imageWidth,
             imageHeight = imageHeight
@@ -91,12 +90,12 @@ fun SharedTransitionScope.LazyRowCarousel(
         return
     }
 
-    var currentAnime by remember { mutableStateOf<Anime?>(null) }
+    var currentAnime by remember { mutableStateOf<AnimeItem?>(animeList.first()) }
     var isSlide by remember { mutableStateOf(true) }
 
     val pagerState = rememberPagerState(
-        initialPage = 1,
-        pageCount = { animeResponse.itemCount }
+        initialPage = 0,
+        pageCount = { animeList.size }
     )
 
     val scope = rememberCoroutineScope()
@@ -104,7 +103,7 @@ fun SharedTransitionScope.LazyRowCarousel(
     LaunchedEffect(pagerState.currentPage) {
         isSlide = false
         delay(250)
-        currentAnime = animeResponse[pagerState.currentPage]
+        currentAnime = animeList[pagerState.currentPage]
         isSlide = true
     }
 
@@ -118,9 +117,10 @@ fun SharedTransitionScope.LazyRowCarousel(
                 modifier = Modifier.fillMaxWidth()
             ) { page ->
 
-                val anime = animeResponse[page]
+                val anime = animeList[page]
 
-                val pageOffset = (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
+                val pageOffset =
+                    (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
                 val scale = 0.85f + (1f - 0.85f) * (1f - pageOffset.absoluteValue)
                 val zIndex = 1f - pageOffset.absoluteValue
 
@@ -133,18 +133,18 @@ fun SharedTransitionScope.LazyRowCarousel(
                         .zIndex(zIndex)
                         .shadow(16.dp, spotColor = LightGray)
                         .clip(RoundedCornerShape(imageCornerRadius))
-                        .clickable { anime?.let(onDetail) }
+                        .clickable { onDetail(anime) }
                 ) {
                     DynamicAsyncImage(
-                        imageUrl = anime?.images?.poster.orEmpty(),
-                        contentDescription = anime?.title?.english.orEmpty(),
+                        imageUrl = anime.poster,
+                        contentDescription = anime.title,
                         contentScale = ContentScale.Crop,
                         modifier = modifier
                             .width(imageWidth)
                             .height(imageHeight)
                             .sharedElement(
                                 sharedContentState =
-                                    rememberSharedContentState("poster_${anime?.id}"),
+                                    rememberSharedContentState("poster_${anime.animeId}"),
                                 animatedVisibilityScope = animatedVisibilityScope,
                                 renderInOverlayDuringTransition = true
                             )
@@ -162,7 +162,7 @@ fun SharedTransitionScope.LazyRowCarousel(
         ) {
             Text(
                 modifier = Modifier.padding(horizontal = 16.dp),
-                text = currentAnime?.title?.english.orEmpty(),
+                text = currentAnime?.title.orEmpty(),
                 style = MaterialTheme.typography.headlineSmall,
                 textAlign = TextAlign.Center,
                 maxLines = 1,
@@ -178,7 +178,7 @@ fun SharedTransitionScope.LazyRowCarousel(
             exit = fadeOut(tween(250)) + slideOutVertically()
         ) {
             Text(
-                text = currentAnime?.dates?.startDate?.toEnglishDate().orEmpty(),
+                text = currentAnime?.releaseDay?.toEnglishDate().orEmpty(),
                 style = MaterialTheme.typography.bodySmall
             )
         }
@@ -189,7 +189,7 @@ fun SharedTransitionScope.LazyRowCarousel(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
-            repeat(animeResponse.itemCount.coerceAtMost(5)) { index ->
+            repeat(animeList.size.coerceAtMost(5)) { index ->
                 val size by animateDpAsState(
                     if (pagerState.currentPage == index)
                         dotsSize * 1.5f

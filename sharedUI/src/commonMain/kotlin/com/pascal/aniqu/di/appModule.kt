@@ -10,8 +10,8 @@ import com.pascal.aniqu.data.repository.NewsRepository
 import com.pascal.aniqu.data.repository.NewsRepositoryImpl
 import com.pascal.aniqu.domain.usecase.local.LocalUseCase
 import com.pascal.aniqu.domain.usecase.local.LocalUseCaseImpl
-import com.pascal.aniqu.domain.usecase.news.RemoteUseCase
-import com.pascal.aniqu.domain.usecase.news.RemoteUseCaseImpl
+import com.pascal.aniqu.domain.usecase.remote.RemoteUseCase
+import com.pascal.aniqu.domain.usecase.remote.RemoteUseCaseImpl
 import com.pascal.aniqu.getDatabaseBuilder
 import com.pascal.aniqu.ui.screen.bookmark.BookmarkViewModel
 import com.pascal.aniqu.ui.screen.detail.DetailViewModel

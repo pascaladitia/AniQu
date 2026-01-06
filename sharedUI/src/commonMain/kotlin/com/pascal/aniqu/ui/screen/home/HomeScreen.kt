@@ -14,13 +14,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
@@ -41,7 +38,6 @@ import app.cash.paging.compose.LazyPagingItems
 import com.pascal.aniqu.domain.model.Anime
 import com.pascal.aniqu.ui.component.screenUtils.DynamicAsyncImage
 import com.pascal.aniqu.ui.component.screenUtils.PagerIndicator
-import com.pascal.aniqu.ui.component.screenUtils.verticalFadeBackground
 import com.pascal.aniqu.ui.screen.home.component.HomeOngoingItem
 import com.pascal.aniqu.ui.screen.home.component.LazyRowCarousel
 import com.pascal.aniqu.ui.screen.home.state.HomeUIState
@@ -165,7 +161,7 @@ fun HomeScreen(
                 uiState.sharedTransitionScope?.let {
                     with(it) {
                         LazyRowCarousel(
-                            animeResponse = animeResponse,
+                            items = uiState.animeHome?.completed,
                             animatedVisibilityScope = uiState.animatedVisibilityScope!!
                         ) {
                             event.onNext()
@@ -197,12 +193,13 @@ fun HomeScreen(
             }
         }
 
-        itemsIndexed(videoList) { index, _ ->
+        itemsIndexed(uiState.animeHome?.ongoing?.animeList.orEmpty()) { index, items ->
             HomeOngoingItem(
                 modifier = Modifier.padding(
                     start = if (index % 2 == 0) 16.dp else 8.dp,
                     end = if (index % 2 == 0) 8.dp else 16.dp
-                )
+                ),
+                items = items
             )
         }
     }

@@ -8,16 +8,14 @@ import androidx.compose.animation.SharedTransitionScope
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
-import com.pascal.aniqu.domain.mapper.getFavoriteTitlesFlow
 import com.pascal.aniqu.domain.model.Anime
 import com.pascal.aniqu.domain.usecase.local.LocalUseCase
-import com.pascal.aniqu.domain.usecase.news.RemoteUseCase
+import com.pascal.aniqu.domain.usecase.remote.RemoteUseCase
 import com.pascal.aniqu.ui.screen.home.state.HomeUIState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -44,26 +42,27 @@ class HomeViewModel(
         }
     }
 
-    fun loadInit() {
+    fun loadAnimeHome() {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = false) }
+            _uiState.update { it.copy(isLoading = true) }
 
-            combine(
-                remoteUseCase.getMarketHighlight(),
-                localUseCase.getFavoriteTitlesFlow()
-            ) { highlight, favorites ->
-                _uiState.value.copy(
-                    isLoading = false,
-                    marketHighlight = highlight
-                )
-            }.catch { e ->
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        error = true to (e.message ?: "Unknown error")
-                    )
+            remoteUseCase.getAnimeHome()
+                .catch { e ->
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            error = true to e.message.toString()
+                        )
+                    }
                 }
-            }.collect { newState -> _uiState.update { newState } }
+                .collect { result ->
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            animeHome = result
+                        )
+                    }
+                }
         }
     }
 

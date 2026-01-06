@@ -3,7 +3,7 @@ package com.pascal.aniqu.ui.screen.watchlist
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pascal.aniqu.domain.usecase.local.LocalUseCase
-import com.pascal.aniqu.domain.usecase.news.RemoteUseCase
+import com.pascal.aniqu.domain.usecase.remote.RemoteUseCase
 import com.pascal.aniqu.ui.screen.watchlist.state.WatchListUIState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,24 +20,7 @@ class WatchListViewModel(
     val uiState: StateFlow<WatchListUIState> = _uiState.asStateFlow()
 
     fun loadInit() {
-        viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
-            try {
-                remoteUseCase.getStockRecommendation()
-                    .collect { data ->
-                        _uiState.value = _uiState.value.copy(
-                            isLoading = false,
-                            stockRecommendation = data,
-                            error = Pair(false, "")
-                        )
-                    }
-            } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    error = Pair(true, e.message ?: "Unknown error")
-                )
-            }
-        }
+
     }
 
     fun resetError() {

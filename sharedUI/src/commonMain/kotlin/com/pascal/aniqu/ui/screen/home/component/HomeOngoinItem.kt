@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.StarRate
-import androidx.compose.material.icons.filled.Start
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,13 +22,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.pascal.aniqu.domain.model.AnimeItem
 import com.pascal.aniqu.ui.component.screenUtils.DynamicAsyncImage
 import com.pascal.aniqu.ui.theme.AppTheme
 
 @Composable
 fun HomeOngoingItem(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    items: AnimeItem? = null
 ) {
+    if (items == null) return
+
     Column(
         modifier = modifier.fillMaxWidth()
     ) {
@@ -39,14 +42,14 @@ fun HomeOngoingItem(
                 .clip(RoundedCornerShape(16.dp))
                 .height(260.dp)
                 .background(Color.Gray),
-            imageUrl = "",
+            imageUrl = items.poster,
             contentScale = ContentScale.Crop
         )
 
         Spacer(Modifier.height(12.dp))
 
         Text(
-            text = "Title",
+            text = items.title,
             style = MaterialTheme.typography.titleLarge
         )
 
@@ -56,7 +59,7 @@ fun HomeOngoingItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Title",
+                text = items.latestReleaseDate,
                 style = MaterialTheme.typography.bodySmall.copy(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -74,7 +77,7 @@ fun HomeOngoingItem(
             Spacer(Modifier.width(8.dp))
 
             Text(
-                text = "8.5",
+                text = items.score,
                 style = MaterialTheme.typography.bodySmall.copy(
                     color = MaterialTheme.colorScheme.onSurface
                 )
