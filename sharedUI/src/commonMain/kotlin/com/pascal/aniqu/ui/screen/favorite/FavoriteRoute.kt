@@ -8,7 +8,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 
 @Composable
-fun FavoriteScreen(
+fun FavoriteRoute(
     modifier: Modifier = Modifier,
     paddingValues: PaddingValues,
     viewModel: FavoriteViewModel = koinInject<FavoriteViewModel>(),

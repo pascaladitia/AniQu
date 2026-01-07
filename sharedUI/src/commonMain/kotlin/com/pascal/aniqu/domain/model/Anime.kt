@@ -1,49 +1,25 @@
 package com.pascal.aniqu.domain.model
 
 data class Anime(
-    val id: String,
-    val type: String,
-    val title: AnimeTitle?,
-    val synopsis: String?,
-    val description: String?,
-    val images: AnimeImages?,
-    val rating: AnimeRating?,
-    val episode: AnimeEpisode?,
-    val status: AnimeStatus?,
-    val dates: AnimeDates?,
-    val isNsfw: Boolean
+    val ongoing: AnimeSection?,
+    val completed: AnimeSection?
 )
 
-data class AnimeTitle(
-    val canonical: String,
-    val english: String?,
-    val japanese: String?
+data class AnimeSection(
+    val href: String,
+    val otakudesuUrl: String,
+    val animeList: List<AnimeItem>
 )
 
-data class AnimeImages(
-    val poster: String?,
-    val cover: String?
-)
-
-data class AnimeRating(
-    val average: Double?,
-    val rank: Int?,
-    val popularityRank: Int?
-)
-
-data class AnimeEpisode(
-    val count: Int?,
-    val length: Int?,
-    val totalLength: Int?
-)
-
-data class AnimeStatus(
-    val status: String,
-    val subtype: String,
-    val ageRating: String?
-)
-
-data class AnimeDates(
-    val startDate: String?,
-    val endDate: String?
+data class AnimeItem(
+    val title: String,
+    val poster: String,
+    val episodes: Int,
+    val releaseDay: String,
+    val latestReleaseDate: String,
+    val lastReleaseDate: String,
+    val score: String,
+    val animeId: String,
+    val href: String,
+    val otakudesuUrl: String
 )

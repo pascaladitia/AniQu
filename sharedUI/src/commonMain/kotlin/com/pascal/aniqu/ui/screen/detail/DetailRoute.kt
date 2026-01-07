@@ -10,7 +10,7 @@ import com.pascal.aniqu.data.local.entity.FavoritesEntity
 import org.koin.compose.koinInject
 
 @Composable
-fun DetailScreen(
+fun DetailRoute(
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
     viewModel: DetailViewModel = koinInject<DetailViewModel>(),

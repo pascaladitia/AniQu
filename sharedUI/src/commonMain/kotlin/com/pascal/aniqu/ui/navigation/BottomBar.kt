@@ -4,15 +4,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.NoteAdd
-import androidx.compose.material.icons.automirrored.outlined.NoteAdd
+import androidx.compose.material.icons.automirrored.filled.MenuBook
+import androidx.compose.material.icons.automirrored.outlined.MenuBook
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.MoneyOff
-import androidx.compose.material.icons.filled.PieChart
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.MoneyOff
-import androidx.compose.material.icons.outlined.PieChart
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -52,10 +52,10 @@ fun BottomBar(
                     screen = Screen.HomeScreen
                 ),
                 NavigationItem(
-                    title = "Watchlist",
-                    iconFilled = Icons.AutoMirrored.Filled.NoteAdd,
-                    iconOutlined = Icons.AutoMirrored.Outlined.NoteAdd,
-                    screen = Screen.WatchlistScreen
+                    title = "Manga",
+                    iconFilled = Icons.AutoMirrored.Filled.MenuBook,
+                    iconOutlined = Icons.AutoMirrored.Outlined.MenuBook,
+                    screen = Screen.MangaScreen
                 ),
                 NavigationItem(
                     title = "Search",
@@ -64,16 +64,16 @@ fun BottomBar(
                     screen = Screen.SearchScreen
                 ),
                 NavigationItem(
-                    title = "Order",
-                    iconFilled = Icons.Filled.MoneyOff,
-                    iconOutlined = Icons.Outlined.MoneyOff,
-                    screen = Screen.OrderScreen
+                    title = "Favorite",
+                    iconFilled = Icons.Filled.Favorite,
+                    iconOutlined = Icons.Outlined.Favorite,
+                    screen = Screen.FavoriteScreen
                 ),
                 NavigationItem(
-                    title = "Portofolio",
-                    iconFilled = Icons.Filled.PieChart,
-                    iconOutlined = Icons.Outlined.PieChart,
-                    screen = Screen.PortofolioScreen
+                    title = "Profile",
+                    iconFilled = Icons.Filled.Person,
+                    iconOutlined = Icons.Outlined.Person,
+                    screen = Screen.ProfileScreen
                 )
             )
 
@@ -86,7 +86,7 @@ fun BottomBar(
                             imageVector = if (selected) item.iconFilled else item.iconOutlined,
                             contentDescription = item.title,
                             modifier = Modifier.size(iconSize),
-                            tint = if (selected) MaterialTheme.colorScheme.primary else Color.Gray
+                            tint = if (selected) MaterialTheme.colorScheme.onSurface else Color.Gray
                         )
                     },
                     label = {
@@ -95,12 +95,12 @@ fun BottomBar(
                             style = MaterialTheme.typography.titleSmall.copy(
                                 fontSize = 10.sp
                             ),
-                            color = if (selected) MaterialTheme.colorScheme.primary else Color.Gray
+                            color = if (selected) MaterialTheme.colorScheme.onSurface else Color.Gray
                         )
                     },
                     colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = MaterialTheme.colorScheme.primary,
-                        indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+                        selectedIconColor = MaterialTheme.colorScheme.onSurface,
+                        indicatorColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
                     ),
                     alwaysShowLabel = false,
                     selected = selected,

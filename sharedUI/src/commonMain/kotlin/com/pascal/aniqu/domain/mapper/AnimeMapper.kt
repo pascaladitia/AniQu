@@ -1,71 +1,40 @@
 package com.pascal.aniqu.domain.mapper
 
-import com.pascal.aniqu.data.remote.dtos.dashboard.AnimeAttributes
-import com.pascal.aniqu.data.remote.dtos.dashboard.AnimeData
-import com.pascal.aniqu.data.remote.dtos.dashboard.AnimeResponse
-import com.pascal.aniqu.domain.model.*
+import com.pascal.aniqu.data.remote.dtos.anime.AnimeResponse
+import com.pascal.aniqu.data.remote.dtos.anime.AnimeItemResponse
+import com.pascal.aniqu.data.remote.dtos.anime.AnimeSectionResponse
+import com.pascal.aniqu.domain.model.Anime
+import com.pascal.aniqu.domain.model.AnimeItem
+import com.pascal.aniqu.domain.model.AnimeSection
 
-
-fun AnimeResponse.toDomain(): List<Anime> =
-    data.mapNotNull { it.toDomain() }
-
-fun AnimeData.toDomain(): Anime {
+fun AnimeResponse?.toDomain(): Anime {
     return Anime(
-        id = id.orEmpty(),
-        type = type.orEmpty(),
-        title = attributes?.toDomainTitle(),
-        synopsis = attributes?.synopsis,
-        description = attributes?.description,
-        images = attributes?.toDomainImages(),
-        rating = attributes?.toDomainRating(),
-        episode = attributes?.toDomainEpisode(),
-        status = attributes?.toDomainStatus(),
-        dates = attributes?.toDomainDates(),
-        isNsfw = attributes?.nsfw ?: false
+        ongoing = this?.ongoing?.toDomain(),
+        completed = this?.completed?.toDomain()
     )
 }
 
-fun AnimeAttributes.toDomainTitle(): AnimeTitle =
-    AnimeTitle(
-        canonical = canonicalTitle ?: "-",
-        english = titles?.en
-            ?: titles?.enJp
-            ?: titles?.enUs,
-        japanese = titles?.jaJp
+fun AnimeSectionResponse.toDomain(): AnimeSection {
+    return AnimeSection(
+        href = href.orEmpty(),
+        otakudesuUrl = otakudesuUrl.orEmpty(),
+        animeList = animeList.map { it.toDomain() }
     )
+}
 
-fun AnimeAttributes.toDomainImages(): AnimeImages =
-    AnimeImages(
-        poster = posterImage?.medium
-            ?: posterImage?.large
-            ?: posterImage?.original,
-        cover = coverImage?.large
-            ?: coverImage?.original
+fun AnimeItemResponse.toDomain(): AnimeItem {
+    return AnimeItem(
+        title = title.orEmpty(),
+        poster = poster.orEmpty(),
+        episodes = episodes ?: 0,
+        releaseDay = releaseDay.orEmpty(),
+        latestReleaseDate = latestReleaseDate.orEmpty(),
+        lastReleaseDate = lastReleaseDate.orEmpty(),
+        score = score.orEmpty(),
+        animeId = animeId.orEmpty(),
+        href = href.orEmpty(),
+        otakudesuUrl = otakudesuUrl.orEmpty()
     )
+}
 
-fun AnimeAttributes.toDomainRating(): AnimeRating =
-    AnimeRating(
-        average = averageRating?.toDoubleOrNull(),
-        rank = ratingRank,
-        popularityRank = popularityRank
-    )
 
-fun AnimeAttributes.toDomainEpisode(): AnimeEpisode =
-    AnimeEpisode(
-        count = episodeCount,
-        length = episodeLength,
-        totalLength = totalLength
-    )
-
-fun AnimeAttributes.toDomainStatus(): AnimeStatus =
-    AnimeStatus(
-        status = status ?: "unknown",
-        subtype = subtype ?: "unknown",
-        ageRating = ageRating
-    )
-
-fun AnimeAttributes.toDomainDates(): AnimeDates =
-    AnimeDates(
-        startDate = startDate,
-        endDate = endDate
-    )
