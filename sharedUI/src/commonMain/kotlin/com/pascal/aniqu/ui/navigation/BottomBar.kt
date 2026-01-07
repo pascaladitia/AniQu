@@ -55,7 +55,7 @@ fun BottomBar(
                     title = "Watchlist",
                     iconFilled = Icons.AutoMirrored.Filled.NoteAdd,
                     iconOutlined = Icons.AutoMirrored.Outlined.NoteAdd,
-                    screen = Screen.WatchlistScreen
+                    screen = Screen.MangaScreen
                 ),
                 NavigationItem(
                     title = "Search",

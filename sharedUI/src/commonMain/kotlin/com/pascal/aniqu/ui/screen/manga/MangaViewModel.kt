@@ -1,23 +1,21 @@
-package com.pascal.aniqu.ui.screen.watchlist
+package com.pascal.aniqu.ui.screen.manga
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.pascal.aniqu.domain.usecase.local.LocalUseCase
 import com.pascal.aniqu.domain.usecase.remote.RemoteUseCase
-import com.pascal.aniqu.ui.screen.watchlist.state.WatchListUIState
+import com.pascal.aniqu.ui.screen.manga.state.MangaUIState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 class WatchListViewModel(
     private val remoteUseCase: RemoteUseCase,
     private val localUseCase: LocalUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(WatchListUIState())
-    val uiState: StateFlow<WatchListUIState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(MangaUIState())
+    val uiState: StateFlow<MangaUIState> = _uiState.asStateFlow()
 
     fun loadInit() {
 
@@ -26,10 +24,4 @@ class WatchListViewModel(
     fun resetError() {
         _uiState.update { it.copy(error = false to "") }
     }
-}
-
-enum class WatchListTab(val title: String) {
-    MY_LIST("My List"),
-    aniqu_PICKS("aniqu+ Picks"),
-    IDEAS("Ideas")
 }

@@ -28,7 +28,7 @@ import com.pascal.aniqu.ui.screen.home.HomeRoute
 import com.pascal.aniqu.ui.screen.onboarding.OnboardingRoute
 import com.pascal.aniqu.ui.screen.profile.PortofolioScreen
 import com.pascal.aniqu.ui.screen.splash.SplashRoute
-import com.pascal.aniqu.ui.screen.watchlist.WatchListScreen
+import com.pascal.aniqu.ui.screen.manga.MangaScreen
 import com.pascal.aniqu.utils.base.getFromPreviousBackStack
 import com.pascal.aniqu.utils.base.saveToCurrentBackStack
 
@@ -44,7 +44,7 @@ fun RouteScreen(
         bottomBar = {
             if (currentRoute in listOf(
                     Screen.HomeScreen.route,
-                    Screen.WatchlistScreen.route,
+                    Screen.MangaScreen.route,
                     Screen.SearchScreen.route,
                     Screen.OrderScreen.route,
                     Screen.PortofolioScreen.route
@@ -113,8 +113,8 @@ fun RouteScreen(
                         }
                     )
                 }
-                composable(route = Screen.WatchlistScreen.route) {
-                    WatchListScreen(
+                composable(route = Screen.MangaScreen.route) {
+                    MangaScreen(
                         paddingValues = paddingValues,
                         onDetail = {}
                     )

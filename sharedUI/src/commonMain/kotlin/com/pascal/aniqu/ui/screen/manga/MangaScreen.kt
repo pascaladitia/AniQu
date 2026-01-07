@@ -1,4 +1,4 @@
-package com.pascal.aniqu.ui.screen.watchlist
+package com.pascal.aniqu.ui.screen.manga
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
@@ -11,19 +11,19 @@ import aniqu.sharedui.generated.resources.Res
 import aniqu.sharedui.generated.resources.close
 import com.pascal.aniqu.ui.component.dialog.ShowDialog
 import com.pascal.aniqu.ui.component.screenUtils.LoadingScreen
-import com.pascal.aniqu.ui.screen.watchlist.state.LocalWatchListEvent
+import com.pascal.aniqu.ui.screen.manga.state.LocalMangaEvent
 import com.pascal.aniqu.ui.theme.AppTheme
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @Composable
-fun WatchListScreen(
+fun MangaScreen(
     modifier: Modifier = Modifier,
     paddingValues: PaddingValues,
     viewModel: WatchListViewModel = koinInject<WatchListViewModel>(),
     onDetail: () -> Unit
 ) {
-    val event = LocalWatchListEvent.current
+    val event = LocalMangaEvent.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {

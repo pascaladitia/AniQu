@@ -18,7 +18,7 @@ import com.pascal.aniqu.ui.screen.detail.DetailViewModel
 import com.pascal.aniqu.ui.screen.favorite.FavoriteViewModel
 import com.pascal.aniqu.ui.screen.home.HomeViewModel
 import com.pascal.aniqu.ui.screen.profile.ProfileViewModel
-import com.pascal.aniqu.ui.screen.watchlist.WatchListViewModel
+import com.pascal.aniqu.ui.screen.manga.WatchListViewModel
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
