@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class WatchListViewModel(
+class MangaViewModel(
     private val remoteUseCase: RemoteUseCase,
     private val localUseCase: LocalUseCase
 ) : ViewModel() {

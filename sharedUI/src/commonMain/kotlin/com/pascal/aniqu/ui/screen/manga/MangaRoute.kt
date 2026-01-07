@@ -17,10 +17,10 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @Composable
-fun MangaScreen(
+fun MangaRoute(
     modifier: Modifier = Modifier,
     paddingValues: PaddingValues,
-    viewModel: WatchListViewModel = koinInject<WatchListViewModel>(),
+    viewModel: MangaViewModel = koinInject<MangaViewModel>(),
     onDetail: () -> Unit
 ) {
     val event = LocalMangaEvent.current

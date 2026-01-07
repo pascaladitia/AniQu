@@ -21,14 +21,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.pascal.aniqu.data.preferences.PrefLogin
-import com.pascal.aniqu.ui.screen.bookmark.BookmarkScreen
-import com.pascal.aniqu.ui.screen.detail.DetailScreen
-import com.pascal.aniqu.ui.screen.favorite.FavoriteScreen
+import com.pascal.aniqu.ui.screen.detail.DetailRoute
+import com.pascal.aniqu.ui.screen.favorite.FavoriteRoute
 import com.pascal.aniqu.ui.screen.home.HomeRoute
+import com.pascal.aniqu.ui.screen.manga.MangaRoute
 import com.pascal.aniqu.ui.screen.onboarding.OnboardingRoute
-import com.pascal.aniqu.ui.screen.profile.PortofolioScreen
+import com.pascal.aniqu.ui.screen.profile.ProfileRoute
+import com.pascal.aniqu.ui.screen.search.SearchRoute
 import com.pascal.aniqu.ui.screen.splash.SplashRoute
-import com.pascal.aniqu.ui.screen.manga.MangaScreen
 import com.pascal.aniqu.utils.base.getFromPreviousBackStack
 import com.pascal.aniqu.utils.base.saveToCurrentBackStack
 
@@ -46,8 +46,8 @@ fun RouteScreen(
                     Screen.HomeScreen.route,
                     Screen.MangaScreen.route,
                     Screen.SearchScreen.route,
-                    Screen.OrderScreen.route,
-                    Screen.PortofolioScreen.route
+                    Screen.FavoriteScreen.route,
+                    Screen.ProfileScreen.route
                 )) {
                 BottomBar(navController)
             }
@@ -104,7 +104,7 @@ fun RouteScreen(
                 }
                 composable(route = Screen.DetailScreen.route) {
                     val animScope: AnimatedVisibilityScope = this
-                    DetailScreen(
+                    DetailRoute(
                         sharedTransitionScope = sharedScope,
                         animatedVisibilityScope = animScope,
                         item = getFromPreviousBackStack(navController, "articles"),
@@ -114,36 +114,28 @@ fun RouteScreen(
                     )
                 }
                 composable(route = Screen.MangaScreen.route) {
-                    MangaScreen(
+                    MangaRoute(
                         paddingValues = paddingValues,
                         onDetail = {}
                     )
                 }
                 composable(route = Screen.SearchScreen.route) {
-                    FavoriteScreen(
+                    SearchRoute(
                         paddingValues = paddingValues,
                         onDetail = {}
                     )
                 }
-                composable(route = Screen.OrderScreen.route) {
-                    FavoriteScreen(
+                composable(route = Screen.FavoriteScreen.route) {
+                    FavoriteRoute(
                         paddingValues = paddingValues,
                         onDetail = {}
                     )
                 }
-                composable(route = Screen.PortofolioScreen.route) {
-                    PortofolioScreen(
+                composable(route = Screen.ProfileScreen.route) {
+                    ProfileRoute(
                         onBookMark = {
-                            navController.navigate(Screen.BookmarkScreen.route)
+                            navController.navigate(Screen.ProfileScreen.route)
                         },
-                    )
-                }
-                composable(route = Screen.BookmarkScreen.route) {
-                    BookmarkScreen(
-                        onNavBack = {
-                            navController.popBackStack()
-                        },
-                        onDetail = {}
                     )
                 }
             }

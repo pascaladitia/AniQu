@@ -21,7 +21,7 @@ import aniqu.sharedui.generated.resources.Res
 import aniqu.sharedui.generated.resources.close
 
 @Composable
-fun PortofolioScreen(
+fun ProfileRoute(
     viewModel: ProfileViewModel = koinInject<ProfileViewModel>(),
     onBookMark: () -> Unit
 ) {
