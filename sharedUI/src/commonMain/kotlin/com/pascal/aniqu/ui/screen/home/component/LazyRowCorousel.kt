@@ -70,6 +70,7 @@ import kotlin.math.absoluteValue
 fun SharedTransitionScope.LazyRowCarousel(
     modifier: Modifier = Modifier,
     animatedVisibilityScope: AnimatedVisibilityScope,
+    isLoading: Boolean = false,
     items: AnimeSection? = null,
     imageWidth: Dp = 200.dp,
     imageHeight: Dp = 300.dp,
@@ -81,7 +82,7 @@ fun SharedTransitionScope.LazyRowCarousel(
 ) {
     val animeList = items?.animeList.orEmpty()
 
-    if (animeList.isEmpty()) {
+    if (isLoading || animeList.isEmpty()) {
         LazyRowShimmer(
             imageWidth = imageWidth,
             imageHeight = imageHeight

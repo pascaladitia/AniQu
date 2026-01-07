@@ -78,7 +78,7 @@ fun HomeLiveItem(
 
     LaunchedEffect(pageCount) {
         while (true) {
-            delay(15_000)
+            delay(10000)
             if (!pagerState.isScrollInProgress && pageCount > 1) {
                 val next =
                     if (pagerState.currentPage == pageCount - 1) 0

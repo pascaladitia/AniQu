@@ -81,6 +81,7 @@ fun HomeScreen(
                 uiState.sharedTransitionScope?.let {
                     with(it) {
                         LazyRowCarousel(
+                            isLoading = uiState.isLoading,
                             items = uiState.anime?.ongoing,
                             animatedVisibilityScope = uiState.animatedVisibilityScope!!
                         ) {
