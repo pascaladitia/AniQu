@@ -32,6 +32,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import app.cash.paging.compose.LazyPagingItems
@@ -77,11 +80,11 @@ fun HomeLiveItem(
         while (true) {
             delay(15_000)
             if (!pagerState.isScrollInProgress && pageCount > 1) {
-                val nextPage =
+                val next =
                     if (pagerState.currentPage == pageCount - 1) 0
                     else pagerState.currentPage + 1
 
-                pagerState.animateScrollToPage(nextPage)
+                pagerState.animateScrollToPage(next)
             }
         }
     }
@@ -96,9 +99,9 @@ fun HomeLiveItem(
 
             DynamicAsyncImage(
                 modifier = Modifier
-                    .background(Color.LightGray)
                     .fillMaxWidth()
-                    .height(240.dp),
+                    .height(240.dp)
+                    .background(Color.LightGray),
                 imageUrl = item.poster,
                 contentScale = ContentScale.Crop
             )
@@ -111,7 +114,7 @@ fun HomeLiveItem(
                     brush = Brush.verticalGradient(
                         colors = listOf(
                             Color.Black.copy(alpha = 0.6f),
-                            Color.Black.copy(alpha = 0.5f),
+                            Color.Black.copy(alpha = 0.4f),
                             Color.Transparent
                         ),
                         startY = Float.POSITIVE_INFINITY,
@@ -121,10 +124,10 @@ fun HomeLiveItem(
                 .padding(16.dp)
                 .align(Alignment.BottomCenter)
         ) {
-
             Text(
                 text = animeLiveResponse[currentPage]?.title.orEmpty(),
-                style = MaterialTheme.typography.headlineMedium
+                style = MaterialTheme.typography.headlineMedium,
+                color = Color.White
             )
 
             Spacer(Modifier.height(4.dp))
@@ -134,25 +137,47 @@ fun HomeLiveItem(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-
                 Text(
-                    text = animeLiveResponse[currentPage]?.releaseDay.orEmpty(),
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    text = buildAnnotatedString {
+                        val releaseDay = animeLiveResponse[currentPage]?.releaseDay.orEmpty()
+                        val lastDate = animeLiveResponse[currentPage]?.latestReleaseDate.orEmpty()
+
+                        if (releaseDay.isNotBlank()) {
+                            withStyle(
+                                SpanStyle(
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            ) {
+                                append(releaseDay)
+                            }
+                        }
+
+                        if (releaseDay.isNotBlank() && lastDate.isNotBlank()) {
+                            append("  •  ")
+                        }
+
+                        if (lastDate.isNotBlank()) {
+                            withStyle(
+                                SpanStyle(
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                                )
+                            ) {
+                                append(lastDate)
+                            }
+                        }
+                    },
+                    style = MaterialTheme.typography.bodyMedium
                 )
 
                 PagerIndicatorWrap(
                     pageCount = pageCount,
                     currentPage = currentPage,
-                    maxDots = 3,
-                    onDotClick = { target ->
-                        scope.launch {
-                            val base = (currentPage / 3) * 3
-                            pagerState.animateScrollToPage((base + target).coerceIn(0, pageCount - 1))
-                        }
+                    maxDots = 3
+                ) { targetPage ->
+                    scope.launch {
+                        pagerState.animateScrollToPage(targetPage)
                     }
-                )
+                }
             }
         }
     }
@@ -165,21 +190,28 @@ fun PagerIndicatorWrap(
     maxDots: Int = 3,
     onDotClick: (Int) -> Unit
 ) {
-    val activeDot by remember {
-        derivedStateOf { currentPage % maxDots }
+    val windowStart = remember(currentPage) {
+        (currentPage / maxDots) * maxDots
     }
 
+    val dotsInWindow = minOf(
+        maxDots,
+        pageCount - windowStart
+    )
+
+    val activeDot = currentPage - windowStart
+
     Row {
-        repeat(minOf(pageCount, maxDots)) { index ->
+        repeat(dotsInWindow) { index ->
             val isActive = index == activeDot
 
             val size by animateDpAsState(
-                if (isActive) 8.dp else 6.dp,
+                targetValue = if (isActive) 8.dp else 6.dp,
                 label = ""
             )
 
             val color by animateColorAsState(
-                if (isActive)
+                targetValue = if (isActive)
                     MaterialTheme.colorScheme.primary
                 else Color.LightGray,
                 label = ""
@@ -192,7 +224,7 @@ fun PagerIndicatorWrap(
                     .clip(CircleShape)
                     .background(color)
                     .clickable {
-                        onDotClick(index)
+                        onDotClick(windowStart + index)
                     }
             )
         }

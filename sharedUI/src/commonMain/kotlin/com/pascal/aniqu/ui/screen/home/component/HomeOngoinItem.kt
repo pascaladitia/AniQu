@@ -65,7 +65,6 @@ fun HomeOngoingItem(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Logger.e("tag episode ${items.episodes}")
             Text(
                 text = stringResource(Res.string.label_episode, items.episodes),
                 style = MaterialTheme.typography.bodySmall.copy(
