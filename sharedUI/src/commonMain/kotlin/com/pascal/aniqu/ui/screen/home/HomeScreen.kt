@@ -32,7 +32,7 @@ import aniqu.sharedui.generated.resources.Res
 import aniqu.sharedui.generated.resources.label_completed
 import aniqu.sharedui.generated.resources.label_ongoing
 import app.cash.paging.compose.LazyPagingItems
-import com.pascal.aniqu.domain.model.AnimeItem
+import com.pascal.aniqu.domain.model.item.AnimeItem
 import com.pascal.aniqu.ui.component.screenUtils.shimmer
 import com.pascal.aniqu.ui.screen.home.component.HomeLiveItem
 import com.pascal.aniqu.ui.screen.home.component.HomeOngoingItem

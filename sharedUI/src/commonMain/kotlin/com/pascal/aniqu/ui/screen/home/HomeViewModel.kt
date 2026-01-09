@@ -8,7 +8,7 @@ import androidx.compose.animation.SharedTransitionScope
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
-import com.pascal.aniqu.domain.model.AnimeItem
+import com.pascal.aniqu.domain.model.item.AnimeItem
 import com.pascal.aniqu.domain.usecase.anime.AnimeUseCase
 import com.pascal.aniqu.ui.screen.home.state.HomeUIState
 import kotlinx.coroutines.flow.MutableStateFlow

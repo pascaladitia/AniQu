@@ -58,8 +58,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.pascal.aniqu.domain.model.AnimeItem
 import com.pascal.aniqu.domain.model.AnimeSection
+import com.pascal.aniqu.domain.model.item.AnimeItem
 import com.pascal.aniqu.ui.component.screenUtils.DynamicAsyncImage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
