@@ -1,5 +1,7 @@
 package com.pascal.aniqu.data.remote.dtos.anime
 
+import com.pascal.aniqu.data.remote.dtos.anime.item.EpisodeResponse
+import com.pascal.aniqu.data.remote.dtos.anime.item.GenreResponse
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -40,24 +42,6 @@ data class SynopsisResponse(
 data class ConnectionResponse(
     val title: String? = null,
     val animeId: String? = null,
-    val href: String? = null,
-    val otakudesuUrl: String? = null
-)
-
-@Serializable
-data class GenreResponse(
-    val title: String? = null,
-    val genreId: String? = null,
-    val href: String? = null,
-    val otakudesuUrl: String? = null
-)
-
-@Serializable
-data class EpisodeResponse(
-    val title: String? = null,
-    val eps: Int? = null,
-    val date: String? = null,
-    val episodeId: String? = null,
     val href: String? = null,
     val otakudesuUrl: String? = null
 )

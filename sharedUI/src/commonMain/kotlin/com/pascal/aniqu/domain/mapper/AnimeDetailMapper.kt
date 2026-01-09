@@ -3,17 +3,17 @@ package com.pascal.aniqu.domain.mapper
 import com.pascal.aniqu.data.remote.dtos.anime.AnimeDetailResponse
 import com.pascal.aniqu.data.remote.dtos.anime.BatchResponse
 import com.pascal.aniqu.data.remote.dtos.anime.ConnectionResponse
-import com.pascal.aniqu.data.remote.dtos.anime.EpisodeResponse
-import com.pascal.aniqu.data.remote.dtos.anime.GenreResponse
 import com.pascal.aniqu.data.remote.dtos.anime.RecommendedAnimeResponse
 import com.pascal.aniqu.data.remote.dtos.anime.SynopsisResponse
+import com.pascal.aniqu.data.remote.dtos.anime.item.EpisodeResponse
+import com.pascal.aniqu.data.remote.dtos.anime.item.GenreResponse
 import com.pascal.aniqu.domain.model.AnimeConnection
 import com.pascal.aniqu.domain.model.AnimeDetail
 import com.pascal.aniqu.domain.model.Batch
-import com.pascal.aniqu.domain.model.Episode
-import com.pascal.aniqu.domain.model.Genre
 import com.pascal.aniqu.domain.model.RecommendedAnime
 import com.pascal.aniqu.domain.model.Synopsis
+import com.pascal.aniqu.domain.model.item.Episode
+import com.pascal.aniqu.domain.model.item.Genre
 
 fun AnimeDetailResponse.toDomain() = AnimeDetail(
     title = title.orEmpty(),

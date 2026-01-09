@@ -5,7 +5,7 @@ import com.pascal.aniqu.data.local.database.AppDatabase
 import com.pascal.aniqu.data.local.database.getRoomDatabase
 import com.pascal.aniqu.data.local.repository.LocalRepository
 import com.pascal.aniqu.data.local.repository.LocalRepositoryImpl
-import com.pascal.aniqu.data.remote.api.KtorClientApi
+import com.pascal.aniqu.data.remote.api.AnimeClientApi
 import com.pascal.aniqu.data.repository.anime.AnimeRepository
 import com.pascal.aniqu.data.repository.anime.AnimeRepositoryImpl
 import com.pascal.aniqu.domain.usecase.local.LocalUseCase
@@ -32,7 +32,7 @@ val appModule = module {
     singleOf(::LocalRepositoryImpl) { bind<LocalRepository>() }
 
     // API client
-    singleOf(::KtorClientApi)
+    singleOf(::AnimeClientApi)
 
     // Repository
     singleOf(::AnimeRepositoryImpl) { bind<AnimeRepository>() }

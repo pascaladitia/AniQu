@@ -1,5 +1,8 @@
 package com.pascal.aniqu.domain.model
 
+import com.pascal.aniqu.domain.model.item.Episode
+import com.pascal.aniqu.domain.model.item.Genre
+
 data class AnimeDetail(
     val title: String,
     val poster: String,
@@ -34,22 +37,6 @@ data class Synopsis(
 data class AnimeConnection(
     val title: String,
     val animeId: String,
-    val href: String,
-    val url: String
-)
-
-data class Genre(
-    val title: String,
-    val genreId: String,
-    val href: String,
-    val url: String
-)
-
-data class Episode(
-    val title: String,
-    val episode: Int,
-    val date: String,
-    val episodeId: String,
     val href: String,
     val url: String
 )

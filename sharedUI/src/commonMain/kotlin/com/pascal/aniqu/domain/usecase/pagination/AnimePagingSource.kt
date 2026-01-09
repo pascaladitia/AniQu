@@ -4,7 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.pascal.aniqu.data.repository.anime.AnimeRepository
 import com.pascal.aniqu.domain.mapper.toDomain
-import com.pascal.aniqu.domain.model.AnimeItem
+import com.pascal.aniqu.domain.model.item.AnimeItem
 
 class AnimePagingSource(
     private val repository: AnimeRepository

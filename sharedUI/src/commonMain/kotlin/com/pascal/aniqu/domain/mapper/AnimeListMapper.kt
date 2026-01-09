@@ -1,11 +1,11 @@
 package com.pascal.aniqu.domain.mapper
 
 import com.pascal.aniqu.data.remote.dtos.anime.AnimeResponse
-import com.pascal.aniqu.data.remote.dtos.anime.AnimeItemResponse
 import com.pascal.aniqu.data.remote.dtos.anime.AnimeSectionResponse
+import com.pascal.aniqu.data.remote.dtos.anime.item.AnimeItemResponse
 import com.pascal.aniqu.domain.model.Anime
-import com.pascal.aniqu.domain.model.AnimeItem
 import com.pascal.aniqu.domain.model.AnimeSection
+import com.pascal.aniqu.domain.model.item.AnimeItem
 
 fun AnimeResponse?.toDomain(): Anime {
     return Anime(
