@@ -4,16 +4,19 @@ package com.pascal.aniqu.ui.screen.home
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.Icon
@@ -22,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import aniqu.sharedui.generated.resources.Res
@@ -29,6 +33,7 @@ import aniqu.sharedui.generated.resources.label_completed
 import aniqu.sharedui.generated.resources.label_ongoing
 import app.cash.paging.compose.LazyPagingItems
 import com.pascal.aniqu.domain.model.AnimeItem
+import com.pascal.aniqu.ui.component.screenUtils.shimmer
 import com.pascal.aniqu.ui.screen.home.component.HomeLiveItem
 import com.pascal.aniqu.ui.screen.home.component.HomeOngoingItem
 import com.pascal.aniqu.ui.screen.home.component.LazyRowCarousel
@@ -114,14 +119,30 @@ fun HomeScreen(
             }
         }
 
-        itemsIndexed(uiState.anime?.completed?.animeList.orEmpty()) { index, items ->
-            HomeOngoingItem(
-                modifier = Modifier.padding(
-                    start = if (index % 2 == 0) 16.dp else 8.dp,
-                    end = if (index % 2 == 0) 8.dp else 16.dp
-                ),
-                items = items
-            )
+        if (uiState.isLoading) {
+            items(2) { index ->
+                Box(
+                    modifier = Modifier
+                        .padding(
+                            start = if (index % 2 == 0) 16.dp else 8.dp,
+                            end = if (index % 2 == 0) 8.dp else 16.dp
+                        )
+                        .fillMaxWidth()
+                        .height(260.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .shimmer()
+                )
+            }
+        } else {
+            itemsIndexed(uiState.anime?.completed?.animeList.orEmpty()) { index, items ->
+                HomeOngoingItem(
+                    modifier = Modifier.padding(
+                        start = if (index % 2 == 0) 16.dp else 8.dp,
+                        end = if (index % 2 == 0) 8.dp else 16.dp
+                    ),
+                    items = items
+                )
+            }
         }
     }
 }
