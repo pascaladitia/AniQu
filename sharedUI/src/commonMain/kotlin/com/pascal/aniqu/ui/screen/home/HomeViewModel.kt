@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import com.pascal.aniqu.domain.model.AnimeItem
-import com.pascal.aniqu.domain.usecase.remote.RemoteUseCase
+import com.pascal.aniqu.domain.usecase.anime.AnimeUseCase
 import com.pascal.aniqu.ui.screen.home.state.HomeUIState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val remoteUseCase: RemoteUseCase
+    private val animeUseCase: AnimeUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUIState())
@@ -44,7 +44,7 @@ class HomeViewModel(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
 
-            remoteUseCase.getAnimeHome()
+            animeUseCase.getAnimeHome()
                 .catch { e ->
                     _uiState.update {
                         it.copy(
@@ -68,7 +68,7 @@ class HomeViewModel(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
 
-            remoteUseCase.getAnimeLive()
+            animeUseCase.getAnimeLive()
                 .catch { e ->
                     _uiState.update {
                         it.copy(
