@@ -2,6 +2,7 @@ package com.pascal.aniqu.data.repository
 
 import com.pascal.aniqu.data.remote.api.KtorClientApi
 import com.pascal.aniqu.data.remote.dtos.BaseResponse
+import com.pascal.aniqu.data.remote.dtos.anime.AnimeDetailResponse
 import com.pascal.aniqu.data.remote.dtos.anime.AnimeResponse
 import com.pascal.aniqu.data.remote.dtos.anime.AnimeSectionResponse
 import org.koin.core.annotation.Single
@@ -16,5 +17,9 @@ class RemoteRepositoryImpl(
 
     override suspend fun getAnimeLive(page: Int): BaseResponse<AnimeSectionResponse> {
         return api.getAnimeLive(page)
+    }
+
+    override suspend fun getAnimeDetail(slug: String): BaseResponse<AnimeDetailResponse> {
+        return api.getAnimeDetail(slug)
     }
 }
