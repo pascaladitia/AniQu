@@ -5,13 +5,13 @@ import com.pascal.aniqu.data.local.database.AppDatabase
 import com.pascal.aniqu.data.local.database.getRoomDatabase
 import com.pascal.aniqu.data.local.repository.LocalRepository
 import com.pascal.aniqu.data.local.repository.LocalRepositoryImpl
-import com.pascal.aniqu.data.remote.api.KtorClientApi
-import com.pascal.aniqu.data.repository.RemoteRepository
-import com.pascal.aniqu.data.repository.RemoteRepositoryImpl
+import com.pascal.aniqu.data.remote.api.AnimeClientApi
+import com.pascal.aniqu.data.repository.anime.AnimeRepository
+import com.pascal.aniqu.data.repository.anime.AnimeRepositoryImpl
 import com.pascal.aniqu.domain.usecase.local.LocalUseCase
 import com.pascal.aniqu.domain.usecase.local.LocalUseCaseImpl
-import com.pascal.aniqu.domain.usecase.remote.RemoteUseCase
-import com.pascal.aniqu.domain.usecase.remote.RemoteUseCaseImpl
+import com.pascal.aniqu.domain.usecase.anime.AnimeUseCase
+import com.pascal.aniqu.domain.usecase.anime.AnimeUseCaseImpl
 import com.pascal.aniqu.getDatabaseBuilder
 import com.pascal.aniqu.ui.screen.detail.DetailViewModel
 import com.pascal.aniqu.ui.screen.favorite.FavoriteViewModel
@@ -32,14 +32,14 @@ val appModule = module {
     singleOf(::LocalRepositoryImpl) { bind<LocalRepository>() }
 
     // API client
-    singleOf(::KtorClientApi)
+    singleOf(::AnimeClientApi)
 
     // Repository
-    singleOf(::RemoteRepositoryImpl) { bind<RemoteRepository>() }
+    singleOf(::AnimeRepositoryImpl) { bind<AnimeRepository>() }
 
     // UseCases
     singleOf(::LocalUseCaseImpl) { bind<LocalUseCase>() }
-    singleOf(::RemoteUseCaseImpl) { bind<RemoteUseCase>() }
+    singleOf(::AnimeUseCaseImpl) { bind<AnimeUseCase>() }
 
     // ViewModels
     singleOf(::HomeViewModel)

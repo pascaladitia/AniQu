@@ -1,15 +1,4 @@
-package com.pascal.aniqu.domain.model
-
-data class Anime(
-    val ongoing: AnimeSection?,
-    val completed: AnimeSection?
-)
-
-data class AnimeSection(
-    val href: String,
-    val otakudesuUrl: String,
-    val animeList: List<AnimeItem>
-)
+package com.pascal.aniqu.domain.model.item
 
 data class AnimeItem(
     val title: String,

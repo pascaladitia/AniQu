@@ -25,8 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import aniqu.sharedui.generated.resources.Res
 import aniqu.sharedui.generated.resources.label_episode
-import co.touchlab.kermit.Logger
-import com.pascal.aniqu.domain.model.AnimeItem
+import com.pascal.aniqu.domain.model.item.AnimeItem
 import com.pascal.aniqu.ui.component.screenUtils.DynamicAsyncImage
 import com.pascal.aniqu.ui.theme.AppTheme
 import org.jetbrains.compose.resources.stringResource

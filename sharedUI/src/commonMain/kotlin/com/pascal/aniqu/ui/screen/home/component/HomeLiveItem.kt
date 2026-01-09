@@ -38,7 +38,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import app.cash.paging.compose.LazyPagingItems
-import com.pascal.aniqu.domain.model.AnimeItem
+import com.pascal.aniqu.domain.model.item.AnimeItem
 import com.pascal.aniqu.ui.component.screenUtils.DynamicAsyncImage
 import com.pascal.aniqu.ui.component.screenUtils.shimmer
 import kotlinx.coroutines.delay
