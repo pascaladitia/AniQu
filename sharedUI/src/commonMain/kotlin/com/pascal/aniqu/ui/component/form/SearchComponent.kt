@@ -35,6 +35,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.PopupProperties
 import com.pascal.aniqu.ui.theme.AppTheme
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.Search
@@ -134,8 +135,12 @@ fun SearchComponent(
         DropdownMenu(
             expanded = expanded && filteredSuggestions.isNotEmpty(),
             onDismissRequest = { expanded = false },
+            properties = PopupProperties(
+                focusable = false
+            ),
             modifier = Modifier
                 .width(textFieldWidth)
+                .heightIn(max = 500.dp)
                 .background(MaterialTheme.colorScheme.outline)
         ) {
             filteredSuggestions.forEach { item ->
