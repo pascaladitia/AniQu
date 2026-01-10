@@ -18,14 +18,15 @@ class AnimeDetailViewModel(
     private val _uiState = MutableStateFlow(AnimeDetailUIState())
     val uiState: StateFlow<AnimeDetailUIState> = _uiState.asStateFlow()
 
-    fun loadAnimeGenre() {
+    fun loadAnimeDetail(slug: String) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true,) }
 
-            animeUseCase.getAnimeGenre()
+            animeUseCase.getAnimeDetail(slug)
                 .catch { e ->
                     _uiState.update {
                         it.copy(
+                            isLoading = false,
                             error = true to e.message.toString(),
                         )
                     }
@@ -34,6 +35,7 @@ class AnimeDetailViewModel(
                     _uiState.update {
                         it.copy(
                             isLoading = false,
+                            animeDetail = result
                         )
                     }
                 }

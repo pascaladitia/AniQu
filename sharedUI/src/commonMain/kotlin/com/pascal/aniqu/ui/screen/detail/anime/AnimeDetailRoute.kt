@@ -2,9 +2,11 @@ package com.pascal.aniqu.ui.screen.detail.anime
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import aniqu.sharedui.generated.resources.Res
 import aniqu.sharedui.generated.resources.close
 import com.pascal.aniqu.ui.component.dialog.ShowDialog
@@ -16,11 +18,16 @@ import org.koin.compose.koinInject
 @Composable
 fun AnimeDetailRoute(
     modifier: Modifier = Modifier,
+    slug: String = "",
     viewModel: AnimeDetailViewModel = koinInject<AnimeDetailViewModel>(),
     onNavBack: () -> Unit
 ) {
     val event = LocalAnimeDetailEvent.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.loadAnimeDetail(slug)
+    }
 
     if (uiState.error.first) {
         ShowDialog(
