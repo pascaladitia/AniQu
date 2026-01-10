@@ -55,7 +55,7 @@ fun HomeOngoingItem(
         Text(
             text = items.title,
             style = MaterialTheme.typography.titleLarge,
-            maxLines = 2,
+            maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
 

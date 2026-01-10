@@ -121,7 +121,6 @@ fun RouteScreen(
                 }
                 composable(route = Screen.SearchScreen.route) {
                     SearchRoute(
-                        paddingValues = paddingValues,
                         onDetail = {}
                     )
                 }
