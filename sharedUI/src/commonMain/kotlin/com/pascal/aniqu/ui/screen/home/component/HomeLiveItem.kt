@@ -41,6 +41,7 @@ import app.cash.paging.compose.LazyPagingItems
 import com.pascal.aniqu.domain.model.item.AnimeItem
 import com.pascal.aniqu.ui.component.screenUtils.DynamicAsyncImage
 import com.pascal.aniqu.ui.component.screenUtils.shimmer
+import com.pascal.aniqu.ui.component.screenUtils.verticalFadeBackground
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -107,19 +108,22 @@ fun HomeLiveItem(
             )
         }
 
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp)
+                .verticalFadeBackground(
+                    startColor = Color.Black.copy(0.8f),
+                    isTop = true
+                )
+        )
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            Color.Black.copy(alpha = 0.6f),
-                            Color.Black.copy(alpha = 0.4f),
-                            Color.Transparent
-                        ),
-                        startY = Float.POSITIVE_INFINITY,
-                        endY = 0f
-                    )
+                .verticalFadeBackground(
+                    startColor = Color.Black.copy(0.8f),
+                    isTop = false
                 )
                 .padding(16.dp)
                 .align(Alignment.BottomCenter)
