@@ -9,4 +9,5 @@ val LocalSearchEvent = compositionLocalOf { SearchEvent() }
 data class SearchEvent (
     val onSearch: (String) -> Unit = {},
     val onGenre: (String) -> Unit = {},
+    val onDetail: (String) -> Unit = {}
 )

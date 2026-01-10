@@ -33,6 +33,7 @@ fun AnimeItemResponse.toDomain(): AnimeItem {
         score = score.orEmpty(),
         animeId = animeId.orEmpty(),
         href = href.orEmpty(),
+        studios = studios.orEmpty(),
         otakudesuUrl = otakudesuUrl.orEmpty()
     )
 }

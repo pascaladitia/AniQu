@@ -2,6 +2,7 @@ package com.pascal.aniqu.ui.screen.search
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -17,10 +18,14 @@ import org.koin.compose.koinInject
 fun SearchRoute(
     modifier: Modifier = Modifier,
     viewModel: SearchViewModel = koinInject<SearchViewModel>(),
-    onDetail: () -> Unit
+    onDetail: (String) -> Unit
 ) {
     val event = LocalSearchEvent.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.loadAnimeGenre()
+    }
 
     if (uiState.error.first) {
         ShowDialog(
@@ -33,13 +38,18 @@ fun SearchRoute(
 
     CompositionLocalProvider(
         LocalSearchEvent provides event.copy(
-            onSearch = {},
-            onGenre = {}
+            onSearch = {
+                viewModel.loadAnimeSearch(it)
+            },
+            onGenre = {
+                viewModel.loadAnimeGenre(it)
+            },
+            onDetail = onDetail
         )
     ) {
         PullRefreshComponent(
             onRefresh = {
-
+                viewModel.loadAnimeGenre()
             }
         ) {
             SearchScreen(

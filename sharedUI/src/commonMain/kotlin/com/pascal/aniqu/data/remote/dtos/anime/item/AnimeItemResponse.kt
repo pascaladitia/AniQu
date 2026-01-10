@@ -13,6 +13,7 @@ data class AnimeItemResponse(
     val score: String? = null,
     val animeId: String? = null,
     val href: String? = null,
+    val studios: String? = null,
     val otakudesuUrl: String? = null,
     val genreList: List<GenreResponse>? = null
 )

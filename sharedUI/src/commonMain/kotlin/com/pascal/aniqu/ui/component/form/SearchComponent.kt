@@ -36,27 +36,31 @@ import compose.icons.FeatherIcons
 import compose.icons.feathericons.Search
 
 @Composable
-fun Search(
+fun SearchComponent(
     modifier: Modifier = Modifier,
     onSearch: (String) -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused = interactionSource.collectIsFocusedAsState()
-    val border = if (isFocused.value) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+    val border = if (isFocused.value) Color.White else MaterialTheme.colorScheme.outline
 
     var searchText by remember { mutableStateOf("") }
 
     BasicTextField(
         modifier = modifier
-            .heightIn(min = 40.dp)
-            .border(1.dp, border, RoundedCornerShape(8.dp))
-            .background(Color.White, RoundedCornerShape(8.dp)),
-
+            .heightIn(min = 48.dp)
+            .then(
+                if (isFocused.value) Modifier
+                    .border(1.dp, border, RoundedCornerShape(16.dp)) else Modifier
+            )
+            .background(MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp)),
         value = searchText,
         onValueChange = {
             searchText = it
         },
-        textStyle = MaterialTheme.typography.bodySmall,
+        textStyle = MaterialTheme.typography.bodyMedium.copy(
+            color = MaterialTheme.colorScheme.onSurface
+        ),
         singleLine = true,
         keyboardOptions = KeyboardOptions.Default.copy(
             imeAction = ImeAction.Search,
@@ -75,8 +79,8 @@ fun Search(
                 contentAlignment = Alignment.CenterStart
             ) {
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
                         modifier = Modifier.size(16.dp),
@@ -90,9 +94,9 @@ fun Search(
                     Box {
                         if (searchText.isEmpty()) {
                             Text(
-                                text = "Cari Tugas Disini",
+                                text = "Search..",
                                 style = MaterialTheme.typography.bodySmall.copy(
-                                    color = MaterialTheme.colorScheme.onSurface
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             )
                         }
@@ -109,7 +113,7 @@ fun Search(
 @Composable
 fun Preview() {
     AppTheme {
-        Search() {
+        SearchComponent() {
 
         }
     }

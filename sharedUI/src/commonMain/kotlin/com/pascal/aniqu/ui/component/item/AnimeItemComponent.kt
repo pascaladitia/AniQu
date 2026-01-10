@@ -1,4 +1,4 @@
-package com.pascal.aniqu.ui.screen.home.component
+package com.pascal.aniqu.ui.component.item
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -31,7 +31,7 @@ import com.pascal.aniqu.ui.theme.AppTheme
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun HomeOngoingItem(
+fun AnimeItemComponent(
     modifier: Modifier = Modifier,
     items: AnimeItem? = null
 ) {
@@ -64,12 +64,21 @@ fun HomeOngoingItem(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = stringResource(Res.string.label_episode, items.episodes),
-                style = MaterialTheme.typography.bodySmall.copy(
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+            if (items.episodes != 0) {
+                Text(
+                    text = stringResource(Res.string.label_episode, items.episodes),
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 )
-            )
+            } else {
+                Text(
+                    text = items.studios,
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                )
+            }
 
             Spacer(Modifier.width(8.dp))
 
@@ -83,7 +92,7 @@ fun HomeOngoingItem(
             Spacer(Modifier.width(4.dp))
 
             Text(
-                text = items.score,
+                text = items.score.ifBlank { "-" },
                 style = MaterialTheme.typography.bodySmall.copy(
                     color = MaterialTheme.colorScheme.onSurface
                 )
@@ -94,8 +103,8 @@ fun HomeOngoingItem(
 
 @Preview(showBackground = true)
 @Composable
-fun HomeOngoingPreview() {
+fun SearchAnimePreview() {
     AppTheme {
-        HomeOngoingItem()
+        AnimeItemComponent()
     }
 }

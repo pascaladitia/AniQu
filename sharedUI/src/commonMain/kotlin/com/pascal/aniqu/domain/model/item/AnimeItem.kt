@@ -10,5 +10,6 @@ data class AnimeItem(
     val score: String,
     val animeId: String,
     val href: String,
+    val studios: String,
     val otakudesuUrl: String
 )

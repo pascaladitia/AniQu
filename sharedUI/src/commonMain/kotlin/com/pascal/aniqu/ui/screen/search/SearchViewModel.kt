@@ -33,10 +33,11 @@ class SearchViewModel(
                 .collect { result ->
                     _uiState.update {
                         it.copy(
-                            isLoading = false,
                             genreList = result.toMutableList()
                         )
                     }
+
+                    loadAnimeGenre(result.first().title)
                 }
         }
     }

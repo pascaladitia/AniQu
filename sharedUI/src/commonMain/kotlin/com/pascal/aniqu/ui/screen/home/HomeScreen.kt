@@ -33,9 +33,9 @@ import aniqu.sharedui.generated.resources.label_completed
 import aniqu.sharedui.generated.resources.label_ongoing
 import app.cash.paging.compose.LazyPagingItems
 import com.pascal.aniqu.domain.model.item.AnimeItem
+import com.pascal.aniqu.ui.component.item.AnimeItemComponent
 import com.pascal.aniqu.ui.component.screenUtils.shimmer
 import com.pascal.aniqu.ui.screen.home.component.HomeLiveItem
-import com.pascal.aniqu.ui.screen.home.component.HomeOngoingItem
 import com.pascal.aniqu.ui.screen.home.component.LazyRowCarousel
 import com.pascal.aniqu.ui.screen.home.state.HomeUIState
 import com.pascal.aniqu.ui.screen.onboarding.state.LocalOnboardingEvent
@@ -135,7 +135,7 @@ fun HomeScreen(
             }
         } else {
             itemsIndexed(uiState.anime?.completed?.animeList.orEmpty()) { index, items ->
-                HomeOngoingItem(
+                AnimeItemComponent(
                     modifier = Modifier.padding(
                         start = if (index % 2 == 0) 16.dp else 8.dp,
                         end = if (index % 2 == 0) 8.dp else 16.dp
