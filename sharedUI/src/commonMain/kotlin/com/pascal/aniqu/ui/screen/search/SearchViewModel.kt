@@ -61,6 +61,7 @@ class SearchViewModel(
                         it.copy(
                             isSearch = false,
                             isLoading = false,
+                            selectedGenre = slug,
                             animeByGenreList = result.toMutableList()
                         )
                     }

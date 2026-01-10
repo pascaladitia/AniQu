@@ -39,7 +39,11 @@ fun SearchRoute(
     CompositionLocalProvider(
         LocalSearchEvent provides event.copy(
             onSearch = {
-                viewModel.loadAnimeSearch(it)
+                if (it.isNotBlank()) {
+                    viewModel.loadAnimeSearch(it)
+                } else {
+                    viewModel.loadAnimeGenre(uiState.selectedGenre)
+                }
             },
             onGenre = {
                 viewModel.loadAnimeGenre(it)
@@ -49,7 +53,7 @@ fun SearchRoute(
     ) {
         PullRefreshComponent(
             onRefresh = {
-                viewModel.loadAnimeGenre()
+                viewModel.loadAnimeGenre(uiState.selectedGenre)
             }
         ) {
             SearchScreen(
