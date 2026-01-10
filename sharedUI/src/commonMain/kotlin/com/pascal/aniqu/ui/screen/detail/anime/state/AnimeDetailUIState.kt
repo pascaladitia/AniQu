@@ -1,9 +1,15 @@
 package com.pascal.aniqu.ui.screen.detail.anime.state
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.SharedTransitionScope
 import com.pascal.aniqu.domain.model.AnimeDetail
 
 data class AnimeDetailUIState(
     val isLoading: Boolean = false,
     val error: Pair<Boolean, String> = false to "",
-    val animeDetail: AnimeDetail? = null
+    val animeId: String = "",
+    val animeDetail: AnimeDetail? = null,
+
+    val sharedTransitionScope: SharedTransitionScope? = null,
+    val animatedVisibilityScope: AnimatedVisibilityScope? = null
 )

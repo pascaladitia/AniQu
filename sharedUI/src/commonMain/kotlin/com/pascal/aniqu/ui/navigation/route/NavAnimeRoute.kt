@@ -31,6 +31,7 @@ import com.pascal.aniqu.ui.screen.onboarding.OnboardingRoute
 import com.pascal.aniqu.ui.screen.profile.ProfileRoute
 import com.pascal.aniqu.ui.screen.search.SearchRoute
 import com.pascal.aniqu.ui.screen.splash.SplashRoute
+import com.pascal.aniqu.utils.base.getFromPreviousBackStack
 import com.pascal.aniqu.utils.base.saveToCurrentBackStack
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -98,13 +99,18 @@ fun NavAnimeRoute(
                         sharedTransitionScope = sharedScope,
                         animatedVisibilityScope = animScope,
                         onDetail = {
-                            saveToCurrentBackStack(navController, "articles", it)
-                            navController.navigate(AnimeScreen.DetailScreen.route)
+                            saveToCurrentBackStack(navController, "slug", it)
+                            navController.navigate(AnimeScreen.AnimeDetailScreen.route)
                         }
                     )
                 }
-                composable(route = AnimeScreen.DetailScreen.route) {
+                composable(route = AnimeScreen.AnimeDetailScreen.route) {
+                    val animScope: AnimatedVisibilityScope = this
+
                     AnimeDetailRoute(
+                        sharedTransitionScope = sharedScope,
+                        animatedVisibilityScope = animScope,
+                        slug = getFromPreviousBackStack<String>(navController, "slug"),
                         onNavBack = {
                             navController.popBackStack()
                         }

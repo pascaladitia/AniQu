@@ -1,5 +1,7 @@
 package com.pascal.aniqu.ui.screen.detail.anime
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -17,8 +19,9 @@ import org.koin.compose.koinInject
 
 @Composable
 fun AnimeDetailRoute(
-    modifier: Modifier = Modifier,
-    slug: String = "",
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    slug: String? = "",
     viewModel: AnimeDetailViewModel = koinInject<AnimeDetailViewModel>(),
     onNavBack: () -> Unit
 ) {
@@ -26,6 +29,7 @@ fun AnimeDetailRoute(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
+        viewModel.setTransition(sharedTransitionScope, animatedVisibilityScope)
         viewModel.loadAnimeDetail(slug)
     }
 
@@ -45,11 +49,10 @@ fun AnimeDetailRoute(
     ) {
         PullRefreshComponent(
             onRefresh = {
-
+                viewModel.loadAnimeDetail(slug)
             }
         ) {
             AnimeDetailScreen(
-                modifier = modifier,
                 uiState = uiState
             )
         }

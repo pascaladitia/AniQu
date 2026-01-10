@@ -143,8 +143,7 @@ fun SharedTransitionScope.LazyRowCarousel(
                             .width(imageWidth)
                             .height(imageHeight)
                             .sharedElement(
-                                sharedContentState =
-                                    rememberSharedContentState("poster_${anime.animeId}"),
+                                sharedContentState = rememberSharedContentState(anime.animeId),
                                 animatedVisibilityScope = animatedVisibilityScope,
                                 renderInOverlayDuringTransition = true
                             )

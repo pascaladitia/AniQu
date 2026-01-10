@@ -1,6 +1,7 @@
 package com.pascal.aniqu.ui.component.item
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,12 +34,16 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun AnimeItemComponent(
     modifier: Modifier = Modifier,
-    items: AnimeItem? = null
+    items: AnimeItem? = null,
+    onClick: (String) -> Unit = {}
 ) {
     if (items == null) return
 
     Column(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
+            .clickable { onClick(items.animeId) }
     ) {
         DynamicAsyncImage(
             modifier = Modifier

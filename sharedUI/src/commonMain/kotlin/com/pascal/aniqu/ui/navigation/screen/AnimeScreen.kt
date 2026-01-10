@@ -8,5 +8,5 @@ sealed class AnimeScreen(val route: String) {
     data object SearchScreen: AnimeScreen("search")
     data object FavoriteScreen: AnimeScreen("favorite")
     data object ProfileScreen: AnimeScreen("profile")
-    data object DetailScreen: AnimeScreen("detail")
+    data object AnimeDetailScreen: AnimeScreen("anime_detail")
 }

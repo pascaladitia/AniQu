@@ -1,5 +1,7 @@
 package com.pascal.aniqu.ui.screen.detail.anime
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.SharedTransitionScope
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pascal.aniqu.domain.usecase.anime.AnimeUseCase
@@ -18,7 +20,21 @@ class AnimeDetailViewModel(
     private val _uiState = MutableStateFlow(AnimeDetailUIState())
     val uiState: StateFlow<AnimeDetailUIState> = _uiState.asStateFlow()
 
-    fun loadAnimeDetail(slug: String) {
+    fun setTransition(
+        sharedTransitionScope: SharedTransitionScope,
+        animatedVisibilityScope: AnimatedVisibilityScope
+    ) {
+        _uiState.update {
+            it.copy(
+                sharedTransitionScope = sharedTransitionScope,
+                animatedVisibilityScope = animatedVisibilityScope
+            )
+        }
+    }
+
+    fun loadAnimeDetail(slug: String?) {
+        if (slug.isNullOrBlank()) return
+
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true,) }
 
@@ -35,6 +51,7 @@ class AnimeDetailViewModel(
                     _uiState.update {
                         it.copy(
                             isLoading = false,
+                            animeId = slug,
                             animeDetail = result
                         )
                     }

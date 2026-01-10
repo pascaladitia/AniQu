@@ -38,7 +38,7 @@ import com.pascal.aniqu.ui.component.screenUtils.shimmer
 import com.pascal.aniqu.ui.screen.home.component.HomeLiveItem
 import com.pascal.aniqu.ui.screen.home.component.LazyRowCarousel
 import com.pascal.aniqu.ui.screen.home.state.HomeUIState
-import com.pascal.aniqu.ui.screen.onboarding.state.LocalOnboardingEvent
+import com.pascal.aniqu.ui.screen.home.state.LocalHomeEvent
 import com.pascal.aniqu.ui.theme.AppTheme
 import org.jetbrains.compose.resources.stringResource
 
@@ -48,7 +48,7 @@ fun HomeScreen(
     uiState: HomeUIState = HomeUIState(),
     animeLiveResponse: LazyPagingItems<AnimeItem>? = null
 ) {
-    val event = LocalOnboardingEvent.current
+    val event = LocalHomeEvent.current
 
     LazyVerticalGrid(
         modifier = modifier.fillMaxSize(),
@@ -57,7 +57,8 @@ fun HomeScreen(
     ) {
         item(span = { GridItemSpan(maxLineSpan) }) {
             HomeLiveItem(
-                animeLiveResponse = animeLiveResponse
+                animeLiveResponse = animeLiveResponse,
+                onClick = event.onDetail
             )
         }
 
@@ -90,7 +91,7 @@ fun HomeScreen(
                             items = uiState.anime?.ongoing,
                             animatedVisibilityScope = uiState.animatedVisibilityScope!!
                         ) {
-                            event.onNext()
+                            event.onDetail(it.animeId)
                         }
                     }
                 }
@@ -140,7 +141,8 @@ fun HomeScreen(
                         start = if (index % 2 == 0) 16.dp else 8.dp,
                         end = if (index % 2 == 0) 8.dp else 16.dp
                     ),
-                    items = items
+                    items = items,
+                    onClick = event.onDetail
                 )
             }
         }

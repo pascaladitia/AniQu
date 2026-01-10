@@ -25,7 +25,7 @@ fun HomeRoute(
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
     viewModel: HomeViewModel = koinInject<HomeViewModel>(),
-    onDetail: (FavoritesEntity?) -> Unit
+    onDetail: (String) -> Unit
 ) {
     val event = LocalHomeEvent.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()

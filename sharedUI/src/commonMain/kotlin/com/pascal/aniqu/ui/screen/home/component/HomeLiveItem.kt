@@ -49,7 +49,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeLiveItem(
     modifier: Modifier = Modifier,
-    animeLiveResponse: LazyPagingItems<AnimeItem>?
+    animeLiveResponse: LazyPagingItems<AnimeItem>?,
+    onClick: (String) -> Unit = {}
 ) {
     if (animeLiveResponse == null) return
 
@@ -102,6 +103,7 @@ fun HomeLiveItem(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(240.dp)
+                    .clickable { onClick(item.animeId) }
                     .background(Color.LightGray),
                 imageUrl = item.poster,
                 contentScale = ContentScale.Crop
