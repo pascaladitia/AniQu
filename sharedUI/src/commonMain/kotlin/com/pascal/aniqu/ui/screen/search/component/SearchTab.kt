@@ -45,17 +45,14 @@ fun SearchTab(
         contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
         if (uiState.isLoading && uiState.genreList.isEmpty()) {
-            item {
-                repeat(4) {
-                    Spacer(
-                        modifier = modifier
-                            .padding(end = 8.dp)
-                            .width(100.dp)
-                            .height(42.dp)
-                            .clip(RoundedCornerShape(16.dp))
-                            .shimmer()
-                    )
-                }
+            items(4) {
+                Spacer(
+                    modifier = modifier
+                        .width(100.dp)
+                        .height(42.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .shimmer()
+                )
             }
         } else {
             itemsIndexed(uiState.genreList) { index, item ->

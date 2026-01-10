@@ -120,7 +120,7 @@ fun HomeScreen(
         }
 
         if (uiState.isLoading) {
-            items(2) { index ->
+            itemsIndexed(List(2) { it }) { index, _ ->
                 Box(
                     modifier = Modifier
                         .padding(
