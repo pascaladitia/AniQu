@@ -65,7 +65,7 @@ fun AnimeDetailHeader(
             modifier = Modifier
                 .fillMaxWidth()
                 .verticalFadeBackground(
-                    startColor = Color.Black,
+                    startColor = Color.Black.copy(0.8f),
                     isTop = false
                 )
                 .padding(24.dp)
