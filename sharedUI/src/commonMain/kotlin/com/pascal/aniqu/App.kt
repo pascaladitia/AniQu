@@ -7,7 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.room.RoomDatabase
 import com.pascal.aniqu.data.local.database.AppDatabase
-import com.pascal.aniqu.ui.navigation.RouteScreen
+import com.pascal.aniqu.ui.navigation.route.NavAnimeRoute
 import com.pascal.aniqu.ui.theme.AppTheme
 import com.pascal.aniqu.ui.theme.LocalThemeIsDark
 import com.russhwolf.settings.Settings
@@ -24,7 +24,7 @@ fun App(
         isDark = true
     }
 
-    RouteScreen()
+    NavAnimeRoute()
 }
 
 expect fun createSettings(): Settings

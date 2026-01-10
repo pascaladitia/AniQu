@@ -1,4 +1,4 @@
-package com.pascal.aniqu.ui.screen.home.detail.anime.state
+package com.pascal.aniqu.ui.screen.detail.anime.state
 
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.compositionLocalOf

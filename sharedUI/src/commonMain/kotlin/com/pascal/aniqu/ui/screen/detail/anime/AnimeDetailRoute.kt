@@ -1,4 +1,4 @@
-package com.pascal.aniqu.ui.screen.home.detail.anime
+package com.pascal.aniqu.ui.screen.detail.anime
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -9,7 +9,7 @@ import aniqu.sharedui.generated.resources.Res
 import aniqu.sharedui.generated.resources.close
 import com.pascal.aniqu.ui.component.dialog.ShowDialog
 import com.pascal.aniqu.ui.component.screenUtils.PullRefreshComponent
-import com.pascal.aniqu.ui.screen.home.detail.anime.state.LocalAnimeDetailEvent
+import com.pascal.aniqu.ui.screen.detail.anime.state.LocalAnimeDetailEvent
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -17,7 +17,7 @@ import org.koin.compose.koinInject
 fun AnimeDetailRoute(
     modifier: Modifier = Modifier,
     viewModel: AnimeDetailViewModel = koinInject<AnimeDetailViewModel>(),
-    onDetail: () -> Unit
+    onNavBack: () -> Unit
 ) {
     val event = LocalAnimeDetailEvent.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -33,7 +33,7 @@ fun AnimeDetailRoute(
 
     CompositionLocalProvider(
         LocalAnimeDetailEvent provides event.copy(
-            onDetail
+            onNavBack = onNavBack
         )
     ) {
         PullRefreshComponent(

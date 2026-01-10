@@ -1,9 +1,9 @@
-package com.pascal.aniqu.ui.screen.home.detail.anime
+package com.pascal.aniqu.ui.screen.detail.anime
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pascal.aniqu.domain.usecase.anime.AnimeUseCase
-import com.pascal.aniqu.ui.screen.home.detail.anime.state.AnimeDetailUIState
+import com.pascal.aniqu.ui.screen.detail.anime.state.AnimeDetailUIState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

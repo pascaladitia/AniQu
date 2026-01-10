@@ -3,7 +3,7 @@
     ExperimentalSharedTransitionApi::class
 )
 
-package com.pascal.aniqu.ui.navigation
+package com.pascal.aniqu.ui.navigation.route
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -21,7 +21,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.pascal.aniqu.data.preferences.PrefLogin
-import com.pascal.aniqu.ui.screen.detail.DetailRoute
+import com.pascal.aniqu.ui.navigation.BottomBar
+import com.pascal.aniqu.ui.navigation.screen.AnimeScreen
+import com.pascal.aniqu.ui.screen.detail.anime.AnimeDetailRoute
 import com.pascal.aniqu.ui.screen.favorite.FavoriteRoute
 import com.pascal.aniqu.ui.screen.home.HomeRoute
 import com.pascal.aniqu.ui.screen.manga.MangaRoute
@@ -29,12 +31,11 @@ import com.pascal.aniqu.ui.screen.onboarding.OnboardingRoute
 import com.pascal.aniqu.ui.screen.profile.ProfileRoute
 import com.pascal.aniqu.ui.screen.search.SearchRoute
 import com.pascal.aniqu.ui.screen.splash.SplashRoute
-import com.pascal.aniqu.utils.base.getFromPreviousBackStack
 import com.pascal.aniqu.utils.base.saveToCurrentBackStack
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun RouteScreen(
+fun NavAnimeRoute(
     navController: NavHostController = rememberNavController(),
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -43,12 +44,12 @@ fun RouteScreen(
     Scaffold(
         bottomBar = {
             if (currentRoute in listOf(
-                    Screen.HomeScreen.route,
-                    Screen.MangaScreen.route,
-                    Screen.SearchScreen.route,
-                    Screen.FavoriteScreen.route,
-                    Screen.ProfileScreen.route
-                )) {
+                    AnimeScreen.HomeScreen.route,
+                    AnimeScreen.MangaScreen.route,
+                    AnimeScreen.SearchScreen.route,
+                    AnimeScreen.FavoriteScreen.route,
+                    AnimeScreen.ProfileScreen.route
+            )) {
                 BottomBar(navController)
             }
         }
@@ -59,31 +60,31 @@ fun RouteScreen(
             NavHost(
                 modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding()),
                 navController = navController,
-                startDestination = Screen.SplashScreen.route,
+                startDestination = AnimeScreen.SplashScreen.route,
             ) {
-                composable(route = Screen.SplashScreen.route) {
+                composable(route = AnimeScreen.SplashScreen.route) {
                     SplashRoute(
                         paddingValues = paddingValues
                     ) {
                         val route = if (PrefLogin.getIsOnboarding()) {
-                            Screen.HomeScreen.route
+                            AnimeScreen.HomeScreen.route
                         } else {
-                            Screen.OnboardingScreen.route
+                            AnimeScreen.OnboardingScreen.route
                         }
 
                         navController.navigate(route) {
-                            popUpTo(Screen.SplashScreen.route) {
+                            popUpTo(AnimeScreen.SplashScreen.route) {
                                 inclusive = true
                             }
                             launchSingleTop = true
                         }
                     }
                 }
-                composable(route = Screen.OnboardingScreen.route) {
+                composable(route = AnimeScreen.OnboardingScreen.route) {
                     OnboardingRoute(
                         onNext = {
-                            navController.navigate(Screen.HomeScreen.route) {
-                                popUpTo(Screen.OnboardingScreen.route) {
+                            navController.navigate(AnimeScreen.HomeScreen.route) {
+                                popUpTo(AnimeScreen.OnboardingScreen.route) {
                                     inclusive = true
                                 }
                                 launchSingleTop = true
@@ -91,49 +92,45 @@ fun RouteScreen(
                         }
                     )
                 }
-                composable(route = Screen.HomeScreen.route) {
+                composable(route = AnimeScreen.HomeScreen.route) {
                     val animScope: AnimatedVisibilityScope = this
                     HomeRoute(
                         sharedTransitionScope = sharedScope,
                         animatedVisibilityScope = animScope,
                         onDetail = {
                             saveToCurrentBackStack(navController, "articles", it)
-                            navController.navigate(Screen.DetailScreen.route)
+                            navController.navigate(AnimeScreen.DetailScreen.route)
                         }
                     )
                 }
-                composable(route = Screen.DetailScreen.route) {
-                    val animScope: AnimatedVisibilityScope = this
-                    DetailRoute(
-                        sharedTransitionScope = sharedScope,
-                        animatedVisibilityScope = animScope,
-                        item = getFromPreviousBackStack(navController, "articles"),
+                composable(route = AnimeScreen.DetailScreen.route) {
+                    AnimeDetailRoute(
                         onNavBack = {
                             navController.popBackStack()
                         }
                     )
                 }
-                composable(route = Screen.MangaScreen.route) {
+                composable(route = AnimeScreen.MangaScreen.route) {
                     MangaRoute(
                         paddingValues = paddingValues,
                         onDetail = {}
                     )
                 }
-                composable(route = Screen.SearchScreen.route) {
+                composable(route = AnimeScreen.SearchScreen.route) {
                     SearchRoute(
                         onDetail = {}
                     )
                 }
-                composable(route = Screen.FavoriteScreen.route) {
+                composable(route = AnimeScreen.FavoriteScreen.route) {
                     FavoriteRoute(
                         paddingValues = paddingValues,
                         onDetail = {}
                     )
                 }
-                composable(route = Screen.ProfileScreen.route) {
+                composable(route = AnimeScreen.ProfileScreen.route) {
                     ProfileRoute(
                         onBookMark = {
-                            navController.navigate(Screen.ProfileScreen.route)
+                            navController.navigate(AnimeScreen.ProfileScreen.route)
                         },
                     )
                 }

@@ -8,16 +8,16 @@ import com.pascal.aniqu.data.local.repository.LocalRepositoryImpl
 import com.pascal.aniqu.data.remote.api.AnimeClientApi
 import com.pascal.aniqu.data.repository.anime.AnimeRepository
 import com.pascal.aniqu.data.repository.anime.AnimeRepositoryImpl
-import com.pascal.aniqu.domain.usecase.local.LocalUseCase
-import com.pascal.aniqu.domain.usecase.local.LocalUseCaseImpl
 import com.pascal.aniqu.domain.usecase.anime.AnimeUseCase
 import com.pascal.aniqu.domain.usecase.anime.AnimeUseCaseImpl
+import com.pascal.aniqu.domain.usecase.local.LocalUseCase
+import com.pascal.aniqu.domain.usecase.local.LocalUseCaseImpl
 import com.pascal.aniqu.getDatabaseBuilder
-import com.pascal.aniqu.ui.screen.detail.DetailViewModel
+import com.pascal.aniqu.ui.screen.detail.anime.AnimeDetailViewModel
 import com.pascal.aniqu.ui.screen.favorite.FavoriteViewModel
 import com.pascal.aniqu.ui.screen.home.HomeViewModel
-import com.pascal.aniqu.ui.screen.profile.ProfileViewModel
 import com.pascal.aniqu.ui.screen.manga.MangaViewModel
+import com.pascal.aniqu.ui.screen.profile.ProfileViewModel
 import com.pascal.aniqu.ui.screen.search.SearchViewModel
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
@@ -47,5 +47,5 @@ val appModule = module {
     singleOf(::SearchViewModel)
     singleOf(::FavoriteViewModel)
     singleOf(::ProfileViewModel)
-    singleOf(::DetailViewModel)
+    singleOf(::AnimeDetailViewModel)
 }
