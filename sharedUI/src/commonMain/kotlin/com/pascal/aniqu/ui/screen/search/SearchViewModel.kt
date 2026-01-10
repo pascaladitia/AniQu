@@ -26,6 +26,7 @@ class SearchViewModel(
                 .catch { e ->
                     _uiState.update {
                         it.copy(
+                            isLoading = false,
                             error = true to e.message.toString(),
                         )
                     }
@@ -50,6 +51,7 @@ class SearchViewModel(
                 .catch { e ->
                     _uiState.update {
                         it.copy(
+                            isLoading = false,
                             error = true to e.message.toString(),
                         )
                     }
@@ -57,6 +59,7 @@ class SearchViewModel(
                 .collect { result ->
                     _uiState.update {
                         it.copy(
+                            isSearch = false,
                             isLoading = false,
                             animeByGenreList = result.toMutableList()
                         )
@@ -73,6 +76,7 @@ class SearchViewModel(
                 .catch { e ->
                     _uiState.update {
                         it.copy(
+                            isLoading = false,
                             error = true to e.message.toString(),
                         )
                     }
@@ -80,6 +84,8 @@ class SearchViewModel(
                 .collect { result ->
                     _uiState.update {
                         it.copy(
+                            isSearch = true,
+                            isLoading = false,
                             animeList = result.toMutableList(),
                         )
                     }

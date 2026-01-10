@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -32,20 +32,22 @@ fun SearchScreen(
     uiState: SearchUIState = SearchUIState()
 ) {
     val event = LocalSearchEvent.current
+    val animeList = if (uiState.isSearch) uiState.animeList else uiState.animeByGenreList
 
     LazyVerticalGrid(
         modifier = modifier
             .fillMaxSize()
-            .systemBarsPadding(),
+            .statusBarsPadding(),
         columns = GridCells.Fixed(2),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item(span = { GridItemSpan(maxLineSpan) }) {
             Column {
                 SearchComponent(
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    suggestions = uiState.animeByGenreList.map { it.title }
                 ) {
-
+                    event.onSearch(it)
                 }
 
                 SearchTab(
@@ -70,7 +72,7 @@ fun SearchScreen(
                 )
             }
         } else {
-            itemsIndexed(uiState.animeByGenreList) { index, items ->
+            itemsIndexed(animeList) { index, items ->
                 AnimeItemComponent(
                     modifier = Modifier.padding(
                         start = if (index % 2 == 0) 16.dp else 8.dp,

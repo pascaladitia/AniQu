@@ -16,6 +16,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -27,6 +29,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,54 +42,76 @@ import compose.icons.feathericons.Search
 @Composable
 fun SearchComponent(
     modifier: Modifier = Modifier,
+    suggestions: List<String> = emptyList(),
     onSearch: (String) -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
-    val isFocused = interactionSource.collectIsFocusedAsState()
-    val border = if (isFocused.value) Color.White else MaterialTheme.colorScheme.outline
+    val isFocused by interactionSource.collectIsFocusedAsState()
 
     var searchText by remember { mutableStateOf("") }
+    var expanded by remember { mutableStateOf(false) }
 
-    BasicTextField(
-        modifier = modifier
-            .heightIn(min = 48.dp)
-            .then(
-                if (isFocused.value) Modifier
-                    .border(1.dp, border, RoundedCornerShape(16.dp)) else Modifier
-            )
-            .background(MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp)),
-        value = searchText,
-        onValueChange = {
-            searchText = it
-        },
-        textStyle = MaterialTheme.typography.bodyMedium.copy(
-            color = MaterialTheme.colorScheme.onSurface
-        ),
-        singleLine = true,
-        keyboardOptions = KeyboardOptions.Default.copy(
-            imeAction = ImeAction.Search,
-            keyboardType = KeyboardType.Text
-        ),
-        keyboardActions = KeyboardActions(
-            onSearch = {
-                onSearch(searchText)
-            }
-        ),
-        decorationBox = { innerTextField ->
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
-                contentAlignment = Alignment.CenterStart
-            ) {
+    val filteredSuggestions = remember(searchText) {
+        if (searchText.isBlank()) emptyList()
+        else suggestions.filter {
+            it.contains(searchText, ignoreCase = true)
+        }
+    }
+
+    var textFieldWidth by remember { mutableStateOf(0.dp) }
+    val density = LocalDensity.current
+
+    Box(modifier = modifier) {
+
+        BasicTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = 48.dp)
+                .onGloballyPositioned {
+                    with(density) {
+                        textFieldWidth = it.size.width.toDp()
+                    }
+                }
+                .border(
+                    1.dp,
+                    if (isFocused) Color.White else MaterialTheme.colorScheme.outline,
+                    RoundedCornerShape(16.dp)
+                )
+                .background(
+                    MaterialTheme.colorScheme.outline,
+                    RoundedCornerShape(16.dp)
+                ),
+            value = searchText,
+            onValueChange = {
+                searchText = it
+                expanded = it.isNotBlank()
+            },
+            interactionSource = interactionSource,
+            textStyle = MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.colorScheme.onSurface
+            ),
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Search,
+                keyboardType = KeyboardType.Text
+            ),
+            keyboardActions = KeyboardActions(
+                onSearch = {
+                    expanded = false
+                    onSearch(searchText)
+                }
+            ),
+            decorationBox = { innerTextField ->
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        modifier = Modifier.size(16.dp),
                         imageVector = FeatherIcons.Search,
                         contentDescription = "Search",
+                        modifier = Modifier.size(16.dp),
                         tint = MaterialTheme.colorScheme.onSurface
                     )
 
@@ -94,27 +120,52 @@ fun SearchComponent(
                     Box {
                         if (searchText.isEmpty()) {
                             Text(
-                                text = "Search..",
-                                style = MaterialTheme.typography.bodySmall.copy(
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
+                                text = "Search anime...",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                         innerTextField()
                     }
                 }
             }
-        }
-    )
-}
+        )
 
+        DropdownMenu(
+            expanded = expanded && filteredSuggestions.isNotEmpty(),
+            onDismissRequest = { expanded = false },
+            modifier = Modifier
+                .width(textFieldWidth)
+                .background(MaterialTheme.colorScheme.outline)
+        ) {
+            filteredSuggestions.forEach { item ->
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = item,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    },
+                    onClick = {
+                        searchText = item
+                        expanded = false
+                        onSearch(item)
+                    }
+                )
+            }
+        }
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
-fun Preview() {
+fun PreviewSearchDropdown() {
     AppTheme {
-        SearchComponent() {
-
-        }
+        SearchComponent(
+            modifier = Modifier.padding(16.dp),
+            onSearch = {
+                println("Search: $it")
+            }
+        )
     }
 }
