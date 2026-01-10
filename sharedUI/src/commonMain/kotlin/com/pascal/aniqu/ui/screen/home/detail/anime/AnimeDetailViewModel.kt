@@ -1,0 +1,46 @@
+package com.pascal.aniqu.ui.screen.home.detail.anime
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.pascal.aniqu.domain.usecase.anime.AnimeUseCase
+import com.pascal.aniqu.ui.screen.home.detail.anime.state.AnimeDetailUIState
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+
+class AnimeDetailViewModel(
+    private val animeUseCase: AnimeUseCase
+): ViewModel() {
+
+    private val _uiState = MutableStateFlow(AnimeDetailUIState())
+    val uiState: StateFlow<AnimeDetailUIState> = _uiState.asStateFlow()
+
+    fun loadAnimeGenre() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true,) }
+
+            animeUseCase.getAnimeGenre()
+                .catch { e ->
+                    _uiState.update {
+                        it.copy(
+                            error = true to e.message.toString(),
+                        )
+                    }
+                }
+                .collect { result ->
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                        )
+                    }
+                }
+        }
+    }
+
+    fun resetError() {
+        _uiState.update { it.copy() }
+    }
+}
