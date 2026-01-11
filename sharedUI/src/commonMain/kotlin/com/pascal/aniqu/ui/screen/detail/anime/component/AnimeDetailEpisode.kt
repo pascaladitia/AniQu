@@ -91,9 +91,7 @@ fun AnimeDetailEpisode(
                     )
                 } else {
                     VideoPlayerComposable(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp),
+                        modifier = Modifier.fillMaxWidth(),
                         playerHost = playerHost
                     )
                 }
