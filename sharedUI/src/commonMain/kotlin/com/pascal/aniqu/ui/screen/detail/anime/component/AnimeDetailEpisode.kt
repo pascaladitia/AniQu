@@ -24,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -52,17 +53,8 @@ fun AnimeDetailEpisode(
     var episodeSelected by remember { mutableStateOf(0) }
     var serverSelected by remember { mutableStateOf(0) }
 
-    val playerHosts = remember {
-        MediaPlayerHost(
-            mediaUrl = uiState.streamingUrl,
-            autoPlay = false,
-            isLooping = false,
-            initialVideoFitMode = ScreenResize.FILL
-        )
-    }
-
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 24.dp, horizontal = 16.dp)
     ) {
@@ -75,25 +67,36 @@ fun AnimeDetailEpisode(
 
         Spacer(Modifier.height(16.dp))
 
-        Crossfade(
-            targetState = uiState.isLoading,
-            animationSpec = tween(durationMillis = 500)
-        ) { isLoading ->
-            if (isLoading) {
-                Box(
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .height(200.dp)
-                        .clip(RoundedCornerShape(16.dp))
-                        .shimmer()
+        key(uiState.streamingUrl) {
+            val playerHost = remember(uiState.streamingUrl) {
+                MediaPlayerHost(
+                    mediaUrl = uiState.streamingUrl,
+                    autoPlay = false,
+                    isLooping = false,
+                    initialVideoFitMode = ScreenResize.FILL
                 )
-            } else {
-                VideoPlayerComposable(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp),
-                    playerHost = playerHosts
-                )
+            }
+
+            Crossfade(
+                targetState = uiState.isLoading || uiState.streamingUrl.isBlank(),
+                animationSpec = tween(500)
+            ) { loading ->
+                if (loading) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                            .clip(RoundedCornerShape(16.dp))
+                            .shimmer()
+                    )
+                } else {
+                    VideoPlayerComposable(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp),
+                        playerHost = playerHost
+                    )
+                }
             }
         }
 
