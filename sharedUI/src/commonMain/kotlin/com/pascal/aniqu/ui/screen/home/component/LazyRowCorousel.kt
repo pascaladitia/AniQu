@@ -60,6 +60,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.pascal.aniqu.domain.model.anime.AnimeItem
 import com.pascal.aniqu.ui.component.screenUtils.DynamicAsyncImage
+import com.pascal.aniqu.utils.cleanAnimeTitle
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
@@ -160,7 +161,7 @@ fun SharedTransitionScope.LazyRowCarousel(
         ) {
             Text(
                 modifier = Modifier.padding(horizontal = 16.dp),
-                text = currentAnime?.title.orEmpty(),
+                text = currentAnime?.title.orEmpty().cleanAnimeTitle(),
                 style = MaterialTheme.typography.headlineSmall,
                 textAlign = TextAlign.Center,
                 maxLines = 1,

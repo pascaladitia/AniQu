@@ -4,14 +4,20 @@ expect fun showToast(msg: String)
 
 expect fun actionShareUrl(url: String?)
 
-fun addRandomParam(url: String?): String? {
-    if (url == null) return null
+fun String.removeEpisodeSuffix(): String {
+    return this.replace(Regex("-episode-\\d+$"), "")
+}
 
-    return when {
-        url.contains("random=") -> "$url${(0..9999).random()}"
-        url.contains("?random") -> "$url${(0..9999).random()}"
-        else -> url
-    }
+fun String.cleanAnimeTitle(): String {
+    return this
+        .replace(
+            Regex(
+                "\\s*episode\\s*\\d+.*$",
+                RegexOption.IGNORE_CASE
+            ),
+            ""
+        )
+        .trim()
 }
 
 fun String.toEnglishDate(): String {

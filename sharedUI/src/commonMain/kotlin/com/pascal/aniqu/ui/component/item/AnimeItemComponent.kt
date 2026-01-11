@@ -7,12 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.StarRate
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,6 +24,7 @@ import aniqu.sharedui.generated.resources.label_episode
 import com.pascal.aniqu.domain.model.anime.AnimeItem
 import com.pascal.aniqu.ui.component.screenUtils.DynamicAsyncImage
 import com.pascal.aniqu.ui.theme.AppTheme
+import com.pascal.aniqu.utils.cleanAnimeTitle
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -57,7 +53,7 @@ fun AnimeItemComponent(
         Spacer(Modifier.height(12.dp))
 
         Text(
-            text = items.title,
+            text = items.title.cleanAnimeTitle(),
             style = MaterialTheme.typography.titleLarge,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
