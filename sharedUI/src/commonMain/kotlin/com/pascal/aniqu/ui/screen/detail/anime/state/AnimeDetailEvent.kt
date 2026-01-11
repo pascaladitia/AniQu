@@ -7,5 +7,6 @@ val LocalAnimeDetailEvent = compositionLocalOf { AnimeDetailEvent() }
 
 @Stable
 data class AnimeDetailEvent (
-    val onNavBack: () -> Unit = {}
+    val onNavBack: () -> Unit = {},
+    val onEpisodeSelected: (String) -> Unit = {}
 )
