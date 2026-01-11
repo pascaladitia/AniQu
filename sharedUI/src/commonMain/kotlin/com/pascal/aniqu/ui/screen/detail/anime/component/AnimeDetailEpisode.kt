@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -27,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,8 +52,8 @@ fun AnimeDetailEpisode(
     uiState: AnimeDetailUIState = AnimeDetailUIState()
 ) {
     val event = LocalAnimeDetailEvent.current
-    var episodeSelected by remember { mutableStateOf(0) }
-    var serverSelected by remember { mutableStateOf(0) }
+    var episodeSelected by rememberSaveable { mutableStateOf(0) }
+    var serverSelected by rememberSaveable { mutableStateOf(0) }
 
     Column(
         modifier = modifier
@@ -73,7 +75,7 @@ fun AnimeDetailEpisode(
                     mediaUrl = uiState.streamingUrl,
                     autoPlay = false,
                     isLooping = false,
-                    initialVideoFitMode = ScreenResize.FILL
+                    initialVideoFitMode = ScreenResize.FIT
                 )
             }
 
@@ -91,7 +93,9 @@ fun AnimeDetailEpisode(
                     )
                 } else {
                     VideoPlayerComposable(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(min = 200.dp),
                         playerHost = playerHost
                     )
                 }

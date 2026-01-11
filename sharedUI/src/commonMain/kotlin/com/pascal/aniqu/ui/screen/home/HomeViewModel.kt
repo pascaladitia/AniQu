@@ -48,7 +48,7 @@ class HomeViewModel(
 
             combine(
                 animeUseCase.getAnimeHome(),
-                animeUseCase.getAnimeGenre("Action")
+                animeUseCase.getAnimeGenre("Shounen")
             ) { animeList, animeGenreList ->
                 animeList to animeGenreList
             }.catch { e ->
