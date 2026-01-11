@@ -58,8 +58,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.pascal.aniqu.domain.model.AnimeSection
-import com.pascal.aniqu.domain.model.item.AnimeItem
+import com.pascal.aniqu.domain.model.anime.AnimeItem
 import com.pascal.aniqu.ui.component.screenUtils.DynamicAsyncImage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -71,7 +70,7 @@ fun SharedTransitionScope.LazyRowCarousel(
     modifier: Modifier = Modifier,
     animatedVisibilityScope: AnimatedVisibilityScope,
     isLoading: Boolean = false,
-    items: AnimeSection? = null,
+    items: List<AnimeItem>? = null,
     imageWidth: Dp = 200.dp,
     imageHeight: Dp = 300.dp,
     imageCornerRadius: Dp = 16.dp,
@@ -80,7 +79,7 @@ fun SharedTransitionScope.LazyRowCarousel(
     dotsSize: Dp = 6.dp,
     onDetail: (AnimeItem) -> Unit
 ) {
-    val animeList = items?.animeList.orEmpty()
+    val animeList = items.orEmpty()
 
     if (isLoading || animeList.isEmpty()) {
         LazyRowShimmer(
@@ -143,7 +142,7 @@ fun SharedTransitionScope.LazyRowCarousel(
                             .width(imageWidth)
                             .height(imageHeight)
                             .sharedElement(
-                                sharedContentState = rememberSharedContentState(anime.animeId),
+                                sharedContentState = rememberSharedContentState(anime.slug),
                                 animatedVisibilityScope = animatedVisibilityScope,
                                 renderInOverlayDuringTransition = true
                             )
@@ -177,7 +176,7 @@ fun SharedTransitionScope.LazyRowCarousel(
             exit = fadeOut(tween(250)) + slideOutVertically()
         ) {
             Text(
-                text = currentAnime?.latestReleaseDate.orEmpty(),
+                text = currentAnime?.status.orEmpty(),
                 style = MaterialTheme.typography.bodySmall
             )
         }

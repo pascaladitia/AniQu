@@ -1,4 +1,4 @@
-package com.pascal.aniqu.domain.model.item
+package com.pascal.aniqu.domain.model.anime
 
 data class Episode(
     val title: String,

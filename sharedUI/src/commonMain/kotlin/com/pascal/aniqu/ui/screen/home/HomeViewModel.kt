@@ -8,13 +8,15 @@ import androidx.compose.animation.SharedTransitionScope
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
-import com.pascal.aniqu.domain.model.item.AnimeItem
+import com.pascal.aniqu.domain.model.anime.AnimeItem
 import com.pascal.aniqu.domain.usecase.anime.AnimeUseCase
 import com.pascal.aniqu.ui.screen.home.state.HomeUIState
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -44,23 +46,27 @@ class HomeViewModel(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
 
-            animeUseCase.getAnimeHome()
-                .catch { e ->
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            error = true to e.message.toString()
-                        )
-                    }
+            combine(
+                animeUseCase.getAnimeHome(),
+                animeUseCase.getAnimeGenre("Action")
+            ) { animeList, animeGenreList ->
+                animeList to animeGenreList
+            }.catch { e ->
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        error = true to e.message.orEmpty()
+                    )
                 }
-                .collect { result ->
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            anime = result
-                        )
-                    }
+            }.collect { (animeList, animeGenreList) ->
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        animeList = animeList.toImmutableList(),
+                        animeGenreList = animeGenreList.toImmutableList()
+                    )
                 }
+            }
         }
     }
 

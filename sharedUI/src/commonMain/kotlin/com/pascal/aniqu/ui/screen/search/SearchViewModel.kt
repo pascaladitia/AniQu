@@ -34,11 +34,11 @@ class SearchViewModel(
                 .collect { result ->
                     _uiState.update {
                         it.copy(
-                            genreList = result.toMutableList()
+                            animeGenreList = result.toMutableList()
                         )
                     }
 
-                    loadAnimeGenre(result.first().title)
+                    result.firstOrNull()?.slug?.let { loadAnimeGenre(it) }
                 }
         }
     }

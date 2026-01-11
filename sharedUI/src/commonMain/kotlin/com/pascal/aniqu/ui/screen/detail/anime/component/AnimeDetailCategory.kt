@@ -43,7 +43,7 @@ fun AnimeDetailCategory(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            uiState.animeDetail?.genres.orEmpty().forEach {
+            uiState.animeDetail?.episodesList.orEmpty().forEach {
                 Box(
                     modifier = Modifier
                         .background(

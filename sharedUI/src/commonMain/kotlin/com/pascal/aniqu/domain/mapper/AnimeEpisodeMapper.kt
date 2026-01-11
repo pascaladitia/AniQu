@@ -29,7 +29,6 @@ fun AnimeEpisodeDetailResponse.toDomain() = AnimeEpisodeDetail(
         encoder = "",
         duration = "",
         type = "",
-        genres = emptyList(),
         episodes = emptyList()
     )
 )
@@ -68,7 +67,6 @@ fun EpisodeInfoResponse.toDomain() = EpisodeInfo(
     encoder = encoder.orEmpty(),
     duration = duration.orEmpty(),
     type = type.orEmpty(),
-    genres = genreList.orEmpty().map { it.toDomain() },
     episodes = episodeList.orEmpty().map { it.toDomain() }
 )
 

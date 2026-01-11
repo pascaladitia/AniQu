@@ -52,7 +52,7 @@ class AnimeDetailViewModel(
 
             val episodeFlow = detailFlow
                 .mapNotNull { detail ->
-                    detail.episodesList.firstOrNull()?.episodeId
+                    detail?.episodesList?.firstOrNull()?.episodeId
                 }
                 .flatMapLatest { episodeId ->
                     animeUseCase.getAnimeEpisode(episodeId)
@@ -60,7 +60,7 @@ class AnimeDetailViewModel(
 
             val streamingFlow = episodeFlow
                 .mapNotNull { episode ->
-                    episode.streamingQualities.firstOrNull()?.servers?.firstOrNull()?.serverId
+                    episode?.streamingQualities?.firstOrNull()?.servers?.firstOrNull()?.serverId
                 }
                 .flatMapLatest { serverId ->
                     animeUseCase.getAnimeStreaming(serverId)
@@ -88,7 +88,7 @@ class AnimeDetailViewModel(
                             animeId = slug,
                             animeDetail = detail,
                             episodeDetail = episode,
-                            streamingUrl = streaming.url
+                            streamingUrl = streaming?.url.orEmpty()
                         )
                     }
                 }

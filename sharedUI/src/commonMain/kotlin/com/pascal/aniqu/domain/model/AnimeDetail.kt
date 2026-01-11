@@ -1,7 +1,6 @@
 package com.pascal.aniqu.domain.model
 
-import com.pascal.aniqu.domain.model.item.Episode
-import com.pascal.aniqu.domain.model.item.Genre
+import com.pascal.aniqu.domain.model.anime.Episode
 
 data class AnimeDetail(
     val title: String,
@@ -17,7 +16,6 @@ data class AnimeDetail(
     val studios: String,
     val batch: Batch?,
     val synopsis: Synopsis?,
-    val genres: List<Genre>,
     val episodesList: List<Episode>,
     val recommendations: List<RecommendedAnime>
 )

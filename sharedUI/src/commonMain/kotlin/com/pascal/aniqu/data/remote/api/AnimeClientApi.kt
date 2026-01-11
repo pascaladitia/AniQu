@@ -5,11 +5,9 @@ import com.pascal.aniqu.data.remote.client
 import com.pascal.aniqu.data.remote.dtos.BaseResponse
 import com.pascal.aniqu.data.remote.dtos.anime.AnimeDetailResponse
 import com.pascal.aniqu.data.remote.dtos.anime.AnimeEpisodeDetailResponse
-import com.pascal.aniqu.data.remote.dtos.anime.AnimeListResponse
-import com.pascal.aniqu.data.remote.dtos.anime.AnimeResponse
-import com.pascal.aniqu.data.remote.dtos.anime.AnimeSectionResponse
 import com.pascal.aniqu.data.remote.dtos.anime.AnimeStreamingResponse
-import com.pascal.aniqu.data.remote.dtos.anime.item.AnimeGenreResponse
+import com.pascal.aniqu.data.remote.dtos.anime.AnimeGenreResponse
+import com.pascal.aniqu.data.remote.dtos.anime.AnimeItemResponse
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
@@ -18,12 +16,12 @@ import org.koin.core.annotation.Single
 @Single
 class AnimeClientApi {
 
-    suspend fun getAnimeHome(): BaseResponse<AnimeResponse> {
+    suspend fun getAnimeHome(): BaseResponse<List<AnimeItemResponse>> {
         return client.get("${BuildKonfig.BASE_URL}/home").body()
     }
 
-    suspend fun getAnimeLive(page: Int): BaseResponse<AnimeSectionResponse> {
-        return client.get("${BuildKonfig.BASE_URL}/ongoing-anime"){
+    suspend fun getAnimeLive(page: Int): BaseResponse<List<AnimeItemResponse>> {
+        return client.get("${BuildKonfig.BASE_URL}/terbaru"){
             parameter("page", "$page")
         }.body()
     }
@@ -32,15 +30,15 @@ class AnimeClientApi {
         return client.get("${BuildKonfig.BASE_URL}/anime/$slug").body()
     }
 
-    suspend fun getAnimeGenre(): BaseResponse<AnimeGenreResponse>{
-        return client.get("${BuildKonfig.BASE_URL}/genre").body()
+    suspend fun getAnimeGenre(): BaseResponse<List<AnimeGenreResponse>>{
+        return client.get("${BuildKonfig.BASE_URL}/genres").body()
     }
 
-    suspend fun getAnimeGenre(slug: String): BaseResponse<AnimeListResponse> {
+    suspend fun getAnimeGenre(slug: String): BaseResponse<List<AnimeItemResponse>> {
         return client.get("${BuildKonfig.BASE_URL}/genre/$slug").body()
     }
 
-    suspend fun getAnimeSearch(key: String): BaseResponse<AnimeListResponse> {
+    suspend fun getAnimeSearch(key: String): BaseResponse<List<AnimeItemResponse>> {
         return client.get("${BuildKonfig.BASE_URL}/search/$key").body()
     }
 

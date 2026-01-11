@@ -25,7 +25,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.core.widgets.analyzer.RunGroup.Companion.index
 import com.pascal.aniqu.ui.component.screenUtils.shimmer
 import com.pascal.aniqu.ui.screen.search.state.LocalSearchEvent
 import com.pascal.aniqu.ui.screen.search.state.SearchUIState
@@ -44,7 +43,7 @@ fun SearchTab(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
-        if (uiState.isLoading && uiState.genreList.isEmpty()) {
+        if (uiState.isLoading && uiState.animeGenreList.isEmpty()) {
             items(4) {
                 Spacer(
                     modifier = modifier
@@ -55,14 +54,14 @@ fun SearchTab(
                 )
             }
         } else {
-            itemsIndexed(uiState.genreList) { index, item ->
+            itemsIndexed(uiState.animeGenreList) { index, item ->
                 SearchTabItem(
                     index = index,
-                    label = item.title,
+                    label = item.name,
                     isSelected = selectedTab == index,
                     onClick = {
                         selectedTab = it
-                        event.onGenre(item.genreId)
+                        event.onGenre(item.slug)
                     }
                 )
             }

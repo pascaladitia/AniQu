@@ -6,14 +6,12 @@ import com.pascal.aniqu.data.remote.dtos.anime.ConnectionResponse
 import com.pascal.aniqu.data.remote.dtos.anime.RecommendedAnimeResponse
 import com.pascal.aniqu.data.remote.dtos.anime.SynopsisResponse
 import com.pascal.aniqu.data.remote.dtos.anime.item.EpisodeResponse
-import com.pascal.aniqu.data.remote.dtos.anime.item.GenreResponse
 import com.pascal.aniqu.domain.model.AnimeConnection
 import com.pascal.aniqu.domain.model.AnimeDetail
 import com.pascal.aniqu.domain.model.Batch
 import com.pascal.aniqu.domain.model.RecommendedAnime
 import com.pascal.aniqu.domain.model.Synopsis
-import com.pascal.aniqu.domain.model.item.Episode
-import com.pascal.aniqu.domain.model.item.Genre
+import com.pascal.aniqu.domain.model.anime.Episode
 
 fun AnimeDetailResponse.toDomain() = AnimeDetail(
     title = title.orEmpty(),
@@ -29,7 +27,6 @@ fun AnimeDetailResponse.toDomain() = AnimeDetail(
     studios = studios.orEmpty(),
     batch = batch?.toDomain(),
     synopsis = synopsis?.toDomain(),
-    genres = genreList.orEmpty().map { it.toDomain() },
     episodesList = episodeList.orEmpty().map { it.toDomain() },
     recommendations = recommendedAnimeList.orEmpty().map { it.toDomain() }
 )
@@ -49,13 +46,6 @@ fun SynopsisResponse.toDomain() = Synopsis(
 fun ConnectionResponse.toDomain() = AnimeConnection(
     title = title.orEmpty(),
     animeId = animeId.orEmpty(),
-    href = href.orEmpty(),
-    url = otakudesuUrl.orEmpty()
-)
-
-fun GenreResponse.toDomain() = Genre(
-    title = title.orEmpty(),
-    genreId = genreId.orEmpty(),
     href = href.orEmpty(),
     url = otakudesuUrl.orEmpty()
 )

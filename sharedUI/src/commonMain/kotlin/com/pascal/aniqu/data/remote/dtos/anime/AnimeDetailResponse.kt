@@ -1,7 +1,6 @@
 package com.pascal.aniqu.data.remote.dtos.anime
 
 import com.pascal.aniqu.data.remote.dtos.anime.item.EpisodeResponse
-import com.pascal.aniqu.data.remote.dtos.anime.item.GenreResponse
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -19,7 +18,6 @@ data class AnimeDetailResponse(
     val studios: String? = null,
     val batch: BatchResponse? = null,
     val synopsis: SynopsisResponse? = null,
-    val genreList: List<GenreResponse>? = null,
     val episodeList: List<EpisodeResponse>? = null,
     val recommendedAnimeList: List<RecommendedAnimeResponse>? = null
 )
