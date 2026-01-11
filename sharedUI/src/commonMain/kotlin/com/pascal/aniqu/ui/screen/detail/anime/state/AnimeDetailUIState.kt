@@ -9,6 +9,7 @@ data class AnimeDetailUIState(
     val isLoading: Boolean = false,
     val error: Pair<Boolean, String> = false to "",
     val animeId: String = "",
+    val streamingUrl: String = "",
     val animeDetail: AnimeDetail? = null,
     val episodeDetail: AnimeEpisodeDetail? = null,
 

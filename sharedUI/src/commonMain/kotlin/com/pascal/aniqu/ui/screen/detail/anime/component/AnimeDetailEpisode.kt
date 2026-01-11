@@ -7,14 +7,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -36,6 +34,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import chaintech.videoplayer.host.MediaPlayerHost
+import chaintech.videoplayer.model.ScreenResize
+import chaintech.videoplayer.ui.video.VideoPlayerComposable
 import com.pascal.aniqu.ui.component.screenUtils.DynamicAsyncImage
 import com.pascal.aniqu.ui.component.screenUtils.shimmer
 import com.pascal.aniqu.ui.screen.detail.anime.state.AnimeDetailUIState
@@ -50,6 +51,15 @@ fun AnimeDetailEpisode(
     val event = LocalAnimeDetailEvent.current
     var episodeSelected by remember { mutableStateOf(0) }
     var serverSelected by remember { mutableStateOf(0) }
+
+    val playerHosts = remember {
+        MediaPlayerHost(
+            mediaUrl = uiState.streamingUrl,
+            autoPlay = false,
+            isLooping = false,
+            initialVideoFitMode = ScreenResize.FILL
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -78,10 +88,11 @@ fun AnimeDetailEpisode(
                         .shimmer()
                 )
             } else {
-                EpisodePoster(
-                    modifier = modifier,
-                    imageUrl = uiState.animeDetail?.poster.orEmpty(),
-                    onClick = event.onNavBack
+                VideoPlayerComposable(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp),
+                    playerHost = playerHosts
                 )
             }
         }
