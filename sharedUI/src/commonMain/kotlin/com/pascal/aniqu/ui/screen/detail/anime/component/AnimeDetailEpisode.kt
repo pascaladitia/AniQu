@@ -7,17 +7,20 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayCircle
+import androidx.compose.material.icons.filled.VideoSettings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -46,6 +49,7 @@ fun AnimeDetailEpisode(
 ) {
     val event = LocalAnimeDetailEvent.current
     var episodeSelected by remember { mutableStateOf(0) }
+    var serverSelected by remember { mutableStateOf(0) }
 
     Column(
         modifier = Modifier
@@ -92,11 +96,39 @@ fun AnimeDetailEpisode(
             itemsIndexed(uiState.animeDetail?.episodesList.orEmpty()) { index, item ->
                 EpisodeItem(
                     index = index,
-                    episode = item.episode,
+                    value = "Ep ${item.episode}",
                     isSelect = episodeSelected == index,
                     onClick = {
                         episodeSelected = it
                         event.onEpisodeSelected(item.episodeId)
+                    }
+                )
+            }
+        }
+
+        Spacer(Modifier.height(8.dp))
+
+        LazyRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            item {
+                Icon(
+                    modifier = Modifier.size(24.dp),
+                    imageVector = Icons.Default.VideoSettings,
+                    contentDescription = null
+                )
+            }
+
+            itemsIndexed(uiState.episodeDetail?.streamingQualities.orEmpty()) { index, item ->
+                EpisodeItem(
+                    index = index,
+                    value = item.quality,
+                    isSelect = serverSelected == index,
+                    onClick = {
+                        serverSelected = it
+                        event.onServerSelected(item.servers.first().serverId)
                     }
                 )
             }
@@ -145,7 +177,7 @@ private fun EpisodePoster(
 fun EpisodeItem(
     modifier: Modifier = Modifier,
     index: Int,
-    episode: Int,
+    value: String,
     isSelect: Boolean = false,
     onClick: (Int) -> Unit
 ) {
@@ -163,7 +195,7 @@ fun EpisodeItem(
             .padding(8.dp)
     ) {
         Text(
-            text = "Ep $episode",
+            text = value,
             style = MaterialTheme.typography.bodySmall.copy(
                 color = MaterialTheme.colorScheme.onSurface
             )

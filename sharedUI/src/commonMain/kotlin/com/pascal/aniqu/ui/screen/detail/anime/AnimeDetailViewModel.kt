@@ -55,6 +55,8 @@ class AnimeDetailViewModel(
                             animeDetail = result
                         )
                     }
+
+                    loadAnimeEpisode(result.episodesList.first().episodeId)
                 }
         }
     }
@@ -86,6 +88,6 @@ class AnimeDetailViewModel(
     }
 
     fun resetError() {
-        _uiState.update { it.copy() }
+        _uiState.update { it.copy(error = false to "") }
     }
 }
