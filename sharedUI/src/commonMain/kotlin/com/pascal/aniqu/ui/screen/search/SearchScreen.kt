@@ -78,7 +78,8 @@ fun SearchScreen(
                         start = if (index % 2 == 0) 16.dp else 8.dp,
                         end = if (index % 2 == 0) 8.dp else 16.dp
                     ),
-                    items = items
+                    items = items,
+                    onClick = event.onDetail
                 )
             }
         }

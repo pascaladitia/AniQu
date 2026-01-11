@@ -124,7 +124,10 @@ fun NavAnimeRoute(
                 }
                 composable(route = AnimeScreen.SearchScreen.route) {
                     SearchRoute(
-                        onDetail = {}
+                        onDetail = {
+                            saveToCurrentBackStack(navController, "slug", it)
+                            navController.navigate(AnimeScreen.AnimeDetailScreen.route)
+                        }
                     )
                 }
                 composable(route = AnimeScreen.FavoriteScreen.route) {
