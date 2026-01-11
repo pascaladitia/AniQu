@@ -10,6 +10,7 @@ import com.pascal.aniqu.ui.screen.detail.anime.component.AnimeDetailCategory
 import com.pascal.aniqu.ui.screen.detail.anime.component.AnimeDetailDescription
 import com.pascal.aniqu.ui.screen.detail.anime.component.AnimeDetailEpisode
 import com.pascal.aniqu.ui.screen.detail.anime.component.AnimeDetailHeader
+import com.pascal.aniqu.ui.screen.detail.anime.component.AnimeDetailRecomend
 import com.pascal.aniqu.ui.screen.detail.anime.state.AnimeDetailUIState
 import com.pascal.aniqu.ui.theme.AppTheme
 
@@ -49,6 +50,12 @@ fun AnimeDetailScreen(
 
         item {
             AnimeDetailCategory(
+                uiState = uiState
+            )
+        }
+
+        item {
+            AnimeDetailRecomend(
                 uiState = uiState
             )
         }
