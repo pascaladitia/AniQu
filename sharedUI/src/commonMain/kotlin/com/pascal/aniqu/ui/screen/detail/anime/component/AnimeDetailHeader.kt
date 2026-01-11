@@ -85,7 +85,7 @@ fun AnimeDetailHeader(
             Text(
                 text = uiState.animeDetail?.studios.orEmpty(),
                 style = MaterialTheme.typography.titleLarge.copy(
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = Color.White.copy(0.8f)
                 ),
                 maxLines = 2,
                 textAlign = TextAlign.Center
