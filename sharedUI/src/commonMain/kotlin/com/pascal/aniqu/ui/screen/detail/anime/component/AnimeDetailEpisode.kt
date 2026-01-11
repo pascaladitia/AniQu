@@ -107,14 +107,14 @@ fun AnimeDetailEpisode(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             reverseLayout = true
         ) {
-            itemsIndexed(uiState.animeDetail?.episodesList.orEmpty()) { index, item ->
+            itemsIndexed(uiState.animeDetail?.episodes.orEmpty()) { index, item ->
                 EpisodeItem(
                     index = index,
                     value = "Ep ${item.episode}",
                     isSelect = episodeSelected == index,
                     onClick = {
                         episodeSelected = it
-                        event.onEpisodeSelected(item.episodeId)
+                        event.onEpisodeSelected(item.slug)
                     }
                 )
             }
@@ -135,14 +135,14 @@ fun AnimeDetailEpisode(
                 )
             }
 
-            itemsIndexed(uiState.episodeDetail?.streamingQualities.orEmpty()) { index, item ->
+            itemsIndexed(uiState.streamingList) { index, item ->
                 EpisodeItem(
                     index = index,
-                    value = item.quality,
+                    value = item.resolution,
                     isSelect = serverSelected == index,
                     onClick = {
                         serverSelected = it
-                        event.onServerSelected(item.servers.first().serverId)
+                        event.onServerSelected(item)
                     }
                 )
             }

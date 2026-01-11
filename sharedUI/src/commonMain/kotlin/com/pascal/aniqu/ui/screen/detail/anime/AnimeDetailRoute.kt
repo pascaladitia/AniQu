@@ -6,9 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import aniqu.sharedui.generated.resources.Res
 import aniqu.sharedui.generated.resources.close
 import com.pascal.aniqu.ui.component.dialog.ShowDialog
@@ -44,7 +42,9 @@ fun AnimeDetailRoute(
 
     CompositionLocalProvider(
         LocalAnimeDetailEvent provides event.copy(
-            onNavBack = onNavBack
+            onNavBack = onNavBack,
+            onEpisodeSelected = {},
+            onServerSelected = {}
         )
     ) {
         PullRefreshComponent(

@@ -2,13 +2,11 @@ package com.pascal.aniqu.ui.screen.detail.anime.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -48,11 +46,11 @@ fun AnimeDetailRecomend(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(uiState.animeDetail?.recommendations.orEmpty()) {
+            items(uiState.recomendList) {
                 AnimeDetailRecomendItem(
                     poster = it.poster,
                     title = it.title,
-                    description = it.animeId
+                    description = it.status.ifBlank { it.type }
                 )
             }
         }

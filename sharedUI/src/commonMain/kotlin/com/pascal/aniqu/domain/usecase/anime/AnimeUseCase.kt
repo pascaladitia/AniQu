@@ -1,11 +1,10 @@
 package com.pascal.aniqu.domain.usecase.anime
 
 import androidx.paging.PagingData
-import com.pascal.aniqu.domain.model.AnimeDetail
-import com.pascal.aniqu.domain.model.AnimeEpisodeDetail
-import com.pascal.aniqu.domain.model.AnimeStreaming
-import com.pascal.aniqu.domain.model.anime.AnimeItem
+import com.pascal.aniqu.domain.model.anime.AnimeDetail
 import com.pascal.aniqu.domain.model.anime.AnimeGenre
+import com.pascal.aniqu.domain.model.anime.AnimeItem
+import com.pascal.aniqu.domain.model.anime.AnimeStreaming
 import kotlinx.coroutines.flow.Flow
 
 interface AnimeUseCase {
@@ -15,6 +14,5 @@ interface AnimeUseCase {
     suspend fun getAnimeGenre(): Flow<List<AnimeGenre>>
     suspend fun getAnimeGenre(slug: String): Flow<List<AnimeItem>>
     suspend fun getAnimeSearch(key: String): Flow<List<AnimeItem>>
-    suspend fun getAnimeEpisode(slug: String): Flow<AnimeEpisodeDetail?>
     suspend fun getAnimeStreaming(id: String): Flow<AnimeStreaming?>
 }

@@ -5,11 +5,10 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.pascal.aniqu.data.repository.anime.AnimeRepository
 import com.pascal.aniqu.domain.mapper.toDomain
-import com.pascal.aniqu.domain.model.AnimeDetail
-import com.pascal.aniqu.domain.model.AnimeEpisodeDetail
-import com.pascal.aniqu.domain.model.AnimeStreaming
-import com.pascal.aniqu.domain.model.anime.AnimeItem
+import com.pascal.aniqu.domain.model.anime.AnimeDetail
 import com.pascal.aniqu.domain.model.anime.AnimeGenre
+import com.pascal.aniqu.domain.model.anime.AnimeItem
+import com.pascal.aniqu.domain.model.anime.AnimeStreaming
 import com.pascal.aniqu.domain.usecase.pagination.AnimePagingSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -47,10 +46,6 @@ class AnimeUseCaseImpl(
 
     override suspend fun getAnimeSearch(key: String): Flow<List<AnimeItem>> = flow {
         emit(repository.getAnimeSearch(key).data?.map { it.toDomain() } ?: emptyList())
-    }
-
-    override suspend fun getAnimeEpisode(slug: String): Flow<AnimeEpisodeDetail?> = flow {
-        emit(repository.getAnimeEpisode(slug).data?.toDomain())
     }
 
     override suspend fun getAnimeStreaming(id: String): Flow<AnimeStreaming?> = flow {

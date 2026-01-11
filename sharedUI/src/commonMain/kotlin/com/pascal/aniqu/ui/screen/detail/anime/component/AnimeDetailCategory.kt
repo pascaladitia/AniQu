@@ -43,7 +43,7 @@ fun AnimeDetailCategory(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            uiState.animeDetail?.episodesList.orEmpty().forEach {
+            uiState.animeDetail?.genres.orEmpty().forEach {
                 Box(
                     modifier = Modifier
                         .background(
@@ -53,7 +53,7 @@ fun AnimeDetailCategory(
                         .padding(8.dp)
                 ) {
                     Text(
-                        text = it.title,
+                        text = it,
                         style = MaterialTheme.typography.bodySmall.copy(
                             color = MaterialTheme.colorScheme.onSurface
                         )

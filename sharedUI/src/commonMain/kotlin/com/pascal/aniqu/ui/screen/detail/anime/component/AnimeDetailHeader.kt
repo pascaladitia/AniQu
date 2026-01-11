@@ -83,7 +83,7 @@ fun AnimeDetailHeader(
             Spacer(Modifier.height(4.dp))
 
             Text(
-                text = uiState.animeDetail?.studios.orEmpty(),
+                text = uiState.animeDetail?.alternativeTitle.orEmpty(),
                 style = MaterialTheme.typography.titleLarge.copy(
                     color = Color.White.copy(0.8f)
                 ),
@@ -97,7 +97,7 @@ fun AnimeDetailHeader(
                 text = buildAnnotatedString {
                     val type = uiState.animeDetail?.type.orEmpty()
                     val status = uiState.animeDetail?.status.orEmpty()
-                    val episode = uiState.animeDetail?.episodes
+                    val studio = uiState.animeDetail?.studio.orEmpty()
 
                     if (type.isNotBlank()) {
                         withStyle(
@@ -123,7 +123,7 @@ fun AnimeDetailHeader(
                         }
                     }
 
-                    if (episode != 0) {
+                    if (studio.isNotBlank()) {
                         append("  |  ")
 
                         withStyle(
@@ -131,7 +131,7 @@ fun AnimeDetailHeader(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         ) {
-                            append("$episode Episode")
+                            append(studio)
                         }
                     }
                 },

@@ -2,8 +2,11 @@ package com.pascal.aniqu.ui.screen.detail.anime.state
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.SharedTransitionScope
-import com.pascal.aniqu.domain.model.AnimeDetail
-import com.pascal.aniqu.domain.model.AnimeEpisodeDetail
+import com.pascal.aniqu.domain.model.anime.AnimeDetail
+import com.pascal.aniqu.domain.model.anime.AnimeItem
+import com.pascal.aniqu.domain.model.anime.Download
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 data class AnimeDetailUIState(
     val isLoading: Boolean = false,
@@ -11,7 +14,8 @@ data class AnimeDetailUIState(
     val animeId: String = "",
     val streamingUrl: String = "",
     val animeDetail: AnimeDetail? = null,
-    val episodeDetail: AnimeEpisodeDetail? = null,
+    val streamingList: ImmutableList<Download> = persistentListOf(),
+    val recomendList: ImmutableList<AnimeItem> = persistentListOf(),
 
     val sharedTransitionScope: SharedTransitionScope? = null,
     val animatedVisibilityScope: AnimatedVisibilityScope? = null
