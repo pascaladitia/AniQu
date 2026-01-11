@@ -40,11 +40,11 @@ fun AnimeDetailEpisode(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+            .padding(vertical = 24.dp, horizontal = 16.dp)
     ) {
         Text(
             text = "Episode",
-            style = MaterialTheme.typography.titleLarge.copy(
+            style = MaterialTheme.typography.headlineSmall.copy(
                 color = MaterialTheme.colorScheme.onSurface
             )
         )
