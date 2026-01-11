@@ -40,7 +40,7 @@ fun AnimeDetailEpisode(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
+            .padding(top = 16.dp, start = 16.dp, end = 16.dp)
     ) {
         Text(
             text = "Episode",

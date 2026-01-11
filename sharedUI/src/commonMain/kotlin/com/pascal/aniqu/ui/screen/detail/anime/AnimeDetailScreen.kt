@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.pascal.aniqu.ui.screen.detail.anime.component.AnimeDetailAction
+import com.pascal.aniqu.ui.screen.detail.anime.component.AnimeDetailDescription
 import com.pascal.aniqu.ui.screen.detail.anime.component.AnimeDetailEpisode
 import com.pascal.aniqu.ui.screen.detail.anime.component.AnimeDetailHeader
 import com.pascal.aniqu.ui.screen.detail.anime.state.AnimeDetailUIState
@@ -27,6 +28,12 @@ fun AnimeDetailScreen(
 
         item {
             AnimeDetailAction(
+                uiState = uiState
+            )
+        }
+
+        item {
+            AnimeDetailDescription(
                 uiState = uiState
             )
         }
