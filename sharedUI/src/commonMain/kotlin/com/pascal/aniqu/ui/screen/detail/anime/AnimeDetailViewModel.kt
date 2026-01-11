@@ -59,6 +59,32 @@ class AnimeDetailViewModel(
         }
     }
 
+    fun loadAnimeEpisode(slug: String?) {
+        if (slug.isNullOrBlank()) return
+
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true,) }
+
+            animeUseCase.getAnimeEpisode(slug)
+                .catch { e ->
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            error = true to e.message.toString(),
+                        )
+                    }
+                }
+                .collect { result ->
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            episodeDetail = result
+                        )
+                    }
+                }
+        }
+    }
+
     fun resetError() {
         _uiState.update { it.copy() }
     }

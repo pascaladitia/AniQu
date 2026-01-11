@@ -29,14 +29,16 @@ import androidx.compose.ui.unit.dp
 import com.pascal.aniqu.ui.component.screenUtils.DynamicAsyncImage
 import com.pascal.aniqu.ui.component.screenUtils.shimmer
 import com.pascal.aniqu.ui.screen.detail.anime.state.AnimeDetailUIState
+import com.pascal.aniqu.ui.screen.detail.anime.state.LocalAnimeDetailEvent
 import com.pascal.aniqu.ui.theme.AppTheme
 
 @Composable
 fun AnimeDetailEpisode(
     modifier: Modifier = Modifier,
-    uiState: AnimeDetailUIState = AnimeDetailUIState(),
-    onClick: () -> Unit = {}
+    uiState: AnimeDetailUIState = AnimeDetailUIState()
 ) {
+    val event = LocalAnimeDetailEvent.current
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -67,7 +69,7 @@ fun AnimeDetailEpisode(
                 EpisodePoster(
                     modifier = modifier,
                     imageUrl = uiState.animeDetail?.poster.orEmpty(),
-                    onClick = onClick
+                    onClick = event.onNavBack
                 )
             }
         }

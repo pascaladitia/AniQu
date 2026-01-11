@@ -43,9 +43,7 @@ fun AnimeDetailScreen(
         item {
             AnimeDetailEpisode(
                 uiState = uiState
-            ) {
-
-            }
+            )
         }
 
         item {
