@@ -68,11 +68,11 @@ fun AnimeDetailRecomendItem(
     description: String
 ) {
     Column(
-        modifier = modifier.width(IntrinsicSize.Min)
+        modifier = modifier.width(120.dp)
     ) {
         DynamicAsyncImage(
             modifier = Modifier
-                .width(120.dp)
+                .fillMaxWidth()
                 .height(180.dp)
                 .clip(RoundedCornerShape(16.dp)),
             imageUrl = poster,
