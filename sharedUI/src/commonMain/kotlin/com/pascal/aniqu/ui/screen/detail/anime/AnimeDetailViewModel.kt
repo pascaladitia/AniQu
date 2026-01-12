@@ -5,6 +5,7 @@ import androidx.compose.animation.SharedTransitionScope
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pascal.aniqu.domain.model.anime.Download
+import com.pascal.aniqu.domain.model.anime.Stream
 import com.pascal.aniqu.domain.usecase.anime.AnimeUseCase
 import com.pascal.aniqu.ui.screen.detail.anime.state.AnimeDetailUIState
 import kotlinx.collections.immutable.persistentListOf
@@ -86,6 +87,7 @@ class AnimeDetailViewModel(
                 }
                 .collect { (detail, streaming, genres) ->
                     val filterStreaming = streaming?.downloads?.filterMp4UniqueByResolution()
+                    val filterEmbed = streaming?.streams?.firstOrNull()?.url.orEmpty()
 
                     _uiState.update {
                         it.copy(
@@ -94,7 +96,8 @@ class AnimeDetailViewModel(
                             animeDetail = detail,
                             recomendList = genres.toImmutableList(),
                             streamingList = filterStreaming?.toImmutableList() ?: persistentListOf(),
-                            streamingUrl = filterStreaming?.firstOrNull()?.url.orEmpty()
+                            streamingUrl = filterStreaming?.firstOrNull()?.url.orEmpty(),
+                            embedUrl = filterEmbed
                         )
                     }
                 }

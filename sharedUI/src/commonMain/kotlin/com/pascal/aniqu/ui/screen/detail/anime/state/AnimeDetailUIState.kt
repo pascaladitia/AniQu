@@ -13,6 +13,7 @@ data class AnimeDetailUIState(
     val error: Pair<Boolean, String> = false to "",
     val animeId: String = "",
     val streamingUrl: String = "",
+    val embedUrl: String = "",
     val animeDetail: AnimeDetail? = null,
     val streamingList: ImmutableList<Download> = persistentListOf(),
     val recomendList: ImmutableList<AnimeItem> = persistentListOf(),

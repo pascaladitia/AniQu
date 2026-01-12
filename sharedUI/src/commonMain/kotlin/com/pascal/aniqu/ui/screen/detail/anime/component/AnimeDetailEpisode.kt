@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -40,6 +39,8 @@ import androidx.compose.ui.unit.dp
 import chaintech.videoplayer.host.MediaPlayerHost
 import chaintech.videoplayer.model.ScreenResize
 import chaintech.videoplayer.ui.video.VideoPlayerComposable
+import com.multiplatform.webview.web.WebView
+import com.multiplatform.webview.web.rememberWebViewState
 import com.pascal.aniqu.ui.component.screenUtils.DynamicAsyncImage
 import com.pascal.aniqu.ui.component.screenUtils.shimmer
 import com.pascal.aniqu.ui.screen.detail.anime.state.AnimeDetailUIState
@@ -69,18 +70,18 @@ fun AnimeDetailEpisode(
 
         Spacer(Modifier.height(16.dp))
 
-        key(uiState.streamingUrl) {
+        key(uiState.streamingUrl, uiState.embedUrl) {
             val playerHost = remember(uiState.streamingUrl) {
                 MediaPlayerHost(
                     mediaUrl = uiState.streamingUrl,
                     autoPlay = false,
                     isLooping = false,
-                    initialVideoFitMode = ScreenResize.FIT
+                    initialVideoFitMode = ScreenResize.FILL
                 )
             }
 
             Crossfade(
-                targetState = uiState.isLoading || uiState.streamingUrl.isBlank(),
+                targetState = uiState.isLoading,
                 animationSpec = tween(500)
             ) { loading ->
                 if (loading) {
@@ -92,12 +93,21 @@ fun AnimeDetailEpisode(
                             .shimmer()
                     )
                 } else {
-                    VideoPlayerComposable(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .heightIn(min = 200.dp),
-                        playerHost = playerHost
-                    )
+                    if (uiState.streamingUrl.isNotBlank()) {
+                        VideoPlayerComposable(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp),
+                            playerHost = playerHost
+                        )
+                    } else {
+                        WebView(
+                            state = rememberWebViewState(uiState.embedUrl),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp)
+                        )
+                    }
                 }
             }
         }
