@@ -16,6 +16,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,6 +26,7 @@ import com.pascal.aniqu.ui.component.screenUtils.shimmer
 import com.pascal.aniqu.ui.component.screenUtils.verticalFadeBackground
 import com.pascal.aniqu.ui.screen.detail.anime.state.AnimeDetailUIState
 import com.pascal.aniqu.ui.theme.AppTheme
+import com.pascal.aniqu.utils.cleanAnimeTitle
 
 @Composable
 fun AnimeDetailHeader(
@@ -73,22 +75,24 @@ fun AnimeDetailHeader(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = uiState.animeDetail?.title.orEmpty(),
+                text = uiState.animeDetail?.title.orEmpty().cleanAnimeTitle(),
                 style = MaterialTheme.typography.headlineMedium,
                 color = Color.White,
                 maxLines = 2,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                overflow = TextOverflow.Ellipsis
             )
 
             Spacer(Modifier.height(4.dp))
 
             Text(
-                text = uiState.animeDetail?.studios.orEmpty(),
+                text = uiState.animeDetail?.alternativeTitle.orEmpty(),
                 style = MaterialTheme.typography.titleLarge.copy(
                     color = Color.White.copy(0.8f)
                 ),
                 maxLines = 2,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                overflow = TextOverflow.Ellipsis
             )
 
             Spacer(Modifier.height(4.dp))
@@ -97,7 +101,7 @@ fun AnimeDetailHeader(
                 text = buildAnnotatedString {
                     val type = uiState.animeDetail?.type.orEmpty()
                     val status = uiState.animeDetail?.status.orEmpty()
-                    val episode = uiState.animeDetail?.episodes
+                    val studio = uiState.animeDetail?.studio.orEmpty()
 
                     if (type.isNotBlank()) {
                         withStyle(
@@ -123,7 +127,7 @@ fun AnimeDetailHeader(
                         }
                     }
 
-                    if (episode != 0) {
+                    if (studio.isNotBlank()) {
                         append("  |  ")
 
                         withStyle(
@@ -131,7 +135,7 @@ fun AnimeDetailHeader(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         ) {
-                            append("$episode Episode")
+                            append(studio)
                         }
                     }
                 },

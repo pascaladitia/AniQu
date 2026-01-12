@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -17,7 +16,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.material.icons.filled.VideoSettings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -27,22 +25,28 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import chaintech.videoplayer.host.MediaPlayerHost
 import chaintech.videoplayer.model.ScreenResize
 import chaintech.videoplayer.ui.video.VideoPlayerComposable
-import com.pascal.aniqu.ui.component.screenUtils.DynamicAsyncImage
+import com.multiplatform.webview.request.RequestInterceptor
+import com.multiplatform.webview.request.WebRequest
+import com.multiplatform.webview.request.WebRequestInterceptResult
+import com.multiplatform.webview.web.WebView
+import com.multiplatform.webview.web.WebViewNavigator
+import com.multiplatform.webview.web.rememberWebViewNavigator
+import com.multiplatform.webview.web.rememberWebViewState
 import com.pascal.aniqu.ui.component.screenUtils.shimmer
 import com.pascal.aniqu.ui.screen.detail.anime.state.AnimeDetailUIState
 import com.pascal.aniqu.ui.screen.detail.anime.state.LocalAnimeDetailEvent
 import com.pascal.aniqu.ui.theme.AppTheme
+import com.pascal.aniqu.utils.extractResolution
 
 @Composable
 fun AnimeDetailEpisode(
@@ -50,8 +54,9 @@ fun AnimeDetailEpisode(
     uiState: AnimeDetailUIState = AnimeDetailUIState()
 ) {
     val event = LocalAnimeDetailEvent.current
-    var episodeSelected by remember { mutableStateOf(0) }
-    var serverSelected by remember { mutableStateOf(0) }
+    var isFullscreen by rememberSaveable { mutableStateOf(false) }
+    var episodeSelected by rememberSaveable { mutableStateOf(0) }
+    var serverSelected by rememberSaveable { mutableStateOf(0) }
 
     Column(
         modifier = modifier
@@ -67,10 +72,10 @@ fun AnimeDetailEpisode(
 
         Spacer(Modifier.height(16.dp))
 
-        key(uiState.streamingUrl) {
-            val playerHost = remember(uiState.streamingUrl) {
+        key(uiState.downloadUrl, uiState.streamUrl) {
+            val playerHost = remember(uiState.downloadUrl) {
                 MediaPlayerHost(
-                    mediaUrl = uiState.streamingUrl,
+                    mediaUrl = uiState.downloadUrl,
                     autoPlay = false,
                     isLooping = false,
                     initialVideoFitMode = ScreenResize.FILL
@@ -78,7 +83,7 @@ fun AnimeDetailEpisode(
             }
 
             Crossfade(
-                targetState = uiState.isLoading || uiState.streamingUrl.isBlank(),
+                targetState = uiState.isLoading,
                 animationSpec = tween(500)
             ) { loading ->
                 if (loading) {
@@ -90,12 +95,53 @@ fun AnimeDetailEpisode(
                             .shimmer()
                     )
                 } else {
-                    VideoPlayerComposable(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp),
-                        playerHost = playerHost
-                    )
+                    if (uiState.downloadUrl.isNotBlank()) {
+                        VideoPlayerComposable(
+                            modifier = if (isFullscreen) {
+                                Modifier.fillMaxWidth().height(400.dp)
+                            } else {
+                                Modifier.fillMaxWidth().height(200.dp)
+                            },
+                            playerHost = playerHost
+                        )
+                    } else {
+                        val webViewState = rememberWebViewState(
+                            url = uiState.streamUrl,
+                            extraSettings = {
+                                this.isJavaScriptEnabled = true
+                            }
+                        )
+
+                        val navigator =
+                            rememberWebViewNavigator(
+                                requestInterceptor =
+                                    object : RequestInterceptor {
+                                        override fun onInterceptUrlRequest(
+                                            request: WebRequest,
+                                            navigator: WebViewNavigator,
+                                        ): WebRequestInterceptResult {
+                                            return if (request.url.contains("kotlin")) {
+                                                WebRequestInterceptResult.Modify(
+                                                    WebRequest(
+                                                        url = "https://kotlinlang.org/docs/multiplatform.html",
+                                                        headers = mutableMapOf("info" to "test"),
+                                                    ),
+                                                )
+                                            } else {
+                                                WebRequestInterceptResult.Allow
+                                            }
+                                        }
+                                    },
+                            )
+
+                        WebView(
+                            state = webViewState,
+                            navigator = navigator,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp)
+                        )
+                    }
                 }
             }
         }
@@ -107,14 +153,14 @@ fun AnimeDetailEpisode(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             reverseLayout = true
         ) {
-            itemsIndexed(uiState.animeDetail?.episodesList.orEmpty()) { index, item ->
+            itemsIndexed(uiState.animeDetail?.episodes.orEmpty()) { index, item ->
                 EpisodeItem(
                     index = index,
                     value = "Ep ${item.episode}",
                     isSelect = episodeSelected == index,
                     onClick = {
                         episodeSelected = it
-                        event.onEpisodeSelected(item.episodeId)
+                        event.onEpisodeSelected(item.slug)
                     }
                 )
             }
@@ -135,55 +181,32 @@ fun AnimeDetailEpisode(
                 )
             }
 
-            itemsIndexed(uiState.episodeDetail?.streamingQualities.orEmpty()) { index, item ->
-                EpisodeItem(
-                    index = index,
-                    value = item.quality,
-                    isSelect = serverSelected == index,
-                    onClick = {
-                        serverSelected = it
-                        event.onServerSelected(item.servers.first().serverId)
-                    }
-                )
+            if (uiState.downloadList.isNotEmpty()) {
+                itemsIndexed(uiState.downloadList) { index, item ->
+                    EpisodeItem(
+                        index = index,
+                        value = item.resolution,
+                        isSelect = serverSelected == index,
+                        onClick = {
+                            serverSelected = it
+                            event.onDownloadSelected(item)
+                        }
+                    )
+                }
+            } else {
+                itemsIndexed(uiState.streamList) { index, item ->
+                    EpisodeItem(
+                        index = index,
+                        value = item.server.extractResolution(),
+                        isSelect = serverSelected == index,
+                        onClick = {
+                            serverSelected = it
+                            event.onSteamSelected(item)
+                        }
+                    )
+                }
             }
         }
-    }
-}
-
-@Composable
-private fun EpisodePoster(
-    modifier: Modifier,
-    imageUrl: String,
-    onClick: () -> Unit
-) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(200.dp)
-            .clip(RoundedCornerShape(16.dp))
-    ) {
-        DynamicAsyncImage(
-            modifier = Modifier
-                .fillMaxSize()
-                .clickable { onClick() },
-            imageUrl = imageUrl,
-            contentScale = ContentScale.Crop
-        )
-
-        Box(
-            modifier = Modifier
-                .matchParentSize()
-                .background(Color.Black.copy(alpha = 0.5f))
-        )
-
-        Icon(
-            modifier = Modifier
-                .size(42.dp)
-                .align(Alignment.Center),
-            imageVector = Icons.Default.PlayCircle,
-            contentDescription = null,
-            tint = Color.White
-        )
     }
 }
 

@@ -4,7 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.pascal.aniqu.data.repository.anime.AnimeRepository
 import com.pascal.aniqu.domain.mapper.toDomain
-import com.pascal.aniqu.domain.model.item.AnimeItem
+import com.pascal.aniqu.domain.model.anime.AnimeItem
 
 class AnimePagingSource(
     private val repository: AnimeRepository
@@ -21,7 +21,7 @@ class AnimePagingSource(
         return try {
             val page = params.key ?: 5
 
-            val animeList = repository.getAnimeLive(page).data?.animeList?.map {
+            val animeList = repository.getAnimeLive(page).data?.map {
                 it.toDomain()
             }
 

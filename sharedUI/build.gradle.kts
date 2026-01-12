@@ -121,7 +121,7 @@ dependencies {
 buildkonfig {
     packageName = "com.pascal.aniqu"
     defaultConfigs {
-        buildConfigField(FieldSpec.Type.STRING, "BASE_URL", "https://www.sankavollerei.com/anime")
+        buildConfigField(FieldSpec.Type.STRING, "BASE_URL", "https://www.sankavollerei.com/anime/animesail")
     }
 }
 

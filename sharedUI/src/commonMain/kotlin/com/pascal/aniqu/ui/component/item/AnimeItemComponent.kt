@@ -7,12 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.StarRate
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,9 +21,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import aniqu.sharedui.generated.resources.Res
 import aniqu.sharedui.generated.resources.label_episode
-import com.pascal.aniqu.domain.model.item.AnimeItem
+import com.pascal.aniqu.domain.model.anime.AnimeItem
 import com.pascal.aniqu.ui.component.screenUtils.DynamicAsyncImage
 import com.pascal.aniqu.ui.theme.AppTheme
+import com.pascal.aniqu.utils.cleanAnimeTitle
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -42,8 +38,7 @@ fun AnimeItemComponent(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .clickable { onClick(items.animeId) }
+            .clickable { onClick(items.slug) }
     ) {
         DynamicAsyncImage(
             modifier = Modifier
@@ -58,7 +53,7 @@ fun AnimeItemComponent(
         Spacer(Modifier.height(12.dp))
 
         Text(
-            text = items.title,
+            text = items.title.cleanAnimeTitle(),
             style = MaterialTheme.typography.titleLarge,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
@@ -69,7 +64,7 @@ fun AnimeItemComponent(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (items.episodes != 0) {
+            if (items.episodes.isNotBlank()) {
                 Text(
                     text = stringResource(Res.string.label_episode, items.episodes),
                     style = MaterialTheme.typography.bodySmall.copy(
@@ -78,26 +73,15 @@ fun AnimeItemComponent(
                 )
             } else {
                 Text(
-                    text = items.studios,
+                    text = items.type,
                     style = MaterialTheme.typography.bodySmall.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 )
             }
 
-            Spacer(Modifier.width(8.dp))
-
-            Icon(
-                modifier = Modifier.size(16.dp),
-                imageVector = Icons.Default.StarRate,
-                contentDescription = null,
-                tint = Color.Yellow
-            )
-
-            Spacer(Modifier.width(4.dp))
-
             Text(
-                text = items.score.ifBlank { "-" },
+                text = " | ${items.date.ifBlank { items.status }}",
                 style = MaterialTheme.typography.bodySmall.copy(
                     color = MaterialTheme.colorScheme.onSurface
                 )

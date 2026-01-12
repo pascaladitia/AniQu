@@ -32,7 +32,7 @@ import aniqu.sharedui.generated.resources.Res
 import aniqu.sharedui.generated.resources.label_completed
 import aniqu.sharedui.generated.resources.label_ongoing
 import app.cash.paging.compose.LazyPagingItems
-import com.pascal.aniqu.domain.model.item.AnimeItem
+import com.pascal.aniqu.domain.model.anime.AnimeItem
 import com.pascal.aniqu.ui.component.item.AnimeItemComponent
 import com.pascal.aniqu.ui.component.screenUtils.shimmer
 import com.pascal.aniqu.ui.screen.home.component.HomeLiveItem
@@ -88,10 +88,10 @@ fun HomeScreen(
                     with(it) {
                         LazyRowCarousel(
                             isLoading = uiState.isLoading,
-                            items = uiState.anime?.ongoing,
+                            items = uiState.animeList,
                             animatedVisibilityScope = uiState.animatedVisibilityScope!!
                         ) {
-                            event.onDetail(it.animeId)
+                            event.onDetail(it.slug)
                         }
                     }
                 }
@@ -135,7 +135,7 @@ fun HomeScreen(
                 )
             }
         } else {
-            itemsIndexed(uiState.anime?.completed?.animeList.orEmpty()) { index, items ->
+            itemsIndexed(uiState.animeGenreList) { index, items ->
                 AnimeItemComponent(
                     modifier = Modifier.padding(
                         start = if (index % 2 == 0) 16.dp else 8.dp,

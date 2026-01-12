@@ -21,8 +21,6 @@ fun AnimeDetailDescription(
     modifier: Modifier = Modifier,
     uiState: AnimeDetailUIState = AnimeDetailUIState()
 ) {
-    val description = uiState.animeDetail?.synopsis?.paragraphs
-
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -43,7 +41,7 @@ fun AnimeDetailDescription(
                 )
             }
         } else {
-            description?.forEach {
+            uiState.animeDetail?.synopsis?.let {
                 Text(
                     text = it,
                     style = MaterialTheme.typography.bodyMedium.copy(

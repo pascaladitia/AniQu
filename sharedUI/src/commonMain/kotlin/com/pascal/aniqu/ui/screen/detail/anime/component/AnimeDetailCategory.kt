@@ -53,7 +53,7 @@ fun AnimeDetailCategory(
                         .padding(8.dp)
                 ) {
                     Text(
-                        text = it.title,
+                        text = it,
                         style = MaterialTheme.typography.bodySmall.copy(
                             color = MaterialTheme.colorScheme.onSurface
                         )

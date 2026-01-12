@@ -13,7 +13,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import aniqu.sharedui.generated.resources.Res
 import aniqu.sharedui.generated.resources.close
 import app.cash.paging.compose.collectAsLazyPagingItems
-import com.pascal.aniqu.data.local.entity.FavoritesEntity
 import com.pascal.aniqu.ui.component.dialog.ShowDialog
 import com.pascal.aniqu.ui.component.screenUtils.PullRefreshComponent
 import com.pascal.aniqu.ui.screen.home.state.LocalHomeEvent
