@@ -44,7 +44,7 @@ fun AnimeDetailRoute(
         LocalAnimeDetailEvent provides event.copy(
             onNavBack = onNavBack,
             onEpisodeSelected = {},
-            onServerSelected = {}
+            onDownloadSelected = {}
         )
     ) {
         PullRefreshComponent(

@@ -87,7 +87,7 @@ class AnimeDetailViewModel(
                 }
                 .collect { (detail, streaming, genres) ->
                     val filterStreaming = streaming?.downloads?.filterMp4UniqueByResolution()
-                    val filterEmbed = streaming?.streams?.firstOrNull()?.url.orEmpty()
+                    val filterEmbed = streaming?.streams?.filterStreamingByServer()
 
                     _uiState.update {
                         it.copy(
@@ -95,9 +95,10 @@ class AnimeDetailViewModel(
                             animeId = slug,
                             animeDetail = detail,
                             recomendList = genres.toImmutableList(),
-                            streamingList = filterStreaming?.toImmutableList() ?: persistentListOf(),
-                            streamingUrl = filterStreaming?.firstOrNull()?.url.orEmpty(),
-                            embedUrl = filterEmbed
+                            downloadList = filterStreaming?.toImmutableList() ?: persistentListOf(),
+                            streamList = filterEmbed?.toImmutableList() ?: persistentListOf(),
+                            downloadUrl = filterStreaming?.firstOrNull()?.url.orEmpty(),
+                            streamUrl = filterEmbed?.firstOrNull()?.url.orEmpty()
                         )
                     }
                 }
@@ -108,6 +109,10 @@ class AnimeDetailViewModel(
         return this
             .filter { it.url.endsWith(".mp4", ignoreCase = true) }
             .distinctBy { it.resolution }
+    }
+
+    fun List<Stream>.filterStreamingByServer(): List<Stream> {
+        return this.distinctBy { it.server }
     }
 
     fun resetError() {

@@ -38,7 +38,6 @@ import chaintech.videoplayer.ui.video.VideoPlayerComposable
 import com.multiplatform.webview.request.RequestInterceptor
 import com.multiplatform.webview.request.WebRequest
 import com.multiplatform.webview.request.WebRequestInterceptResult
-import com.multiplatform.webview.setting.PlatformWebSettings
 import com.multiplatform.webview.web.WebView
 import com.multiplatform.webview.web.WebViewNavigator
 import com.multiplatform.webview.web.rememberWebViewNavigator
@@ -72,10 +71,10 @@ fun AnimeDetailEpisode(
 
         Spacer(Modifier.height(16.dp))
 
-        key(uiState.streamingUrl, uiState.embedUrl) {
-            val playerHost = remember(uiState.streamingUrl) {
+        key(uiState.downloadUrl, uiState.streamUrl) {
+            val playerHost = remember(uiState.downloadUrl) {
                 MediaPlayerHost(
-                    mediaUrl = uiState.streamingUrl,
+                    mediaUrl = uiState.downloadUrl,
                     autoPlay = false,
                     isLooping = false,
                     initialVideoFitMode = ScreenResize.FILL
@@ -95,7 +94,7 @@ fun AnimeDetailEpisode(
                             .shimmer()
                     )
                 } else {
-                    if (uiState.streamingUrl.isNotBlank()) {
+                    if (uiState.downloadUrl.isNotBlank()) {
                         VideoPlayerComposable(
                             modifier = if (isFullscreen) {
                                 Modifier.fillMaxWidth().height(400.dp)
@@ -106,7 +105,7 @@ fun AnimeDetailEpisode(
                         )
                     } else {
                         val webViewState = rememberWebViewState(
-                            url = uiState.embedUrl,
+                            url = uiState.streamUrl,
                             extraSettings = {
                                 this.isJavaScriptEnabled = true
                             }
@@ -181,16 +180,30 @@ fun AnimeDetailEpisode(
                 )
             }
 
-            itemsIndexed(uiState.streamingList) { index, item ->
-                EpisodeItem(
-                    index = index,
-                    value = item.resolution,
-                    isSelect = serverSelected == index,
-                    onClick = {
-                        serverSelected = it
-                        event.onServerSelected(item)
-                    }
-                )
+            if (uiState.downloadList.isNotEmpty()) {
+                itemsIndexed(uiState.downloadList) { index, item ->
+                    EpisodeItem(
+                        index = index,
+                        value = item.resolution,
+                        isSelect = serverSelected == index,
+                        onClick = {
+                            serverSelected = it
+                            event.onDownloadSelected(item)
+                        }
+                    )
+                }
+            } else {
+                itemsIndexed(uiState.streamList) { index, item ->
+                    EpisodeItem(
+                        index = index,
+                        value = item.server,
+                        isSelect = serverSelected == index,
+                        onClick = {
+                            serverSelected = it
+                            event.onSteamSelected(item)
+                        }
+                    )
+                }
             }
         }
     }
