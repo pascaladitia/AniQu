@@ -41,7 +41,7 @@ fun AnimeStreamingScreen(
                     autoPlay = true,
                     isLooping = false,
                     isFullScreen = true,
-                    initialVideoFitMode = ScreenResize.FILL
+                    initialVideoFitMode = ScreenResize.FIT
                 )
             }
 
