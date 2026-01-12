@@ -29,18 +29,19 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import app.cash.paging.compose.LazyPagingItems
-import com.pascal.aniqu.domain.model.item.AnimeItem
+import com.pascal.aniqu.domain.model.anime.AnimeItem
 import com.pascal.aniqu.ui.component.screenUtils.DynamicAsyncImage
 import com.pascal.aniqu.ui.component.screenUtils.shimmer
+import com.pascal.aniqu.ui.component.screenUtils.verticalFadeBackground
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -48,7 +49,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeLiveItem(
     modifier: Modifier = Modifier,
-    animeLiveResponse: LazyPagingItems<AnimeItem>?
+    animeLiveResponse: LazyPagingItems<AnimeItem>?,
+    onClick: (String) -> Unit = {}
 ) {
     if (animeLiveResponse == null) return
 
@@ -101,25 +103,29 @@ fun HomeLiveItem(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(240.dp)
+                    .clickable { onClick(item.slug) }
                     .background(Color.LightGray),
                 imageUrl = item.poster,
                 contentScale = ContentScale.Crop
             )
         }
 
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp)
+                .verticalFadeBackground(
+                    startColor = Color.Black.copy(0.8f),
+                    isTop = true
+                )
+        )
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            Color.Black.copy(alpha = 0.6f),
-                            Color.Black.copy(alpha = 0.4f),
-                            Color.Transparent
-                        ),
-                        startY = Float.POSITIVE_INFINITY,
-                        endY = 0f
-                    )
+                .verticalFadeBackground(
+                    startColor = Color.Black.copy(0.8f),
+                    isTop = false
                 )
                 .padding(16.dp)
                 .align(Alignment.BottomCenter)
@@ -127,7 +133,9 @@ fun HomeLiveItem(
             Text(
                 text = animeLiveResponse[currentPage]?.title.orEmpty(),
                 style = MaterialTheme.typography.headlineMedium,
-                color = Color.White
+                color = Color.White,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
             )
 
             Spacer(Modifier.height(4.dp))
@@ -139,8 +147,8 @@ fun HomeLiveItem(
             ) {
                 Text(
                     text = buildAnnotatedString {
-                        val releaseDay = animeLiveResponse[currentPage]?.releaseDay.orEmpty()
-                        val lastDate = animeLiveResponse[currentPage]?.latestReleaseDate.orEmpty()
+                        val releaseDay = animeLiveResponse[currentPage]?.type.orEmpty()
+                        val lastDate = animeLiveResponse[currentPage]?.status.orEmpty()
 
                         if (releaseDay.isNotBlank()) {
                             withStyle(

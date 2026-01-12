@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.pascal.aniqu.ui.navigation.screen.AnimeScreen
 
 @Composable
 fun BottomBar(
@@ -49,36 +50,36 @@ fun BottomBar(
                     title = "Home",
                     iconFilled = Icons.Filled.Home,
                     iconOutlined = Icons.Outlined.Home,
-                    screen = Screen.HomeScreen
+                    animeScreen = AnimeScreen.HomeScreen
                 ),
                 NavigationItem(
                     title = "Manga",
                     iconFilled = Icons.AutoMirrored.Filled.MenuBook,
                     iconOutlined = Icons.AutoMirrored.Outlined.MenuBook,
-                    screen = Screen.MangaScreen
+                    animeScreen = AnimeScreen.MangaScreen
                 ),
                 NavigationItem(
                     title = "Search",
                     iconFilled = Icons.Filled.Search,
                     iconOutlined = Icons.Outlined.Search,
-                    screen = Screen.SearchScreen
+                    animeScreen = AnimeScreen.SearchScreen
                 ),
                 NavigationItem(
                     title = "Favorite",
                     iconFilled = Icons.Filled.Favorite,
                     iconOutlined = Icons.Outlined.Favorite,
-                    screen = Screen.FavoriteScreen
+                    animeScreen = AnimeScreen.FavoriteScreen
                 ),
                 NavigationItem(
                     title = "Profile",
                     iconFilled = Icons.Filled.Person,
                     iconOutlined = Icons.Outlined.Person,
-                    screen = Screen.ProfileScreen
+                    animeScreen = AnimeScreen.ProfileScreen
                 )
             )
 
             navigationItems.forEach { item ->
-                val selected = currentRoute == item.screen.route
+                val selected = currentRoute == item.animeScreen.route
                 NavigationBarItem(
                     icon = {
                         val iconSize = if (selected) 26.dp else 24.dp
@@ -105,7 +106,7 @@ fun BottomBar(
                     alwaysShowLabel = false,
                     selected = selected,
                     onClick = {
-                        navController.navigate(item.screen.route) {
+                        navController.navigate(item.animeScreen.route) {
                             popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = true
                             }

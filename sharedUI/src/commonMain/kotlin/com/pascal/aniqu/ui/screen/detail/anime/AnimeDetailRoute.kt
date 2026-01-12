@@ -1,30 +1,34 @@
-package com.pascal.aniqu.ui.screen.search
+package com.pascal.aniqu.ui.screen.detail.anime
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import aniqu.sharedui.generated.resources.Res
 import aniqu.sharedui.generated.resources.close
 import com.pascal.aniqu.ui.component.dialog.ShowDialog
 import com.pascal.aniqu.ui.component.screenUtils.PullRefreshComponent
-import com.pascal.aniqu.ui.screen.search.state.LocalSearchEvent
+import com.pascal.aniqu.ui.screen.detail.anime.state.LocalAnimeDetailEvent
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @Composable
-fun SearchRoute(
-    modifier: Modifier = Modifier,
-    viewModel: SearchViewModel = koinInject<SearchViewModel>(),
-    onDetail: (String) -> Unit
+fun AnimeDetailRoute(
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    slug: String? = "",
+    viewModel: AnimeDetailViewModel = koinInject<AnimeDetailViewModel>(),
+    onNavBack: () -> Unit
 ) {
-    val event = LocalSearchEvent.current
+    val event = LocalAnimeDetailEvent.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.loadAnimeGenre()
+        viewModel.setTransition(sharedTransitionScope, animatedVisibilityScope)
+        viewModel.loadAnimeDetail(slug)
     }
 
     if (uiState.error.first) {
@@ -37,27 +41,18 @@ fun SearchRoute(
     }
 
     CompositionLocalProvider(
-        LocalSearchEvent provides event.copy(
-            onSearch = {
-                if (it.isNotBlank()) {
-                    viewModel.loadAnimeSearch(it)
-                } else {
-                    viewModel.loadAnimeGenre(uiState.selectedGenre)
-                }
-            },
-            onGenre = {
-                viewModel.loadAnimeGenre(it)
-            },
-            onDetail = onDetail
+        LocalAnimeDetailEvent provides event.copy(
+            onNavBack = onNavBack,
+            onEpisodeSelected = {},
+            onDownloadSelected = {}
         )
     ) {
         PullRefreshComponent(
             onRefresh = {
-                viewModel.loadAnimeGenre(uiState.selectedGenre)
+                viewModel.loadAnimeDetail(slug)
             }
         ) {
-            SearchScreen(
-                modifier = modifier,
+            AnimeDetailScreen(
                 uiState = uiState
             )
         }

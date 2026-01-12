@@ -8,34 +8,38 @@ inline fun <reified T> saveToCurrentBackStack(
     key: String,
     data: T
 ) {
-    val jsonOrValue = try {
-        Json.encodeToString(data)
-    } catch (_: Exception) {
-        data.toString()
+    val handle = navController.currentBackStackEntry
+        ?.savedStateHandle
+        ?: return
+
+    when (data) {
+        is String,
+        is Int,
+        is Double,
+        is Float,
+        is Long,
+        is Boolean -> {
+            handle[key] = data
+        }
+        else -> {
+            handle[key] = Json.encodeToString(data)
+        }
     }
-    navController.currentBackStackEntry?.savedStateHandle?.set(key, jsonOrValue)
 }
 
 inline fun <reified T> getFromPreviousBackStack(
     navController: NavController,
     key: String
 ): T? {
-    val value = navController.previousBackStackEntry
+    val handle = navController.previousBackStackEntry
         ?.savedStateHandle
-        ?.get<String>(key) ?: return null
+        ?: return null
 
-    return try {
-        Json.decodeFromString<T>(value)
-    } catch (_: Exception) {
-        @Suppress("UNCHECKED_CAST")
-        when (T::class) {
-            String::class -> value as T
-            Int::class -> value.toIntOrNull() as? T
-            Double::class -> value.toDoubleOrNull() as? T
-            Float::class -> value.toFloatOrNull() as? T
-            Long::class -> value.toLongOrNull() as? T
-            Boolean::class -> value.toBooleanStrictOrNull() as? T
-            else -> null
-        }
-    }
+    handle.get<T>(key)?.let { return it }
+
+    val json = handle.get<String>(key) ?: return null
+    return runCatching {
+        Json.decodeFromString<T>(json)
+    }.getOrNull()
 }
+

@@ -32,13 +32,13 @@ import aniqu.sharedui.generated.resources.Res
 import aniqu.sharedui.generated.resources.label_completed
 import aniqu.sharedui.generated.resources.label_ongoing
 import app.cash.paging.compose.LazyPagingItems
-import com.pascal.aniqu.domain.model.item.AnimeItem
+import com.pascal.aniqu.domain.model.anime.AnimeItem
+import com.pascal.aniqu.ui.component.item.AnimeItemComponent
 import com.pascal.aniqu.ui.component.screenUtils.shimmer
 import com.pascal.aniqu.ui.screen.home.component.HomeLiveItem
-import com.pascal.aniqu.ui.screen.home.component.HomeOngoingItem
 import com.pascal.aniqu.ui.screen.home.component.LazyRowCarousel
 import com.pascal.aniqu.ui.screen.home.state.HomeUIState
-import com.pascal.aniqu.ui.screen.onboarding.state.LocalOnboardingEvent
+import com.pascal.aniqu.ui.screen.home.state.LocalHomeEvent
 import com.pascal.aniqu.ui.theme.AppTheme
 import org.jetbrains.compose.resources.stringResource
 
@@ -48,7 +48,7 @@ fun HomeScreen(
     uiState: HomeUIState = HomeUIState(),
     animeLiveResponse: LazyPagingItems<AnimeItem>? = null
 ) {
-    val event = LocalOnboardingEvent.current
+    val event = LocalHomeEvent.current
 
     LazyVerticalGrid(
         modifier = modifier.fillMaxSize(),
@@ -57,7 +57,8 @@ fun HomeScreen(
     ) {
         item(span = { GridItemSpan(maxLineSpan) }) {
             HomeLiveItem(
-                animeLiveResponse = animeLiveResponse
+                animeLiveResponse = animeLiveResponse,
+                onClick = event.onDetail
             )
         }
 
@@ -87,10 +88,10 @@ fun HomeScreen(
                     with(it) {
                         LazyRowCarousel(
                             isLoading = uiState.isLoading,
-                            items = uiState.anime?.ongoing,
+                            items = uiState.animeList,
                             animatedVisibilityScope = uiState.animatedVisibilityScope!!
                         ) {
-                            event.onNext()
+                            event.onDetail(it.slug)
                         }
                     }
                 }
@@ -120,7 +121,7 @@ fun HomeScreen(
         }
 
         if (uiState.isLoading) {
-            items(2) { index ->
+            itemsIndexed(List(2) { it }) { index, _ ->
                 Box(
                     modifier = Modifier
                         .padding(
@@ -134,13 +135,14 @@ fun HomeScreen(
                 )
             }
         } else {
-            itemsIndexed(uiState.anime?.completed?.animeList.orEmpty()) { index, items ->
-                HomeOngoingItem(
+            itemsIndexed(uiState.animeGenreList) { index, items ->
+                AnimeItemComponent(
                     modifier = Modifier.padding(
                         start = if (index % 2 == 0) 16.dp else 8.dp,
                         end = if (index % 2 == 0) 8.dp else 16.dp
                     ),
-                    items = items
+                    items = items,
+                    onClick = event.onDetail
                 )
             }
         }
