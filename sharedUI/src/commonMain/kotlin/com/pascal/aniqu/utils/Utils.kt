@@ -20,6 +20,16 @@ fun String.cleanAnimeTitle(): String {
         .trim()
 }
 
+fun String.extractResolution(): String {
+    val regex = "\\d+p".toRegex()
+    val matches = regex.findAll(this).toList()
+    return if (matches.isNotEmpty()) {
+        matches.joinToString(", ") { it.value }
+    } else {
+        this
+    }
+}
+
 fun String.toEnglishDate(): String {
     val parts = this.split("-")
     if (parts.size != 3) return this

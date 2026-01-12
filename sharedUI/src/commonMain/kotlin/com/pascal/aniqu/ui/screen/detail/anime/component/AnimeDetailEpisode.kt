@@ -46,6 +46,7 @@ import com.pascal.aniqu.ui.component.screenUtils.shimmer
 import com.pascal.aniqu.ui.screen.detail.anime.state.AnimeDetailUIState
 import com.pascal.aniqu.ui.screen.detail.anime.state.LocalAnimeDetailEvent
 import com.pascal.aniqu.ui.theme.AppTheme
+import com.pascal.aniqu.utils.extractResolution
 
 @Composable
 fun AnimeDetailEpisode(
@@ -196,7 +197,7 @@ fun AnimeDetailEpisode(
                 itemsIndexed(uiState.streamList) { index, item ->
                     EpisodeItem(
                         index = index,
-                        value = item.server,
+                        value = item.server.extractResolution(),
                         isSelect = serverSelected == index,
                         onClick = {
                             serverSelected = it

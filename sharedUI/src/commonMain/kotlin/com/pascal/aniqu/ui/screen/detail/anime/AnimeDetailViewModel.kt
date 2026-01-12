@@ -8,6 +8,7 @@ import com.pascal.aniqu.domain.model.anime.Download
 import com.pascal.aniqu.domain.model.anime.Stream
 import com.pascal.aniqu.domain.usecase.anime.AnimeUseCase
 import com.pascal.aniqu.ui.screen.detail.anime.state.AnimeDetailUIState
+import com.pascal.aniqu.utils.extractResolution
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -112,7 +113,7 @@ class AnimeDetailViewModel(
     }
 
     fun List<Stream>.filterStreamingByServer(): List<Stream> {
-        return this.distinctBy { it.server }
+        return this.distinctBy { it.server.extractResolution() }
     }
 
     fun resetError() {
