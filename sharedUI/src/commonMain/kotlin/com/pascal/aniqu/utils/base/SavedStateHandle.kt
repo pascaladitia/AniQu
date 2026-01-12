@@ -35,7 +35,17 @@ inline fun <reified T> getFromPreviousBackStack(
         ?.savedStateHandle
         ?: return null
 
-    handle.get<T>(key)?.let { return it }
+    when (T::class) {
+        String::class,
+        Int::class,
+        Double::class,
+        Float::class,
+        Long::class,
+        Boolean::class -> {
+            @Suppress("UNCHECKED_CAST")
+            return handle.get<T>(key)
+        }
+    }
 
     val json = handle.get<String>(key) ?: return null
     return runCatching {
