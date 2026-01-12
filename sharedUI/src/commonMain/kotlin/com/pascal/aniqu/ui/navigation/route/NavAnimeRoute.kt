@@ -21,9 +21,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.pascal.aniqu.data.preferences.PrefLogin
+import com.pascal.aniqu.domain.model.anime.Stream
 import com.pascal.aniqu.ui.navigation.BottomBar
 import com.pascal.aniqu.ui.navigation.screen.AnimeScreen
 import com.pascal.aniqu.ui.screen.detail.anime.AnimeDetailRoute
+import com.pascal.aniqu.ui.screen.detail.streaming.AnimeStreamingRoute
 import com.pascal.aniqu.ui.screen.favorite.FavoriteRoute
 import com.pascal.aniqu.ui.screen.home.HomeRoute
 import com.pascal.aniqu.ui.screen.manga.MangaRoute
@@ -99,20 +101,8 @@ fun NavAnimeRoute(
                         sharedTransitionScope = sharedScope,
                         animatedVisibilityScope = animScope,
                         onDetail = {
-                            saveToCurrentBackStack(navController, "slug", it)
+                            saveToCurrentBackStack(navController, NavKey.SLUG, it)
                             navController.navigate(AnimeScreen.AnimeDetailScreen.route)
-                        }
-                    )
-                }
-                composable(route = AnimeScreen.AnimeDetailScreen.route) {
-                    val animScope: AnimatedVisibilityScope = this
-
-                    AnimeDetailRoute(
-                        sharedTransitionScope = sharedScope,
-                        animatedVisibilityScope = animScope,
-                        slug = getFromPreviousBackStack<String>(navController, "slug"),
-                        onNavBack = {
-                            navController.popBackStack()
                         }
                     )
                 }
@@ -125,7 +115,7 @@ fun NavAnimeRoute(
                 composable(route = AnimeScreen.SearchScreen.route) {
                     SearchRoute(
                         onDetail = {
-                            saveToCurrentBackStack(navController, "slug", it)
+                            saveToCurrentBackStack(navController, NavKey.SLUG, it)
                             navController.navigate(AnimeScreen.AnimeDetailScreen.route)
                         }
                     )
@@ -141,6 +131,30 @@ fun NavAnimeRoute(
                         onBookMark = {
                             navController.navigate(AnimeScreen.ProfileScreen.route)
                         },
+                    )
+                }
+                composable(route = AnimeScreen.AnimeDetailScreen.route) {
+                    val animScope: AnimatedVisibilityScope = this
+
+                    AnimeDetailRoute(
+                        sharedTransitionScope = sharedScope,
+                        animatedVisibilityScope = animScope,
+                        slug = getFromPreviousBackStack<String>(navController, NavKey.SLUG),
+                        onNavPlayStream = {
+                            saveToCurrentBackStack(navController, NavKey.STREAM, it)
+                            navController.navigate(AnimeScreen.AnimeStreamingScreen.route)
+                        },
+                        onNavBack = {
+                            navController.popBackStack()
+                        }
+                    )
+                }
+                composable(route = AnimeScreen.AnimeStreamingScreen.route) {
+                    AnimeStreamingRoute(
+                        stream = getFromPreviousBackStack<Stream>(navController, NavKey.STREAM),
+                        onNavBack = {
+                            navController.popBackStack()
+                        }
                     )
                 }
             }

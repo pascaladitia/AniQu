@@ -4,12 +4,10 @@ import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.SharedTransitionScope
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.pascal.aniqu.domain.model.anime.Download
+import com.pascal.aniqu.domain.mapper.mapToStreamList
 import com.pascal.aniqu.domain.model.anime.Stream
 import com.pascal.aniqu.domain.usecase.anime.AnimeUseCase
 import com.pascal.aniqu.ui.screen.detail.anime.state.AnimeDetailUIState
-import com.pascal.aniqu.utils.extractResolution
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,6 +47,7 @@ class AnimeDetailViewModel(
             _uiState.update {
                 it.copy(
                     isLoading = true,
+                    isLoadingStream = true,
                     error = false to ""
                 )
             }
@@ -82,38 +81,66 @@ class AnimeDetailViewModel(
                     _uiState.update {
                         it.copy(
                             isLoading = false,
+                            isLoadingStream = false,
                             error = true to (e.message ?: "Unknown error")
                         )
                     }
                 }
                 .collect { (detail, streaming, genres) ->
-                    val filterStreaming = streaming?.downloads?.filterMp4UniqueByResolution()
-                    val filterEmbed = streaming?.streams?.filterStreamingByServer()
+                    val streamingList = mapToStreamList(
+                        downloads = streaming?.downloads,
+                        streams = streaming?.streams
+                    )
 
                     _uiState.update {
                         it.copy(
                             isLoading = false,
+                            isLoadingStream = false,
                             animeId = slug,
                             animeDetail = detail,
                             recomendList = genres.toImmutableList(),
-                            downloadList = filterStreaming?.toImmutableList() ?: persistentListOf(),
-                            streamList = filterEmbed?.toImmutableList() ?: persistentListOf(),
-                            downloadUrl = filterStreaming?.firstOrNull()?.url.orEmpty(),
-                            streamUrl = filterEmbed?.firstOrNull()?.url.orEmpty()
+                            streamList = streamingList.toImmutableList(),
+                            streamSelected = streamingList.firstOrNull()
                         )
                     }
                 }
         }
     }
 
-    fun List<Download>.filterMp4UniqueByResolution(): List<Download> {
-        return this
-            .filter { it.url.endsWith(".mp4", ignoreCase = true) }
-            .distinctBy { it.resolution }
+    fun loadAnimeStream(id: String) {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoadingStream = true) }
+
+            animeUseCase.getAnimeStreaming(id)
+                .catch { e ->
+                    _uiState.update {
+                        it.copy(
+                            isLoadingStream = false,
+                            error = true to e.message.toString()
+                        )
+                    }
+                }
+                .collect { result ->
+                    val streamingList = mapToStreamList(
+                        downloads = result?.downloads,
+                        streams = result?.streams
+                    )
+
+                    _uiState.update {
+                        it.copy(
+                            isLoadingStream = false,
+                            streamList = streamingList.toImmutableList(),
+                            streamSelected = streamingList.firstOrNull()
+                        )
+                    }
+                }
+        }
     }
 
-    fun List<Stream>.filterStreamingByServer(): List<Stream> {
-        return this.distinctBy { it.server.extractResolution() }
+    fun streamSelected(stream: Stream) {
+        _uiState.update {
+            it.copy(streamSelected = stream)
+        }
     }
 
     fun resetError() {

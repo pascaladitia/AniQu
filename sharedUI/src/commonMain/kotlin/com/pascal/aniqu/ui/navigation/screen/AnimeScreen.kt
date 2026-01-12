@@ -9,4 +9,5 @@ sealed class AnimeScreen(val route: String) {
     data object FavoriteScreen: AnimeScreen("favorite")
     data object ProfileScreen: AnimeScreen("profile")
     data object AnimeDetailScreen: AnimeScreen("anime_detail")
+    data object AnimeStreamingScreen: AnimeScreen("anime_streaming")
 }

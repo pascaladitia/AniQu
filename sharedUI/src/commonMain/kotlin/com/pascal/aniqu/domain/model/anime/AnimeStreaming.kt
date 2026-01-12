@@ -1,5 +1,7 @@
 package com.pascal.aniqu.domain.model.anime
 
+import kotlinx.serialization.Serializable
+
 data class AnimeStreaming(
     val title: String,
     val poster: String,
@@ -18,9 +20,11 @@ data class Navigation(
     val allEpisodesSlug: String
 )
 
+@Serializable
 data class Stream(
     val server: String,
-    val url: String
+    val url: String,
+    val isEmbed: Boolean
 )
 
 data class Download(

@@ -14,6 +14,7 @@ import com.pascal.aniqu.domain.usecase.local.LocalUseCase
 import com.pascal.aniqu.domain.usecase.local.LocalUseCaseImpl
 import com.pascal.aniqu.getDatabaseBuilder
 import com.pascal.aniqu.ui.screen.detail.anime.AnimeDetailViewModel
+import com.pascal.aniqu.ui.screen.detail.streaming.AnimeStreamingViewModel
 import com.pascal.aniqu.ui.screen.favorite.FavoriteViewModel
 import com.pascal.aniqu.ui.screen.home.HomeViewModel
 import com.pascal.aniqu.ui.screen.manga.MangaViewModel
@@ -48,4 +49,5 @@ val appModule = module {
     singleOf(::FavoriteViewModel)
     singleOf(::ProfileViewModel)
     singleOf(::AnimeDetailViewModel)
+    singleOf(::AnimeStreamingViewModel)
 }
