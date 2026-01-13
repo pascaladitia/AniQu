@@ -13,5 +13,11 @@
     <string name="label_description_onboarding">Get ready to immerse yourself in a world of anime. with a diverse collection of titles</string>
     <string name="label_completed">Completed</string>
     <string name="label_ongoing">On Going</string>
-    <string name="label_episode">%1$d Episode</string>
+    <string name="label_episode_count">%1$d Episode</string>
+    <string name="label_download">Download</string>
+    <string name="label_share">Share</string>
+    <string name="label_favorite">Favorite</string>
+    <string name="label_episode">Episode</string>
+    <string name="label_categories">Categories</string>
+    <string name="label_recomend_to_watch">Recomend to Watch</string>
 </resources>

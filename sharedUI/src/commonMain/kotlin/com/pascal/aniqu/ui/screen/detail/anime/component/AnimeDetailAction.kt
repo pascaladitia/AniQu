@@ -26,10 +26,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import aniqu.sharedui.generated.resources.Res
+import aniqu.sharedui.generated.resources.label_download
+import aniqu.sharedui.generated.resources.label_favorite
+import aniqu.sharedui.generated.resources.label_share
 import com.pascal.aniqu.ui.component.screenUtils.shimmer
 import com.pascal.aniqu.ui.screen.detail.anime.state.AnimeDetailUIState
 import com.pascal.aniqu.ui.screen.detail.anime.state.LocalAnimeDetailEvent
 import com.pascal.aniqu.ui.theme.AppTheme
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun AnimeDetailAction(
@@ -47,7 +52,7 @@ fun AnimeDetailAction(
     ) {
         AnimeDetailActionItem(
             icon = Icons.Default.Favorite,
-            label = "Favorite",
+            label = stringResource(Res.string.label_favorite),
             onClick = {
 
             }
@@ -57,7 +62,7 @@ fun AnimeDetailAction(
 
         AnimeDetailActionItem(
             icon = Icons.Default.Download,
-            label = "Download",
+            label = stringResource(Res.string.label_download),
             onClick = {
 
             }
@@ -67,7 +72,7 @@ fun AnimeDetailAction(
 
         AnimeDetailActionItem(
             icon = Icons.Default.Share,
-            label = "Share",
+            label = stringResource(Res.string.label_share),
             onClick = {
 
             }

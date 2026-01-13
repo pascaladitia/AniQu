@@ -34,12 +34,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import aniqu.sharedui.generated.resources.Res
+import aniqu.sharedui.generated.resources.label_favorite
 import com.pascal.aniqu.ui.component.screenUtils.DynamicAsyncImage
 import com.pascal.aniqu.ui.component.screenUtils.shimmer
 import com.pascal.aniqu.ui.screen.detail.anime.state.AnimeDetailUIState
 import com.pascal.aniqu.ui.screen.detail.anime.state.LocalAnimeDetailEvent
 import com.pascal.aniqu.ui.theme.AppTheme
 import com.pascal.aniqu.utils.extractResolution
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun AnimeDetailEpisode(
@@ -56,7 +59,7 @@ fun AnimeDetailEpisode(
             .padding(vertical = 24.dp, horizontal = 16.dp)
     ) {
         Text(
-            text = "Episode",
+            text = stringResource(Res.string.label_favorite),
             style = MaterialTheme.typography.headlineSmall.copy(
                 color = MaterialTheme.colorScheme.onSurface
             )
