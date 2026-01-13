@@ -28,7 +28,7 @@ fun AnimeDetailRoute(
     val event = LocalAnimeDetailEvent.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(slug) {
         viewModel.setTransition(sharedTransitionScope, animatedVisibilityScope)
         viewModel.loadAnimeDetail(slug)
     }

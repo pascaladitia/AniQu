@@ -142,7 +142,10 @@ fun NavAnimeRoute(
                         slug = getFromPreviousBackStack<String>(navController, NavKey.SLUG),
                         onNavPlayStream = {
                             saveToCurrentBackStack(navController, NavKey.STREAM, it)
-                            navController.navigate(AnimeScreen.AnimeStreamingScreen.route)
+                            navController.navigate(AnimeScreen.AnimeStreamingScreen.route) {
+                                launchSingleTop = true
+                                restoreState = true
+                            }
                         },
                         onNavBack = {
                             navController.popBackStack()

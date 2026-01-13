@@ -41,7 +41,7 @@ class AnimeDetailViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     fun loadAnimeDetail(slug: String?) {
-        if (slug.isNullOrBlank()) return
+        if (slug.isNullOrBlank() || uiState.value.animeDetail != null) return
 
         viewModelScope.launch {
             _uiState.update {
