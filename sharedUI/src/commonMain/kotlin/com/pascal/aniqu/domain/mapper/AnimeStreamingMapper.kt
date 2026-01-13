@@ -58,7 +58,7 @@ fun mapToStreamList(
     return if (mp4List.isNotEmpty()) {
         mp4List.map {
             Stream(
-                server = it.server,
+                server = it.resolution,
                 url = it.url,
                 isEmbed = false
             )
