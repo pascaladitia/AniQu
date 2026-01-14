@@ -1,6 +1,9 @@
 package com.pascal.aniqu.utils
 
+import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSOperationQueue
+import platform.Foundation.NSSearchPathForDirectoriesInDomains
+import platform.Foundation.NSUserDomainMask
 import platform.UIKit.UIActivityViewController
 import platform.UIKit.UIAlertAction
 import platform.UIKit.UIAlertActionStyleDefault
@@ -44,3 +47,10 @@ actual fun actionShareUrl(url: String?) {
         rootVC.presentViewController(activityVC, animated = true, completion = null)
     }
 }
+
+actual fun downloadDirectory(): String =
+    NSSearchPathForDirectoriesInDomains(
+        NSDocumentDirectory,
+        NSUserDomainMask,
+        true
+    ).first() as String

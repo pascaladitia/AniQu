@@ -47,7 +47,7 @@ fun AnimeDetailRoute(
             onFavorite = viewModel::setFavorite,
             onEpisodeSelected = viewModel::loadAnimeStream,
             onSteamSelected = viewModel::streamSelected,
-            onDownloadSelected = {},
+            onDownloadSelected = viewModel::loadDownload,
             onNavPlayStream = onNavPlayStream,
             onNavBack = onNavBack
         )

@@ -30,3 +30,9 @@ actual fun actionShareUrl(url: String?) {
         }
     }
 }
+
+actual fun downloadDirectory(): String =
+    android.os.Environment
+        .getExternalStoragePublicDirectory(
+            android.os.Environment.DIRECTORY_DOWNLOADS
+        ).absolutePath

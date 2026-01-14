@@ -19,6 +19,10 @@ data class AnimeDetailUIState(
     val streamList: ImmutableList<Stream> = persistentListOf(),
     val recomendList: ImmutableList<AnimeItem> = persistentListOf(),
 
+    val isDownloading: Boolean = false,
+    val progress: Int = 0,
+    val filePath: String? = null,
+
     val sharedTransitionScope: SharedTransitionScope? = null,
     val animatedVisibilityScope: AnimatedVisibilityScope? = null
 )

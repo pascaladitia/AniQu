@@ -4,6 +4,8 @@ expect fun showToast(msg: String)
 
 expect fun actionShareUrl(url: String?)
 
+expect fun downloadDirectory(): String
+
 fun String.removeEpisodeSuffix(): String {
     return this.replace(Regex("-episode-\\d+$"), "")
 }
