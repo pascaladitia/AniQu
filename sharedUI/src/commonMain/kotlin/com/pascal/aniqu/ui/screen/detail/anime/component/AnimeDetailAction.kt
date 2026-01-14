@@ -2,7 +2,6 @@ package com.pascal.aniqu.ui.screen.detail.anime.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +14,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,7 +30,6 @@ import aniqu.sharedui.generated.resources.Res
 import aniqu.sharedui.generated.resources.label_download
 import aniqu.sharedui.generated.resources.label_favorite
 import aniqu.sharedui.generated.resources.label_share
-import com.pascal.aniqu.ui.component.screenUtils.shimmer
 import com.pascal.aniqu.ui.screen.detail.anime.state.AnimeDetailUIState
 import com.pascal.aniqu.ui.screen.detail.anime.state.LocalAnimeDetailEvent
 import com.pascal.aniqu.ui.theme.AppTheme
@@ -43,6 +42,12 @@ fun AnimeDetailAction(
 ) {
     val event = LocalAnimeDetailEvent.current
 
+    val iconFav = if (uiState.isFavorite) {
+        Icons.Default.Favorite
+    } else {
+        Icons.Default.FavoriteBorder
+    }
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -51,10 +56,10 @@ fun AnimeDetailAction(
         horizontalArrangement = Arrangement.Center
     ) {
         AnimeDetailActionItem(
-            icon = Icons.Default.Favorite,
+            icon = iconFav,
             label = stringResource(Res.string.label_favorite),
             onClick = {
-
+                event.onFavorite(uiState.animeDetail)
             }
         )
 

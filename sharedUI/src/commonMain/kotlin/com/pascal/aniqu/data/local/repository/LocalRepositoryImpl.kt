@@ -37,7 +37,7 @@ class LocalRepositoryImpl(
     }
 
     override suspend fun getFavorite(): List<FavoritesEntity>? {
-        return database.favoritesDao().getFavoriteMovieList()
+        return database.favoritesDao().getFavoriteList()
     }
 
     override suspend fun getFavorite(title: String): Boolean {

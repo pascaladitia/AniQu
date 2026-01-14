@@ -5,8 +5,11 @@ import androidx.compose.animation.SharedTransitionScope
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pascal.aniqu.domain.mapper.mapToStreamList
+import com.pascal.aniqu.domain.mapper.toEntity
+import com.pascal.aniqu.domain.model.anime.AnimeDetail
 import com.pascal.aniqu.domain.model.anime.Stream
 import com.pascal.aniqu.domain.usecase.anime.AnimeUseCase
+import com.pascal.aniqu.domain.usecase.local.LocalUseCase
 import com.pascal.aniqu.ui.screen.detail.anime.state.AnimeDetailUIState
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -21,6 +24,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AnimeDetailViewModel(
+    private val localUseCase: LocalUseCase,
     private val animeUseCase: AnimeUseCase
 ): ViewModel() {
 
@@ -103,6 +107,8 @@ class AnimeDetailViewModel(
                             streamSelected = streamingList.firstOrNull()
                         )
                     }
+
+                    loadFavorite(detail?.title.orEmpty())
                 }
         }
     }
@@ -141,6 +147,48 @@ class AnimeDetailViewModel(
         _uiState.update {
             it.copy(streamSelected = stream)
         }
+    }
+
+    fun loadFavorite(title: String) {
+        viewModelScope.launch {
+            localUseCase.getFavorite(title).collect { result ->
+                _uiState.update { it.copy(isFavorite = result) }
+            }
+        }
+    }
+
+    fun setFavorite(anime: AnimeDetail?) {
+        if (anime == null) {
+            _uiState.update { it.copy(error = true to "Failed save favorite") }
+            return
+        }
+
+        val modify = anime.copy(slug = _uiState.value.animeId)
+
+        viewModelScope.launch {
+            val flowUseCase = if (uiState.value.isFavorite) {
+                localUseCase.deleteFavorite(modify.toEntity())
+            } else {
+
+                localUseCase.insertFavorite(modify.toEntity())
+            }
+
+            flowUseCase.catch { e ->
+                _uiState.update {
+                    it.copy(
+                        isLoadingStream = false,
+                        error = true to e.message.toString()
+                    )
+                }
+            }
+                .collect {
+                    loadFavorite(anime.title)
+                }
+        }
+    }
+
+    fun clearState() {
+        _uiState.value = AnimeDetailUIState()
     }
 
     fun resetError() {

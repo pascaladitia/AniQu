@@ -2,6 +2,10 @@ package com.pascal.aniqu.domain.usecase.local
 
 import com.pascal.aniqu.data.local.entity.FavoritesEntity
 import com.pascal.aniqu.data.local.repository.LocalRepository
+import com.pascal.aniqu.domain.mapper.toAnimeItem
+import com.pascal.aniqu.domain.model.anime.AnimeItem
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import org.koin.core.annotation.Single
 
 @Single
@@ -9,23 +13,23 @@ class LocalUseCaseImpl(
     private val repository: LocalRepository,
 ) : LocalUseCase {
 
-    override suspend fun insertFavorite(entity: FavoritesEntity) {
-        repository.insertFavorite(entity)
+    override suspend fun insertFavorite(entity: FavoritesEntity) = flow {
+        emit(repository.insertFavorite(entity))
     }
 
-    override suspend fun deleteFavorite(entity: FavoritesEntity) {
-        repository.deleteFavorite(entity)
+    override suspend fun deleteFavorite(entity: FavoritesEntity) = flow {
+        emit(repository.deleteFavorite(entity))
     }
 
-    override suspend fun getFavorite(): List<FavoritesEntity>? {
-        return repository.getFavorite()
+    override suspend fun getFavorite(): Flow<List<AnimeItem>> = flow {
+        emit(repository.getFavorite().orEmpty().map { it.toAnimeItem() })
     }
 
-    override suspend fun getFavorite(title: String): Boolean {
-        return repository.getFavorite(title)
+    override suspend fun getFavorite(title: String): Flow<Boolean> = flow {
+        emit(repository.getFavorite(title))
     }
 
-    override suspend fun clearFavorite() {
-        return repository.clearFavorite()
+    override suspend fun clearFavorite() = flow {
+        emit(repository.clearFavorite())
     }
 }

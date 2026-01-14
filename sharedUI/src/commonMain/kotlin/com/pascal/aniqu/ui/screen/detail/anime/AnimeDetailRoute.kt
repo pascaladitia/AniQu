@@ -44,11 +44,15 @@ fun AnimeDetailRoute(
 
     CompositionLocalProvider(
         LocalAnimeDetailEvent provides event.copy(
+            onFavorite = viewModel::setFavorite,
             onEpisodeSelected = viewModel::loadAnimeStream,
             onSteamSelected = viewModel::streamSelected,
             onDownloadSelected = {},
             onNavPlayStream = onNavPlayStream,
-            onNavBack = onNavBack
+            onNavBack = {
+                viewModel.clearState()
+                onNavBack()
+            }
         )
     ) {
         PullRefreshComponent(

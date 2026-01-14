@@ -11,6 +11,7 @@ import kotlinx.collections.immutable.persistentListOf
 data class AnimeDetailUIState(
     val isLoading: Boolean = false,
     val isLoadingStream: Boolean = false,
+    val isFavorite: Boolean = false,
     val error: Pair<Boolean, String> = false to "",
     val animeId: String = "",
     val animeDetail: AnimeDetail? = null,
