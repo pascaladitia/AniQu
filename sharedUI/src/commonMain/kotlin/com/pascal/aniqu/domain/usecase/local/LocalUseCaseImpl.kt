@@ -21,15 +21,15 @@ class LocalUseCaseImpl(
         emit(repository.getFavorite(slug))
     }
 
-    override suspend fun insertFavorite(entity: FavoritesEntity) = flow {
-        emit(repository.insertFavorite(entity))
+    override suspend fun insertFavorite(entity: FavoritesEntity) {
+        return repository.insertFavorite(entity)
     }
 
-    override suspend fun deleteFavorite(slug: String) = flow {
-        emit(repository.deleteFavorite(slug))
+    override suspend fun deleteFavorite(slug: String) {
+        return repository.deleteFavorite(slug)
     }
 
-    override suspend fun clearFavorite() = flow {
-        emit(repository.clearFavorite())
+    override suspend fun clearFavorite() {
+        return repository.clearFavorite()
     }
 }

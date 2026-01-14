@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "f0564a01ff1d5c1e39b5be1976c00779",
+    "identityHash": "0aa54ea70117b0caa6e16c3d608e7439",
     "entities": [
       {
         "tableName": "profiles",
@@ -103,12 +103,23 @@
           "columnNames": [
             "id"
           ]
-        }
+        },
+        "indices": [
+          {
+            "name": "index_favorite_slug",
+            "unique": true,
+            "columnNames": [
+              "slug"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_favorite_slug` ON `${TABLE_NAME}` (`slug`)"
+          }
+        ]
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f0564a01ff1d5c1e39b5be1976c00779')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0aa54ea70117b0caa6e16c3d608e7439')"
     ]
   }
 }

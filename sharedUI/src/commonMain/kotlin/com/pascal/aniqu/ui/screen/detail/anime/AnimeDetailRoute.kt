@@ -49,10 +49,7 @@ fun AnimeDetailRoute(
             onSteamSelected = viewModel::streamSelected,
             onDownloadSelected = {},
             onNavPlayStream = onNavPlayStream,
-            onNavBack = {
-                viewModel.clearState()
-                onNavBack()
-            }
+            onNavBack = onNavBack
         )
     ) {
         PullRefreshComponent(

@@ -14,10 +14,10 @@ interface FavoritesDao {
     @Query("SELECT * FROM favorite")
     suspend fun getFavoriteList(): List<FavoritesEntity>?
 
-    @Query("SELECT * FROM favorite WHERE LOWER(title) = LOWER(:slug) LIMIT 1")
+    @Query("SELECT * FROM favorite WHERE LOWER(slug) = LOWER(:slug) LIMIT 1")
     suspend fun getFavorite(slug: String): FavoritesEntity?
 
-    @Query("DELETE FROM favorite WHERE LOWER(title) = LOWER(:slug)")
+    @Query("DELETE FROM favorite WHERE LOWER(slug) = LOWER(:slug)")
     suspend fun deleteFavorite(slug: String) : Int
 
     @Query("DELETE FROM favorite")

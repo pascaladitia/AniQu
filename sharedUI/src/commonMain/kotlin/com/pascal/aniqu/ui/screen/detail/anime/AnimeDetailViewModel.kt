@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.SharedTransitionScope
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.touchlab.kermit.Logger
 import com.pascal.aniqu.domain.mapper.mapToStreamList
 import com.pascal.aniqu.domain.mapper.toEntity
 import com.pascal.aniqu.domain.model.anime.AnimeDetail
@@ -19,6 +18,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
@@ -27,10 +28,16 @@ import kotlinx.coroutines.launch
 class AnimeDetailViewModel(
     private val localUseCase: LocalUseCase,
     private val animeUseCase: AnimeUseCase
-): ViewModel() {
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AnimeDetailUIState())
     val uiState: StateFlow<AnimeDetailUIState> = _uiState.asStateFlow()
+
+    private val favoriteSlug = MutableStateFlow<String?>(null)
+
+    init {
+        observeFavorite()
+    }
 
     fun setTransition(
         sharedTransitionScope: SharedTransitionScope,
@@ -60,26 +67,14 @@ class AnimeDetailViewModel(
             val detailFlow = animeUseCase.getAnimeDetail(slug)
 
             val streamingFlow = detailFlow
-                .mapNotNull { detail ->
-                    detail?.episodes?.firstOrNull()?.slug
-                }
-                .flatMapLatest { serverId ->
-                    animeUseCase.getAnimeStreaming(serverId)
-                }
+                .mapNotNull { it?.episodes?.firstOrNull()?.slug }
+                .flatMapLatest { animeUseCase.getAnimeStreaming(it) }
 
             val genresFlow = detailFlow
-                .mapNotNull { detail ->
-                    detail?.genres?.firstOrNull()
-                }
-                .flatMapLatest { slug ->
-                    animeUseCase.getAnimeGenre(slug)
-                }
+                .mapNotNull { it?.genres?.firstOrNull() }
+                .flatMapLatest { animeUseCase.getAnimeGenre(it) }
 
-            combine(
-                detailFlow,
-                streamingFlow,
-                genresFlow
-            ) { detail, streaming, genres ->
+            combine(detailFlow, streamingFlow, genresFlow) { detail, streaming, genres ->
                 Triple(detail, streaming, genres)
             }
                 .catch { e ->
@@ -92,7 +87,8 @@ class AnimeDetailViewModel(
                     }
                 }
                 .collect { (detail, streaming, genres) ->
-                    val streamingList = mapToStreamList(
+
+                    val streamList = mapToStreamList(
                         downloads = streaming?.downloads,
                         streams = streaming?.streams
                     )
@@ -104,12 +100,31 @@ class AnimeDetailViewModel(
                             animeId = slug,
                             animeDetail = detail,
                             recomendList = genres.toImmutableList(),
-                            streamList = streamingList.toImmutableList(),
-                            streamSelected = streamingList.firstOrNull()
+                            streamList = streamList.toImmutableList(),
+                            streamSelected = streamList.firstOrNull()
                         )
                     }
 
-                    loadFavorite(detail?.title.orEmpty())
+                    loadFavorite(slug)
+                }
+        }
+    }
+
+    fun loadFavorite(title: String) {
+        favoriteSlug.value = title
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun observeFavorite() {
+        viewModelScope.launch {
+            favoriteSlug
+                .filterNotNull()
+                .distinctUntilChanged()
+                .flatMapLatest { slug ->
+                    localUseCase.getFavorite(slug)
+                }
+                .collect { isFav ->
+                    _uiState.update { it.copy(isFavorite = isFav) }
                 }
         }
     }
@@ -128,7 +143,7 @@ class AnimeDetailViewModel(
                     }
                 }
                 .collect { result ->
-                    val streamingList = mapToStreamList(
+                    val streamList = mapToStreamList(
                         downloads = result?.downloads,
                         streams = result?.streams
                     )
@@ -136,25 +151,11 @@ class AnimeDetailViewModel(
                     _uiState.update {
                         it.copy(
                             isLoadingStream = false,
-                            streamList = streamingList.toImmutableList(),
-                            streamSelected = streamingList.firstOrNull()
+                            streamList = streamList.toImmutableList(),
+                            streamSelected = streamList.firstOrNull()
                         )
                     }
                 }
-        }
-    }
-
-    fun streamSelected(stream: Stream) {
-        _uiState.update {
-            it.copy(streamSelected = stream)
-        }
-    }
-
-    fun loadFavorite(title: String) {
-        viewModelScope.launch {
-            localUseCase.getFavorite(title).collect { result ->
-                _uiState.update { it.copy(isFavorite = result) }
-            }
         }
     }
 
@@ -164,31 +165,29 @@ class AnimeDetailViewModel(
             return
         }
 
-        val modify = anime.copy(slug = _uiState.value.animeId)
+        val slug = _uiState.value.animeId
 
         viewModelScope.launch {
-            val flowUseCase = if (uiState.value.isFavorite) {
-                localUseCase.deleteFavorite(modify.slug)
-            } else {
+            try {
+                if (_uiState.value.isFavorite) {
+                    localUseCase.deleteFavorite(slug)
+                } else {
+                    localUseCase.insertFavorite(anime.toEntity())
+                }
 
-                localUseCase.insertFavorite(modify.toEntity())
-            }
-
-            flowUseCase.catch { e ->
                 _uiState.update {
-                    it.copy(
-                        error = true to e.message.toString()
-                    )
+                    it.copy(isFavorite = !_uiState.value.isFavorite)
+                }
+            } catch (e: Exception) {
+                _uiState.update {
+                    it.copy(error = true to e.message.toString())
                 }
             }
-                .collect {
-                    loadFavorite(anime.title)
-                }
         }
     }
 
-    fun clearState() {
-        _uiState.value = AnimeDetailUIState()
+    fun streamSelected(stream: Stream) {
+        _uiState.update { it.copy(streamSelected = stream) }
     }
 
     fun resetError() {
