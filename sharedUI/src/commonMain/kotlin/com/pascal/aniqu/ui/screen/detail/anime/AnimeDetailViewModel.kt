@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.SharedTransitionScope
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.pascal.aniqu.domain.mapper.mapToStreamList
 import com.pascal.aniqu.domain.mapper.toEntity
 import com.pascal.aniqu.domain.model.anime.AnimeDetail
@@ -45,7 +46,7 @@ class AnimeDetailViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     fun loadAnimeDetail(slug: String?) {
-        if (slug.isNullOrBlank() || uiState.value.animeDetail != null) return
+        if (slug.isNullOrBlank()) return
 
         viewModelScope.launch {
             _uiState.update {
@@ -167,7 +168,7 @@ class AnimeDetailViewModel(
 
         viewModelScope.launch {
             val flowUseCase = if (uiState.value.isFavorite) {
-                localUseCase.deleteFavorite(modify.toEntity())
+                localUseCase.deleteFavorite(modify.slug)
             } else {
 
                 localUseCase.insertFavorite(modify.toEntity())
@@ -176,7 +177,6 @@ class AnimeDetailViewModel(
             flowUseCase.catch { e ->
                 _uiState.update {
                     it.copy(
-                        isLoadingStream = false,
                         error = true to e.message.toString()
                     )
                 }

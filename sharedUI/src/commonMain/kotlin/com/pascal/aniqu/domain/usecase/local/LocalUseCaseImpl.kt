@@ -13,20 +13,20 @@ class LocalUseCaseImpl(
     private val repository: LocalRepository,
 ) : LocalUseCase {
 
-    override suspend fun insertFavorite(entity: FavoritesEntity) = flow {
-        emit(repository.insertFavorite(entity))
-    }
-
-    override suspend fun deleteFavorite(entity: FavoritesEntity) = flow {
-        emit(repository.deleteFavorite(entity))
-    }
-
     override suspend fun getFavorite(): Flow<List<AnimeItem>> = flow {
         emit(repository.getFavorite().orEmpty().map { it.toAnimeItem() })
     }
 
-    override suspend fun getFavorite(title: String): Flow<Boolean> = flow {
-        emit(repository.getFavorite(title))
+    override suspend fun getFavorite(slug: String): Flow<Boolean> = flow {
+        emit(repository.getFavorite(slug))
+    }
+
+    override suspend fun insertFavorite(entity: FavoritesEntity) = flow {
+        emit(repository.insertFavorite(entity))
+    }
+
+    override suspend fun deleteFavorite(slug: String) = flow {
+        emit(repository.deleteFavorite(slug))
     }
 
     override suspend fun clearFavorite() = flow {
