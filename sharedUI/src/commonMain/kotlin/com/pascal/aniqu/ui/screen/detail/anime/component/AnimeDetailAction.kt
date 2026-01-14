@@ -37,6 +37,7 @@ import com.pascal.aniqu.ui.component.screenUtils.AnchoredPopup
 import com.pascal.aniqu.ui.screen.detail.anime.state.AnimeDetailUIState
 import com.pascal.aniqu.ui.screen.detail.anime.state.LocalAnimeDetailEvent
 import com.pascal.aniqu.ui.theme.AppTheme
+import com.pascal.aniqu.utils.actionShareUrl
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -104,7 +105,7 @@ fun AnimeDetailAction(
             icon = Icons.Default.Share,
             label = stringResource(Res.string.label_share),
             onClick = {
-
+                actionShareUrl(uiState.streamSelected?.url)
             }
         )
     }
