@@ -165,14 +165,14 @@ class AnimeDetailViewModel(
             return
         }
 
-        val slug = _uiState.value.animeId
+        val modify = anime.copy(slug = _uiState.value.animeId)
 
         viewModelScope.launch {
             try {
                 if (_uiState.value.isFavorite) {
-                    localUseCase.deleteFavorite(slug)
+                    localUseCase.deleteFavorite(modify.slug)
                 } else {
-                    localUseCase.insertFavorite(anime.toEntity())
+                    localUseCase.insertFavorite(modify.toEntity())
                 }
 
                 _uiState.update {
