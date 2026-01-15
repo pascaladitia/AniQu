@@ -1,6 +1,7 @@
-package com.pascal.aniqu.utils
+package com.pascal.aniqu.utils.download
 
 import co.touchlab.kermit.Logger
+import com.pascal.aniqu.utils.downloadDirectory
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get

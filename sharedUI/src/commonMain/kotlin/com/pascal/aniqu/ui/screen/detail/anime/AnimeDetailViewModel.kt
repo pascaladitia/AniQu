@@ -11,8 +11,9 @@ import com.pascal.aniqu.domain.model.anime.Stream
 import com.pascal.aniqu.domain.usecase.anime.AnimeUseCase
 import com.pascal.aniqu.domain.usecase.local.LocalUseCase
 import com.pascal.aniqu.ui.screen.detail.anime.state.AnimeDetailUIState
-import com.pascal.aniqu.utils.DownloadState
-import com.pascal.aniqu.utils.KtorDownloader
+import com.pascal.aniqu.utils.download.DownloadManager
+import com.pascal.aniqu.utils.download.KtorDownloader
+import com.pascal.aniqu.utils.showToast
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +25,6 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.mapNotNull
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -192,44 +192,9 @@ class AnimeDetailViewModel(
 
 
     fun loadDownload(stream: Stream) {
-        viewModelScope.launch {
-            downloader.download(stream.url)
-                .onStart {
-                    _uiState.update { it.copy(isDownloading = true) }
-                }
-                .catch { e ->
-                    _uiState.update {
-                        it.copy(error = true to e.message.toString())
-                    }
-                }
-                .collect { state ->
-                    when (state) {
-                        is DownloadState.Progress -> {
-                            _uiState.update {
-                                it.copy(progress = state.percent)
-                            }
-                        }
-
-                        is DownloadState.Success -> {
-                            _uiState.update {
-                                it.copy(
-                                    isDownloading = false,
-                                    filePath = state.filePath
-                                )
-                            }
-                        }
-
-                        is DownloadState.Error -> {
-                            _uiState.update {
-                                it.copy(
-                                    isDownloading = false,
-                                    error = true to state.message
-                                )
-                            }
-                        }
-                    }
-                }
-        }
+        val downloader  = DownloadManager()
+        downloader.download(stream.url)
+        showToast("Video Downloading...")
     }
 
     fun streamSelected(stream: Stream) {

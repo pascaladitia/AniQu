@@ -93,6 +93,7 @@ kotlin {
             implementation(libs.room.runtime.android)
             implementation(libs.play.services.auth)
             implementation(libs.androidx.ui.tooling)
+            implementation("androidx.work:work-runtime-ktx:2.11.0")
         }
 
         iosMain.dependencies {

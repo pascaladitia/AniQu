@@ -1,6 +1,6 @@
 package com.pascal.aniqu.di
 
-import com.pascal.aniqu.utils.KtorDownloader
+import com.pascal.aniqu.utils.download.KtorDownloader
 import okio.FileSystem
 import okio.SYSTEM
 import org.koin.dsl.module
