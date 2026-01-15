@@ -95,6 +95,7 @@ peekaboo-image-picker = { module = "io.github.onseok:peekaboo-image-picker", ver
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 moko-permission = { module = "dev.icerock.moko:permissions-compose", version.ref = "moko-permission" }
 moko-permission-camera = { module = "dev.icerock.moko:permissions-camera", version.ref = "moko-permission" }
+moko-permission-notifications = { module = "dev.icerock.moko:permissions-notifications", version.ref = "moko-permission" }
 compose-webview-multiplatform = { module = "io.github.kevinnzou:compose-webview-multiplatform", version.ref = "composeWebviewMultiplatform" }
 firebase-auth = { module = "dev.gitlive:firebase-auth", version.ref = "firebaseApp" }
 firebase-app = { module = "dev.gitlive:firebase-app", version.ref = "firebaseApp" }

@@ -64,6 +64,7 @@ kotlin {
 
             implementation(libs.moko.permission)
             implementation(libs.moko.permission.camera)
+            implementation(libs.moko.permission.notifications)
             implementation(libs.paging.compose.common)
             implementation(libs.paging.common)
             implementation(libs.constraintlayout.compose.multiplatform)
