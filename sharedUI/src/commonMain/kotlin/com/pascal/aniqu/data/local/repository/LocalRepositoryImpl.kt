@@ -28,7 +28,7 @@ class LocalRepositoryImpl(
     }
 
     // Favorites
-    override suspend fun getFavorite(): List<FavoritesEntity>? {
+    override suspend fun getFavorite(): List<FavoritesEntity> {
         return database.favoritesDao().getFavoriteList()
     }
 

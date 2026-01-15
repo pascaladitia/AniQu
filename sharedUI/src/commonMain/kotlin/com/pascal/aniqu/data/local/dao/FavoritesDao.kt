@@ -12,7 +12,7 @@ interface FavoritesDao {
     suspend fun insertFavorite(cachedTest: FavoritesEntity) : Long
 
     @Query("SELECT * FROM favorite")
-    suspend fun getFavoriteList(): List<FavoritesEntity>?
+    suspend fun getFavoriteList(): List<FavoritesEntity>
 
     @Query("SELECT * FROM favorite WHERE LOWER(slug) = LOWER(:slug) LIMIT 1")
     suspend fun getFavorite(slug: String): FavoritesEntity?
