@@ -5,29 +5,38 @@ import platform.Foundation.NSOperationQueue
 import platform.Foundation.NSSearchPathForDirectoriesInDomains
 import platform.Foundation.NSUserDomainMask
 import platform.UIKit.UIActivityViewController
-import platform.UIKit.UIAlertAction
-import platform.UIKit.UIAlertActionStyleDefault
 import platform.UIKit.UIAlertController
 import platform.UIKit.UIAlertControllerStyleAlert
 import platform.UIKit.UIApplication
 import platform.UIKit.UIViewController
+import platform.darwin.DISPATCH_TIME_NOW
+import platform.darwin.dispatch_after
+import platform.darwin.dispatch_async
+import platform.darwin.dispatch_get_main_queue
+import platform.darwin.dispatch_time
+
 
 actual fun showToast(msg: String) {
-    val alert = UIAlertController.alertControllerWithTitle(
-        title = null,
-        message = msg,
-        preferredStyle = UIAlertControllerStyleAlert
-    )
-    alert.addAction(
-        UIAlertAction.actionWithTitle(
-            title = "OK",
-            style = UIAlertActionStyleDefault,
-            handler = null
-        )
-    )
+    dispatch_async(dispatch_get_main_queue()) {
 
-    val rootVC = UIApplication.sharedApplication.keyWindow?.rootViewController
-    rootVC?.presentViewController(alert, animated = true, completion = null)
+        val rootVC: UIViewController =
+            UIApplication.sharedApplication.keyWindow?.rootViewController ?: return@dispatch_async
+
+        val alert = UIAlertController.alertControllerWithTitle(
+            title = null,
+            message = msg,
+            preferredStyle = UIAlertControllerStyleAlert
+        )
+
+        rootVC.presentViewController(alert, animated = true, completion = null)
+
+        dispatch_after(
+            dispatch_time(DISPATCH_TIME_NOW, 2_000_000_000),
+            dispatch_get_main_queue()
+        ) {
+            alert.dismissViewControllerAnimated(true, null)
+        }
+    }
 }
 
 actual fun actionShareUrl(url: String?) {
