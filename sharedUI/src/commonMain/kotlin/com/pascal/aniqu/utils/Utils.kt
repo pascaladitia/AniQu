@@ -1,5 +1,12 @@
 package com.pascal.aniqu.utils
 
+@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
+expect object AppInfo {
+    val versionName: String
+    val versionCode: String
+    val appId: String
+}
+
 expect fun showToast(msg: String)
 
 expect fun actionShareUrl(url: String?)

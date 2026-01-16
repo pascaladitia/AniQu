@@ -14,7 +14,19 @@ import platform.darwin.dispatch_after
 import platform.darwin.dispatch_async
 import platform.darwin.dispatch_get_main_queue
 import platform.darwin.dispatch_time
+import platform.Foundation.NSBundle
 
+@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
+actual object AppInfo {
+    actual val versionName: String
+        get() = NSBundle.mainBundle.objectForInfoDictionaryKey("CFBundleShortVersionString") as? String ?: ""
+
+    actual val versionCode: String
+        get() = NSBundle.mainBundle.objectForInfoDictionaryKey("CFBundleVersion") as? String ?: ""
+
+    actual val appId: String
+        get() = NSBundle.mainBundle.bundleIdentifier ?: ""
+}
 
 actual fun showToast(msg: String) {
     dispatch_async(dispatch_get_main_queue()) {

@@ -1,10 +1,33 @@
 package com.pascal.aniqu.utils
 
 import android.content.Intent
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
 import com.pascal.aniqu.ContextUtils
+
+@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
+actual object AppInfo {
+    actual val versionName: String
+        get() = ContextUtils.context.packageManager
+            .getPackageInfo(ContextUtils.context.packageName, 0)
+            .versionName ?: ""
+
+    actual val versionCode: String
+        get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            ContextUtils.context.packageManager
+                .getPackageInfo(ContextUtils.context.packageName, 0)
+                .longVersionCode.toString()
+        } else {
+            ContextUtils.context.packageManager
+                .getPackageInfo(ContextUtils.context.packageName, 0)
+                .versionCode.toString()
+        }
+
+    actual val appId: String
+        get() = ContextUtils.context.packageName
+}
 
 actual fun showToast(msg: String) {
     Toast.makeText(ContextUtils.context, msg, Toast.LENGTH_SHORT).show()
