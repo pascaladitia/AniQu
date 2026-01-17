@@ -62,7 +62,8 @@ class AnimeDetailViewModel(
                 it.copy(
                     isLoading = true,
                     isLoadingStream = true,
-                    error = false to ""
+                    error = false to "",
+                    animeDetail = null
                 )
             }
 

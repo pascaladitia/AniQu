@@ -1,4 +1,4 @@
-package com.pascal.aniqu.ui.screen.search
+package com.pascal.aniqu.ui.screen.favorite
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,18 +21,16 @@ import androidx.compose.ui.unit.dp
 import com.pascal.aniqu.ui.component.form.SearchComponent
 import com.pascal.aniqu.ui.component.item.AnimeItemComponent
 import com.pascal.aniqu.ui.component.screenUtils.shimmer
-import com.pascal.aniqu.ui.screen.search.component.SearchTab
-import com.pascal.aniqu.ui.screen.search.state.LocalSearchEvent
-import com.pascal.aniqu.ui.screen.search.state.SearchUIState
+import com.pascal.aniqu.ui.screen.favorite.state.FavoriteUIState
+import com.pascal.aniqu.ui.screen.favorite.state.LocalFavoriteEvent
 import com.pascal.aniqu.ui.theme.AppTheme
 
 @Composable
-fun SearchScreen(
+fun FavoriteScreen(
     modifier: Modifier = Modifier,
-    uiState: SearchUIState = SearchUIState()
+    uiState: FavoriteUIState = FavoriteUIState()
 ) {
-    val event = LocalSearchEvent.current
-    val animeList = if (uiState.isSearch) uiState.animeList else uiState.animeByGenreList
+    val event = LocalFavoriteEvent.current
 
     LazyVerticalGrid(
         modifier = modifier
@@ -45,14 +43,10 @@ fun SearchScreen(
             Column {
                 SearchComponent(
                     modifier = Modifier.padding(16.dp),
-                    suggestions = uiState.animeByGenreList.map { it.title }
+                    suggestions = uiState.animeList.map { it.title }
                 ) {
                     event.onSearch(it)
                 }
-
-                SearchTab(
-                    uiState = uiState
-                )
             }
         }
 
@@ -71,7 +65,7 @@ fun SearchScreen(
                 )
             }
         } else {
-            itemsIndexed(animeList) { index, items ->
+            itemsIndexed(uiState.animeList) { index, items ->
                 AnimeItemComponent(
                     modifier = Modifier.padding(
                         start = if (index % 2 == 0) 16.dp else 8.dp,
@@ -87,9 +81,9 @@ fun SearchScreen(
 
 @Preview
 @Composable
-fun SearchPreview() {
+fun FavoritePreview() {
     AppTheme {
-        SearchScreen()
+        FavoriteScreen()
     }
 }
 

@@ -122,8 +122,10 @@ fun NavAnimeRoute(
                 }
                 composable(route = AnimeScreen.FavoriteScreen.route) {
                     FavoriteRoute(
-                        paddingValues = paddingValues,
-                        onDetail = {}
+                        onDetail = {
+                            saveToCurrentBackStack(navController, NavKey.SLUG, it)
+                            navController.navigate(AnimeScreen.AnimeDetailScreen.route)
+                        }
                     )
                 }
                 composable(route = AnimeScreen.ProfileScreen.route) {
