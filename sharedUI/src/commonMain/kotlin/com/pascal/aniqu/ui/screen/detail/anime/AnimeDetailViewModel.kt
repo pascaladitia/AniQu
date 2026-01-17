@@ -12,7 +12,6 @@ import com.pascal.aniqu.domain.usecase.anime.AnimeUseCase
 import com.pascal.aniqu.domain.usecase.local.LocalUseCase
 import com.pascal.aniqu.ui.screen.detail.anime.state.AnimeDetailUIState
 import com.pascal.aniqu.utils.download.DownloadManager
-import com.pascal.aniqu.utils.download.KtorDownloader
 import com.pascal.aniqu.utils.showToast
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -30,8 +29,7 @@ import kotlinx.coroutines.launch
 
 class AnimeDetailViewModel(
     private val localUseCase: LocalUseCase,
-    private val animeUseCase: AnimeUseCase,
-    private val downloader: KtorDownloader
+    private val animeUseCase: AnimeUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AnimeDetailUIState())
