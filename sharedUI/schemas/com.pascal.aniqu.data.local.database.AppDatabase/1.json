@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "cd7aed81a9fcf101435d7123d384c6bd",
+    "identityHash": "0aa54ea70117b0caa6e16c3d608e7439",
     "entities": [
       {
         "tableName": "profiles",
@@ -54,81 +54,72 @@
       },
       {
         "tableName": "favorite",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`title` TEXT NOT NULL, `isExclusive` INTEGER, `image` TEXT, `label` TEXT, `description` TEXT, `author` TEXT, `category` TEXT, `imageDescription` TEXT, `mediaCount` INTEGER, `publishedTime` TEXT, `audio` TEXT, `share` TEXT, PRIMARY KEY(`title`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT, `slug` TEXT, `poster` TEXT, `episodes` TEXT, `type` TEXT, `status` TEXT, `date` TEXT)",
         "fields": [
           {
-            "fieldPath": "title",
-            "columnName": "title",
-            "affinity": "TEXT",
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "isExclusive",
-            "columnName": "isExclusive",
-            "affinity": "INTEGER"
-          },
-          {
-            "fieldPath": "image",
-            "columnName": "image",
+            "fieldPath": "title",
+            "columnName": "title",
             "affinity": "TEXT"
           },
           {
-            "fieldPath": "label",
-            "columnName": "label",
+            "fieldPath": "slug",
+            "columnName": "slug",
             "affinity": "TEXT"
           },
           {
-            "fieldPath": "description",
-            "columnName": "description",
+            "fieldPath": "poster",
+            "columnName": "poster",
             "affinity": "TEXT"
           },
           {
-            "fieldPath": "author",
-            "columnName": "author",
+            "fieldPath": "episodes",
+            "columnName": "episodes",
             "affinity": "TEXT"
           },
           {
-            "fieldPath": "category",
-            "columnName": "category",
+            "fieldPath": "type",
+            "columnName": "type",
             "affinity": "TEXT"
           },
           {
-            "fieldPath": "imageDescription",
-            "columnName": "imageDescription",
+            "fieldPath": "status",
+            "columnName": "status",
             "affinity": "TEXT"
           },
           {
-            "fieldPath": "mediaCount",
-            "columnName": "mediaCount",
-            "affinity": "INTEGER"
-          },
-          {
-            "fieldPath": "publishedTime",
-            "columnName": "publishedTime",
-            "affinity": "TEXT"
-          },
-          {
-            "fieldPath": "audio",
-            "columnName": "audio",
-            "affinity": "TEXT"
-          },
-          {
-            "fieldPath": "share",
-            "columnName": "share",
+            "fieldPath": "date",
+            "columnName": "date",
             "affinity": "TEXT"
           }
         ],
         "primaryKey": {
-          "autoGenerate": false,
+          "autoGenerate": true,
           "columnNames": [
-            "title"
+            "id"
           ]
-        }
+        },
+        "indices": [
+          {
+            "name": "index_favorite_slug",
+            "unique": true,
+            "columnNames": [
+              "slug"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_favorite_slug` ON `${TABLE_NAME}` (`slug`)"
+          }
+        ]
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'cd7aed81a9fcf101435d7123d384c6bd')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0aa54ea70117b0caa6e16c3d608e7439')"
     ]
   }
 }

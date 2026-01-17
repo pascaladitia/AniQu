@@ -16,8 +16,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import aniqu.sharedui.generated.resources.Res
+import aniqu.sharedui.generated.resources.label_categories
+import aniqu.sharedui.generated.resources.label_favorite
 import com.pascal.aniqu.ui.screen.detail.anime.state.AnimeDetailUIState
 import com.pascal.aniqu.ui.theme.AppTheme
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun AnimeDetailCategory(
@@ -30,7 +34,7 @@ fun AnimeDetailCategory(
             .padding(horizontal = 16.dp)
     ) {
         Text(
-            text = "Categories",
+            text = stringResource(Res.string.label_categories),
             style = MaterialTheme.typography.headlineSmall.copy(
                 color = MaterialTheme.colorScheme.onSurface
             )

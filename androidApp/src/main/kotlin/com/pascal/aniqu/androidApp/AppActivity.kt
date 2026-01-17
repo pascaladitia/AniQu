@@ -25,7 +25,8 @@ class AppActivity : ComponentActivity() {
             App(onThemeChanged = { ThemeChanged(it) })
         }
 
-        ContextUtils.setContext(context = this)
+        ContextUtils.setActivity(this)
+
         if (GlobalContext.getOrNull() == null) {
             initKoin {
                 androidLogger(level = Level.NONE)

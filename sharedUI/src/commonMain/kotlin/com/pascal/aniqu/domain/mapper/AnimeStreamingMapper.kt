@@ -8,6 +8,7 @@ import com.pascal.aniqu.domain.model.anime.AnimeStreaming
 import com.pascal.aniqu.domain.model.anime.Download
 import com.pascal.aniqu.domain.model.anime.Navigation
 import com.pascal.aniqu.domain.model.anime.Stream
+import com.pascal.aniqu.utils.extractResolution
 
 fun AnimeStreamingResponse.toDomain(): AnimeStreaming {
     return AnimeStreaming(
@@ -36,7 +37,8 @@ fun NavigationResponse.toDomain() = Navigation(
 
 fun StreamResponse.toDomain() = Stream(
     server = server.orEmpty(),
-    url = url.orEmpty()
+    url = url.orEmpty(),
+    isEmbed = false
 )
 
 fun DownloadResponse.toDomain() = Download(
@@ -44,3 +46,45 @@ fun DownloadResponse.toDomain() = Download(
     server = server.orEmpty(),
     url = url.orEmpty()
 )
+
+fun mapToStreamList(
+    downloads: List<Download>?,
+    streams: List<Stream>?
+): List<Stream> {
+    val mp4List = downloads
+        ?.filterMp4UniqueByResolution()
+        .orEmpty()
+
+    return if (mp4List.isNotEmpty()) {
+        mp4List.map {
+            Stream(
+                server = it.resolution,
+                url = it.url,
+                isEmbed = false
+            )
+        }
+    } else {
+        streams
+            ?.filterStreamingByServer()
+            ?.map {
+                Stream(
+                    server = it.server,
+                    url = it.url,
+                    isEmbed = true
+                )
+            }
+            .orEmpty()
+    }
+}
+
+fun List<Download>.filterMp4UniqueByResolution(): List<Download> {
+    return this
+        .filter { it.url.endsWith(".mp4", ignoreCase = true) }
+        .distinctBy { it.resolution }
+}
+
+fun List<Stream>.filterStreamingByServer(): List<Stream> {
+    return this
+        .distinctBy { it.server.extractResolution() }
+        .filter { it.server.isNotBlank() }
+}

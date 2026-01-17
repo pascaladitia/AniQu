@@ -4,21 +4,24 @@ import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.SharedTransitionScope
 import com.pascal.aniqu.domain.model.anime.AnimeDetail
 import com.pascal.aniqu.domain.model.anime.AnimeItem
-import com.pascal.aniqu.domain.model.anime.Download
 import com.pascal.aniqu.domain.model.anime.Stream
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 data class AnimeDetailUIState(
     val isLoading: Boolean = false,
+    val isLoadingStream: Boolean = false,
+    val isFavorite: Boolean = false,
     val error: Pair<Boolean, String> = false to "",
     val animeId: String = "",
-    val downloadUrl: String = "",
-    val streamUrl: String = "",
     val animeDetail: AnimeDetail? = null,
-    val downloadList: ImmutableList<Download> = persistentListOf(),
+    val streamSelected: Stream? = null,
     val streamList: ImmutableList<Stream> = persistentListOf(),
     val recomendList: ImmutableList<AnimeItem> = persistentListOf(),
+
+    val isDownloading: Boolean = false,
+    val progress: Int = 0,
+    val filePath: String? = null,
 
     val sharedTransitionScope: SharedTransitionScope? = null,
     val animatedVisibilityScope: AnimatedVisibilityScope? = null

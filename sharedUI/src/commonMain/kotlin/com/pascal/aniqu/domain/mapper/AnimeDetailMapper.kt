@@ -9,6 +9,7 @@ fun AnimeDetailResponse.toDomain(): AnimeDetail {
     val info = info
 
     return AnimeDetail(
+        slug = "",
         title = title.orEmpty(),
         poster = poster.orEmpty(),
         synopsis = synopsis.orEmpty(),

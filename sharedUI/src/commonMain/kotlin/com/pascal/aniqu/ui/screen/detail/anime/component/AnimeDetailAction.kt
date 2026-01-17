@@ -1,5 +1,6 @@
 package com.pascal.aniqu.ui.screen.detail.anime.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,9 +13,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -26,10 +29,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.pascal.aniqu.ui.component.screenUtils.shimmer
+import aniqu.sharedui.generated.resources.Res
+import aniqu.sharedui.generated.resources.label_download
+import aniqu.sharedui.generated.resources.label_favorite
+import aniqu.sharedui.generated.resources.label_share
+import com.pascal.aniqu.ui.component.screenUtils.AnchoredPopup
 import com.pascal.aniqu.ui.screen.detail.anime.state.AnimeDetailUIState
 import com.pascal.aniqu.ui.screen.detail.anime.state.LocalAnimeDetailEvent
 import com.pascal.aniqu.ui.theme.AppTheme
+import com.pascal.aniqu.utils.actionShareUrl
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun AnimeDetailAction(
@@ -37,6 +46,12 @@ fun AnimeDetailAction(
     uiState: AnimeDetailUIState = AnimeDetailUIState()
 ) {
     val event = LocalAnimeDetailEvent.current
+
+    val iconFav = if (uiState.isFavorite) {
+        Icons.Default.Favorite
+    } else {
+        Icons.Default.FavoriteBorder
+    }
 
     Row(
         modifier = modifier
@@ -46,20 +61,41 @@ fun AnimeDetailAction(
         horizontalArrangement = Arrangement.Center
     ) {
         AnimeDetailActionItem(
-            icon = Icons.Default.Favorite,
-            label = "Favorite",
+            icon = iconFav,
+            label = stringResource(Res.string.label_favorite),
             onClick = {
-
+                event.onFavorite(uiState.animeDetail)
             }
         )
 
         Spacer(Modifier.width(32.dp))
 
-        AnimeDetailActionItem(
-            icon = Icons.Default.Download,
-            label = "Download",
-            onClick = {
+        AnchoredPopup(
+            anchor = { onClick ->
+                AnimeDetailActionItem(
+                    icon = Icons.Default.Download,
+                    label = stringResource(Res.string.label_download),
+                    onClick = onClick
+                )
+            },
+            popupContent = { close ->
+                Row {
+                    uiState.streamList.forEachIndexed { index, item ->
+                        if (index != 0) {
+                            Spacer(Modifier.width(12.dp))
+                        }
 
+                        DownloadItem(
+                            index = index,
+                            value = item.server,
+                            isSelect = true,
+                            onClick = {
+                                event.onDownloadSelected(item)
+                                close()
+                            }
+                        )
+                    }
+                }
             }
         )
 
@@ -67,9 +103,9 @@ fun AnimeDetailAction(
 
         AnimeDetailActionItem(
             icon = Icons.Default.Share,
-            label = "Share",
+            label = stringResource(Res.string.label_share),
             onClick = {
-
+                actionShareUrl(uiState.streamSelected?.url)
             }
         )
     }
@@ -100,6 +136,36 @@ fun AnimeDetailActionItem(
 
         Text(
             text = label,
+            style = MaterialTheme.typography.bodySmall.copy(
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        )
+    }
+}
+
+@Composable
+fun DownloadItem(
+    modifier: Modifier = Modifier,
+    index: Int,
+    value: String,
+    isSelect: Boolean = false,
+    onClick: (Int) -> Unit
+) {
+    val bgColor = if (isSelect) {
+        MaterialTheme.colorScheme.primary
+    } else {
+        MaterialTheme.colorScheme.outline
+    }
+
+    Box(
+        modifier = modifier
+            .clip(RoundedCornerShape(8.dp))
+            .clickable { onClick(index) }
+            .background(bgColor)
+            .padding(8.dp)
+    ) {
+        Text(
+            text = value,
             style = MaterialTheme.typography.bodySmall.copy(
                 color = MaterialTheme.colorScheme.onSurface
             )

@@ -1,35 +1,36 @@
 package com.pascal.aniqu.data.remote.api
 
 import com.pascal.aniqu.BuildKonfig
-import com.pascal.aniqu.data.remote.client
 import com.pascal.aniqu.data.remote.dtos.BaseResponse
 import com.pascal.aniqu.data.remote.dtos.anime.AnimeDetailResponse
 import com.pascal.aniqu.data.remote.dtos.anime.AnimeGenreResponse
 import com.pascal.aniqu.data.remote.dtos.anime.AnimeItemResponse
 import com.pascal.aniqu.data.remote.dtos.anime.AnimeStreamingResponse
+import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import org.koin.core.annotation.Single
 
 @Single
-class AnimeClientApi {
-
+class AnimeClientApi(
+    private val client: HttpClient
+) {
     suspend fun getAnimeHome(): BaseResponse<List<AnimeItemResponse>> {
         return client.get("${BuildKonfig.BASE_URL}/home").body()
     }
 
     suspend fun getAnimeLive(page: Int): BaseResponse<List<AnimeItemResponse>> {
-        return client.get("${BuildKonfig.BASE_URL}/terbaru"){
+        return client.get("${BuildKonfig.BASE_URL}/terbaru") {
             parameter("page", "$page")
         }.body()
     }
 
-    suspend fun getAnimeDetail(slug: String): BaseResponse<AnimeDetailResponse>{
+    suspend fun getAnimeDetail(slug: String): BaseResponse<AnimeDetailResponse> {
         return client.get("${BuildKonfig.BASE_URL}/detail/$slug").body()
     }
 
-    suspend fun getAnimeGenre(): BaseResponse<List<AnimeGenreResponse>>{
+    suspend fun getAnimeGenre(): BaseResponse<List<AnimeGenreResponse>> {
         return client.get("${BuildKonfig.BASE_URL}/genres").body()
     }
 

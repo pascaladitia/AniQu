@@ -1,6 +1,7 @@
 package com.pascal.aniqu.domain.model.anime
 
 data class AnimeDetail(
+    val slug: String,
     val title: String,
     val poster: String,
     val synopsis: String,

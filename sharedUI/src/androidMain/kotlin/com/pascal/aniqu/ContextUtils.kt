@@ -1,16 +1,32 @@
 package com.pascal.aniqu
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 
+@SuppressLint("StaticFieldLeak")
 object ContextUtils {
 
     private var kmpApplicationContext: Context? = null
+    private var currentActivity: Activity? = null
 
-    val context
+    val context: Context
         get() = kmpApplicationContext
-            ?: error("Android context has not been set. Please call setContext in your Application's onCreate.")
+            ?: error("Android context has not been set. Call setContext() in Application.onCreate()")
 
-    fun setContext(context: Context) {
-        kmpApplicationContext = context.applicationContext
+    val activity: Activity
+        get() = currentActivity
+            ?: error("Activity has not been set. Call setActivity() in Activity.onCreate()")
+
+
+    fun setActivity(activity: Activity?) {
+        currentActivity = activity
+        kmpApplicationContext = activity?.applicationContext
+    }
+
+    fun clearActivity(activity: Activity) {
+        if (currentActivity === activity) {
+            currentActivity = null
+        }
     }
 }

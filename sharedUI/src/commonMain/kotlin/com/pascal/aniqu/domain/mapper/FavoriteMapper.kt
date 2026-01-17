@@ -1,9 +1,41 @@
 package com.pascal.aniqu.domain.mapper
 
-import com.pascal.aniqu.domain.usecase.local.LocalUseCase
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import com.pascal.aniqu.data.local.entity.FavoritesEntity
+import com.pascal.aniqu.domain.model.anime.AnimeDetail
+import com.pascal.aniqu.domain.model.anime.AnimeItem
 
-fun LocalUseCase.getFavoriteTitlesFlow(): Flow<Set<String>> = flow {
-    emit(getFavorite()?.map { it.title }?.toSet() ?: emptySet())
+fun AnimeItem.toEntity(): FavoritesEntity {
+    return FavoritesEntity(
+        title = title,
+        slug = slug,
+        poster = poster,
+        episodes = episodes,
+        type = type,
+        status = status,
+        date = date
+    )
+}
+
+fun FavoritesEntity.toAnimeItem(): AnimeItem {
+    return AnimeItem(
+        title = title.orEmpty(),
+        slug = slug.orEmpty(),
+        poster = poster.orEmpty(),
+        episodes = episodes.orEmpty(),
+        type = type.orEmpty(),
+        status = status.orEmpty(),
+        date = date.orEmpty()
+    )
+}
+
+fun AnimeDetail.toEntity(): FavoritesEntity {
+    return FavoritesEntity(
+        title = title,
+        slug = slug,
+        poster = poster,
+        episodes = totalEpisodes.toString(),
+        type = type,
+        status = status,
+        date = released
+    )
 }

@@ -64,6 +64,7 @@ kotlin {
 
             implementation(libs.moko.permission)
             implementation(libs.moko.permission.camera)
+            implementation(libs.moko.permission.notifications)
             implementation(libs.paging.compose.common)
             implementation(libs.paging.common)
             implementation(libs.constraintlayout.compose.multiplatform)
@@ -93,6 +94,7 @@ kotlin {
             implementation(libs.room.runtime.android)
             implementation(libs.play.services.auth)
             implementation(libs.androidx.ui.tooling)
+            implementation(libs.androidx.work.runtime.ktx)
         }
 
         iosMain.dependencies {

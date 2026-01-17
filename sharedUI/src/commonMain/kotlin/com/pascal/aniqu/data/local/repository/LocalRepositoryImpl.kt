@@ -28,20 +28,20 @@ class LocalRepositoryImpl(
     }
 
     // Favorites
+    override suspend fun getFavorite(): List<FavoritesEntity> {
+        return database.favoritesDao().getFavoriteList()
+    }
+
+    override suspend fun getFavorite(slug: String): Boolean {
+        return database.favoritesDao().getFavorite(slug) != null
+    }
+
     override suspend fun insertFavorite(entity: FavoritesEntity) {
         database.favoritesDao().insertFavorite(entity)
     }
 
-    override suspend fun deleteFavorite(entity: FavoritesEntity) {
-        database.favoritesDao().deleteFavorite(entity)
-    }
-
-    override suspend fun getFavorite(): List<FavoritesEntity>? {
-        return database.favoritesDao().getFavoriteMovieList()
-    }
-
-    override suspend fun getFavorite(title: String): Boolean {
-        return database.favoritesDao().getFavorite(title) != null
+    override suspend fun deleteFavorite(slug: String) {
+        database.favoritesDao().deleteFavorite(slug)
     }
 
     override suspend fun clearFavorite() {

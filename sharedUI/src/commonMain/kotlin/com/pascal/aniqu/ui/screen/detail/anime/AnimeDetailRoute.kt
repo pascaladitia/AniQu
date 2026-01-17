@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import aniqu.sharedui.generated.resources.Res
 import aniqu.sharedui.generated.resources.close
+import com.pascal.aniqu.domain.model.anime.Stream
 import com.pascal.aniqu.ui.component.dialog.ShowDialog
 import com.pascal.aniqu.ui.component.screenUtils.PullRefreshComponent
 import com.pascal.aniqu.ui.screen.detail.anime.state.LocalAnimeDetailEvent
@@ -21,12 +22,13 @@ fun AnimeDetailRoute(
     animatedVisibilityScope: AnimatedVisibilityScope,
     slug: String? = "",
     viewModel: AnimeDetailViewModel = koinInject<AnimeDetailViewModel>(),
+    onNavPlayStream: (Stream) -> Unit,
     onNavBack: () -> Unit
 ) {
     val event = LocalAnimeDetailEvent.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(slug) {
         viewModel.setTransition(sharedTransitionScope, animatedVisibilityScope)
         viewModel.loadAnimeDetail(slug)
     }
@@ -42,9 +44,12 @@ fun AnimeDetailRoute(
 
     CompositionLocalProvider(
         LocalAnimeDetailEvent provides event.copy(
-            onNavBack = onNavBack,
-            onEpisodeSelected = {},
-            onDownloadSelected = {}
+            onFavorite = viewModel::setFavorite,
+            onEpisodeSelected = viewModel::loadAnimeStream,
+            onSteamSelected = viewModel::streamSelected,
+            onDownloadSelected = viewModel::loadDownload,
+            onNavPlayStream = onNavPlayStream,
+            onNavBack = onNavBack
         )
     ) {
         PullRefreshComponent(
