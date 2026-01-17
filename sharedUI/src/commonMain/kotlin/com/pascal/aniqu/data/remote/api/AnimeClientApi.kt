@@ -17,32 +17,32 @@ class AnimeClientApi(
     private val client: HttpClient
 ) {
     suspend fun getAnimeHome(): BaseResponse<List<AnimeItemResponse>> {
-        return client.get("${BuildKonfig.BASE_URL}/home").body()
+        return client.get("${BuildKonfig.BASE_URL_ANIME}/home").body()
     }
 
     suspend fun getAnimeLive(page: Int): BaseResponse<List<AnimeItemResponse>> {
-        return client.get("${BuildKonfig.BASE_URL}/terbaru") {
+        return client.get("${BuildKonfig.BASE_URL_ANIME}/terbaru") {
             parameter("page", "$page")
         }.body()
     }
 
     suspend fun getAnimeDetail(slug: String): BaseResponse<AnimeDetailResponse> {
-        return client.get("${BuildKonfig.BASE_URL}/detail/$slug").body()
+        return client.get("${BuildKonfig.BASE_URL_ANIME}/detail/$slug").body()
     }
 
     suspend fun getAnimeGenre(): BaseResponse<List<AnimeGenreResponse>> {
-        return client.get("${BuildKonfig.BASE_URL}/genres").body()
+        return client.get("${BuildKonfig.BASE_URL_ANIME}/genres").body()
     }
 
     suspend fun getAnimeGenre(slug: String): BaseResponse<List<AnimeItemResponse>> {
-        return client.get("${BuildKonfig.BASE_URL}/genre/$slug").body()
+        return client.get("${BuildKonfig.BASE_URL_ANIME}/genre/$slug").body()
     }
 
     suspend fun getAnimeSearch(key: String): BaseResponse<List<AnimeItemResponse>> {
-        return client.get("${BuildKonfig.BASE_URL}/search/$key").body()
+        return client.get("${BuildKonfig.BASE_URL_ANIME}/search/$key").body()
     }
 
     suspend fun getAnimeStreaming(id: String): BaseResponse<AnimeStreamingResponse> {
-        return client.get("${BuildKonfig.BASE_URL}/episode/$id").body()
+        return client.get("${BuildKonfig.BASE_URL_ANIME}/episode/$id").body()
     }
 }

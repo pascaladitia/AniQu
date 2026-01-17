@@ -3,7 +3,7 @@ package com.pascal.aniqu.domain.usecase.pagination
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.pascal.aniqu.data.repository.anime.AnimeRepository
-import com.pascal.aniqu.domain.mapper.toDomain
+import com.pascal.aniqu.domain.mapper.anime.toDomain
 import com.pascal.aniqu.domain.model.anime.AnimeItem
 
 class AnimePagingSource(

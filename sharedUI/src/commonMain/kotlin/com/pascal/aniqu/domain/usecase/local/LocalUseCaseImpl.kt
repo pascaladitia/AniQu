@@ -2,7 +2,7 @@ package com.pascal.aniqu.domain.usecase.local
 
 import com.pascal.aniqu.data.local.entity.FavoritesEntity
 import com.pascal.aniqu.data.local.repository.LocalRepository
-import com.pascal.aniqu.domain.mapper.toAnimeItem
+import com.pascal.aniqu.domain.mapper.favorite.toAnimeItem
 import com.pascal.aniqu.domain.model.anime.AnimeItem
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

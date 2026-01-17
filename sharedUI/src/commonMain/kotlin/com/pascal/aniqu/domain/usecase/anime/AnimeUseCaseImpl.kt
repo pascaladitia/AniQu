@@ -4,7 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.pascal.aniqu.data.repository.anime.AnimeRepository
-import com.pascal.aniqu.domain.mapper.toDomain
+import com.pascal.aniqu.domain.mapper.anime.toDomain
 import com.pascal.aniqu.domain.model.anime.AnimeDetail
 import com.pascal.aniqu.domain.model.anime.AnimeGenre
 import com.pascal.aniqu.domain.model.anime.AnimeItem

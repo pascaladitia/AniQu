@@ -4,8 +4,8 @@ import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.SharedTransitionScope
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.pascal.aniqu.domain.mapper.mapToStreamList
-import com.pascal.aniqu.domain.mapper.toEntity
+import com.pascal.aniqu.domain.mapper.anime.mapToStreamList
+import com.pascal.aniqu.domain.mapper.favorite.toEntity
 import com.pascal.aniqu.domain.model.anime.AnimeDetail
 import com.pascal.aniqu.domain.model.anime.Stream
 import com.pascal.aniqu.domain.usecase.anime.AnimeUseCase

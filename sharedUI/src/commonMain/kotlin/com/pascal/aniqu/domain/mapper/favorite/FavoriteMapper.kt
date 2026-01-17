@@ -1,4 +1,4 @@
-package com.pascal.aniqu.domain.mapper
+package com.pascal.aniqu.domain.mapper.favorite
 
 import com.pascal.aniqu.data.local.entity.FavoritesEntity
 import com.pascal.aniqu.domain.model.anime.AnimeDetail

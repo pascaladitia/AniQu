@@ -123,7 +123,8 @@ dependencies {
 buildkonfig {
     packageName = "com.pascal.aniqu"
     defaultConfigs {
-        buildConfigField(FieldSpec.Type.STRING, "BASE_URL", "https://www.sankavollerei.com/anime/animesail")
+        buildConfigField(FieldSpec.Type.STRING, "BASE_URL_ANIME", "https://www.sankavollerei.com/anime/animesail")
+        buildConfigField(FieldSpec.Type.STRING, "BASE_URL_MANGA", "https://www.sankavollerei.com/comic/mangakita")
     }
 }
 

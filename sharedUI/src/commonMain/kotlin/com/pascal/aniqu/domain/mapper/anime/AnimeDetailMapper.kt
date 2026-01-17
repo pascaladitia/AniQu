@@ -1,4 +1,4 @@
-package com.pascal.aniqu.domain.mapper
+package com.pascal.aniqu.domain.mapper.anime
 
 import com.pascal.aniqu.data.remote.dtos.anime.AnimeDetailResponse
 import com.pascal.aniqu.data.remote.dtos.anime.EpisodeResponse
