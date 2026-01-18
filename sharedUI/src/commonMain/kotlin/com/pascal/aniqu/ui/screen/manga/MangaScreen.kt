@@ -15,11 +15,16 @@ import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import aniqu.sharedui.generated.resources.Res
+import aniqu.sharedui.generated.resources.label_search_manga
 import com.pascal.aniqu.ui.component.form.SearchComponent
 import com.pascal.aniqu.ui.screen.manga.component.MangaLiveItem
+import com.pascal.aniqu.ui.screen.manga.component.MangaNewReleaseItem
+import com.pascal.aniqu.ui.screen.manga.component.MangaUpdatedItem
 import com.pascal.aniqu.ui.screen.manga.state.LocalMangaEvent
 import com.pascal.aniqu.ui.screen.manga.state.MangaUIState
 import com.pascal.aniqu.ui.theme.AppTheme
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun MangaScreen(
@@ -54,9 +59,22 @@ fun MangaScreen(
                         .constrainAs(search) {
                             centerAround(image.bottom)
                     },
+                    hint = stringResource(Res.string.label_search_manga),
                     onSearch = {}
                 )
             }
+        }
+
+        item(span = { GridItemSpan(maxLineSpan) }) {
+            MangaNewReleaseItem(
+                uiState = uiState
+            )
+        }
+
+        item(span = { GridItemSpan(maxLineSpan) }) {
+            MangaUpdatedItem(
+                uiState = uiState
+            )
         }
     }
 }

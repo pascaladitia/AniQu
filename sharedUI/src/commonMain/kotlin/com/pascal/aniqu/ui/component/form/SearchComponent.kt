@@ -43,6 +43,7 @@ import compose.icons.feathericons.Search
 @Composable
 fun SearchComponent(
     modifier: Modifier = Modifier,
+    hint: String = "",
     suggestions: List<String> = emptyList(),
     onSearch: (String) -> Unit
 ) {
@@ -121,7 +122,7 @@ fun SearchComponent(
                     Box {
                         if (searchText.isEmpty()) {
                             Text(
-                                text = "Search anime...",
+                                text = hint,
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )

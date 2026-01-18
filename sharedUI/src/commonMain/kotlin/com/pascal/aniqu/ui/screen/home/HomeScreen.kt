@@ -6,24 +6,16 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,13 +26,13 @@ import aniqu.sharedui.generated.resources.label_ongoing
 import app.cash.paging.compose.LazyPagingItems
 import com.pascal.aniqu.domain.model.anime.AnimeItem
 import com.pascal.aniqu.ui.component.item.AnimeItemComponent
+import com.pascal.aniqu.ui.component.screenUtils.SectionComponent
 import com.pascal.aniqu.ui.component.screenUtils.shimmer
 import com.pascal.aniqu.ui.screen.home.component.HomeLiveItem
 import com.pascal.aniqu.ui.screen.home.component.LazyRowCarousel
 import com.pascal.aniqu.ui.screen.home.state.HomeUIState
 import com.pascal.aniqu.ui.screen.home.state.LocalHomeEvent
 import com.pascal.aniqu.ui.theme.AppTheme
-import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun HomeScreen(
@@ -64,25 +56,10 @@ fun HomeScreen(
 
         item(span = { GridItemSpan(maxLineSpan) }) {
             Column {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = stringResource(Res.string.label_ongoing),
-                        style = MaterialTheme.typography.titleLarge
-                    )
-
-                    Icon(
-                        modifier = Modifier.size(24.dp),
-                        imageVector = Icons.Default.ChevronRight,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
-                }
+                SectionComponent(
+                    label = Res.string.label_ongoing,
+                    onClick = {}
+                )
 
                 uiState.sharedTransitionScope?.let {
                     with(it) {
@@ -99,25 +76,10 @@ fun HomeScreen(
         }
 
         item(span = { GridItemSpan(maxLineSpan) }) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = stringResource(Res.string.label_completed),
-                    style = MaterialTheme.typography.titleLarge
-                )
-
-                Icon(
-                    modifier = Modifier.size(24.dp),
-                    imageVector = Icons.Default.ChevronRight,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
-            }
+            SectionComponent(
+                label = Res.string.label_completed,
+                onClick = {}
+            )
         }
 
         if (uiState.isLoading) {

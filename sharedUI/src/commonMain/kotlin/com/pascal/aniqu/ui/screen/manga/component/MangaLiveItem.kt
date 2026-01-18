@@ -132,7 +132,7 @@ fun MangaLiveItem(
         ) {
             Text(
                 text = items[currentPage].title,
-                style = MaterialTheme.typography.headlineSmall,
+                style = MaterialTheme.typography.headlineMedium,
                 color = Color.White,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis

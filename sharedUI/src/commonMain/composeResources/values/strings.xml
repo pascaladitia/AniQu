@@ -20,4 +20,9 @@
     <string name="label_episode">Episode</string>
     <string name="label_categories">Categories</string>
     <string name="label_recomend_to_watch">Recomend to Watch</string>
+    <string name="label_see_all">See All</string>
+    <string name="label_latest_update">Latest Update</string>
+    <string name="label_new_release">Latest Update</string>
+    <string name="label_search_anime">Search Anime...</string>
+    <string name="label_search_manga">Search Manga...</string>
 </resources>

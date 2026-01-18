@@ -18,6 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import aniqu.sharedui.generated.resources.Res
+import aniqu.sharedui.generated.resources.label_search_anime
+import aniqu.sharedui.generated.resources.label_search_manga
 import com.pascal.aniqu.ui.component.form.SearchComponent
 import com.pascal.aniqu.ui.component.item.AnimeItemComponent
 import com.pascal.aniqu.ui.component.screenUtils.shimmer
@@ -25,6 +28,7 @@ import com.pascal.aniqu.ui.screen.search.component.SearchTab
 import com.pascal.aniqu.ui.screen.search.state.LocalSearchEvent
 import com.pascal.aniqu.ui.screen.search.state.SearchUIState
 import com.pascal.aniqu.ui.theme.AppTheme
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun SearchScreen(
@@ -45,6 +49,7 @@ fun SearchScreen(
             Column {
                 SearchComponent(
                     modifier = Modifier.padding(16.dp),
+                    hint = stringResource(Res.string.label_search_anime),
                     suggestions = uiState.animeByGenreList.map { it.title }
                 ) {
                     event.onSearch(it)
