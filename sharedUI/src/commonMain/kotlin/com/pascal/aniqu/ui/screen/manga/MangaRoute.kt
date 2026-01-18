@@ -16,7 +16,7 @@ import org.koin.compose.koinInject
 @Composable
 fun MangaRoute(
     viewModel: MangaViewModel = koinInject<MangaViewModel>(),
-    onDetail: () -> Unit
+    onDetail: (String) -> Unit
 ) {
     val event = LocalMangaEvent.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()

@@ -1,4 +1,4 @@
-package com.pascal.aniqu.ui.screen.home.component
+package com.pascal.aniqu.ui.screen.manga.component
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -12,8 +12,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.SpanStyle
@@ -31,42 +38,36 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.paging.LoadState
-import app.cash.paging.compose.LazyPagingItems
-import com.pascal.aniqu.domain.model.anime.AnimeItem
 import com.pascal.aniqu.ui.component.screenUtils.DynamicAsyncImage
 import com.pascal.aniqu.ui.component.screenUtils.PagerIndicatorWrap
 import com.pascal.aniqu.ui.component.screenUtils.shimmer
 import com.pascal.aniqu.ui.component.screenUtils.verticalFadeBackground
+import com.pascal.aniqu.ui.screen.manga.state.MangaUIState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeLiveItem(
+fun MangaLiveItem(
     modifier: Modifier = Modifier,
-    animeLiveResponse: LazyPagingItems<AnimeItem>?,
+    uiState: MangaUIState = MangaUIState(),
     onClick: (String) -> Unit = {}
 ) {
-    if (animeLiveResponse == null) return
+    val items = uiState.mangaResponse?.popularToday
 
-    val loadState = animeLiveResponse.loadState
-
-    if (loadState.refresh is LoadState.Loading) {
+    if (uiState.isLoading) {
         Box(
             modifier = modifier
                 .fillMaxWidth()
-                .height(240.dp)
+                .height(300.dp)
                 .shimmer()
         )
         return
     }
 
-    if (loadState.refresh is LoadState.Error) return
+    if (uiState.error.first || items.isNullOrEmpty()) return
 
-    val pageCount = animeLiveResponse.itemCount
-    if (pageCount == 0) return
-
+    val pageCount = items.size
     val pagerState = rememberPagerState { pageCount }
     val scope = rememberCoroutineScope()
 
@@ -76,7 +77,7 @@ fun HomeLiveItem(
 
     LaunchedEffect(pageCount) {
         while (true) {
-            delay(10000)
+            delay(10_000)
             if (!pagerState.isScrollInProgress && pageCount > 1) {
                 val next =
                     if (pagerState.currentPage == pageCount - 1) 0
@@ -87,21 +88,24 @@ fun HomeLiveItem(
         }
     }
 
-    Box(modifier = modifier.fillMaxWidth()) {
-
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp))
+    ) {
         HorizontalPager(
             state = pagerState,
             modifier = Modifier.fillMaxSize()
         ) { page ->
-            val item = animeLiveResponse[page] ?: return@HorizontalPager
+            val item = items[page]
 
             DynamicAsyncImage(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(240.dp)
+                    .height(300.dp)
                     .clickable { onClick(item.slug) }
                     .background(Color.LightGray),
-                imageUrl = item.poster,
+                imageUrl = item.image,
                 contentScale = ContentScale.Crop
             )
         }
@@ -111,7 +115,7 @@ fun HomeLiveItem(
                 .fillMaxWidth()
                 .height(48.dp)
                 .verticalFadeBackground(
-                    startColor = Color.Black.copy(0.8f),
+                    startColor = Color.Black.copy(alpha = 0.8f),
                     isTop = true
                 )
         )
@@ -120,15 +124,15 @@ fun HomeLiveItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .verticalFadeBackground(
-                    startColor = Color.Black.copy(0.8f),
+                    startColor = Color.Black.copy(alpha = 0.8f),
                     isTop = false
                 )
-                .padding(16.dp)
+                .padding(horizontal = 16.dp, vertical = 42.dp)
                 .align(Alignment.BottomCenter)
         ) {
             Text(
-                text = animeLiveResponse[currentPage]?.title.orEmpty(),
-                style = MaterialTheme.typography.headlineMedium,
+                text = items[currentPage].title,
+                style = MaterialTheme.typography.headlineSmall,
                 color = Color.White,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
@@ -138,40 +142,47 @@ fun HomeLiveItem(
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                verticalAlignment = Alignment.CenterVertically
             ) {
+                val rating = items[currentPage].rating
+                val chapter = items[currentPage].latestChapter
+
                 Text(
                     text = buildAnnotatedString {
-                        val releaseDay = animeLiveResponse[currentPage]?.type.orEmpty()
-                        val lastDate = animeLiveResponse[currentPage]?.status.orEmpty()
-
-                        if (releaseDay.isNotBlank()) {
+                        if (chapter.isNotBlank()) {
                             withStyle(
                                 SpanStyle(
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             ) {
-                                append(releaseDay)
+                                append(chapter)
                             }
                         }
 
-                        if (releaseDay.isNotBlank() && lastDate.isNotBlank()) {
-                            append("  •  ")
-                        }
-
-                        if (lastDate.isNotBlank()) {
-                            withStyle(
-                                SpanStyle(
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
-                                )
-                            ) {
-                                append(lastDate)
-                            }
+                        if (rating.isNotBlank()) {
+                            append("  |  ")
                         }
                     },
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.titleSmall
                 )
+
+                Icon(
+                    modifier = Modifier.size(16.dp),
+                    imageVector = Icons.Default.Star,
+                    contentDescription = null,
+                    tint = Color.Yellow
+                )
+
+                Spacer(Modifier.width(4.dp))
+
+                Text(
+                    text = rating.ifBlank { "-" },
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        color = Color.White
+                    )
+                )
+
+                Spacer(Modifier.weight(1f))
 
                 PagerIndicatorWrap(
                     pageCount = pageCount,

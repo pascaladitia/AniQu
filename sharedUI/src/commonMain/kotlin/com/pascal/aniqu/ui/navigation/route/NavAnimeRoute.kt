@@ -108,7 +108,6 @@ fun NavAnimeRoute(
                 }
                 composable(route = AnimeScreen.MangaScreen.route) {
                     MangaRoute(
-                        paddingValues = paddingValues,
                         onDetail = {}
                     )
                 }

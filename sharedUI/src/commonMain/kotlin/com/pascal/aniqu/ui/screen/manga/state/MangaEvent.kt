@@ -7,5 +7,5 @@ val LocalMangaEvent = compositionLocalOf { MangaEvent() }
 
 @Stable
 data class MangaEvent(
-    val onDetail: () -> Unit = {}
+    val onDetail: (String) -> Unit = {}
 )
